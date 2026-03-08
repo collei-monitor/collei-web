@@ -74,6 +74,7 @@ export default {
       networkDownload: "Download",
       status: "Status",
     },
+    buildTime: "Built at {{time}}",
   },
   detail: {
     notFound: "Server not found",

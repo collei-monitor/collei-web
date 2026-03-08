@@ -12,6 +12,8 @@ import { useDisplayServers, usePublicGroups } from "@/services/display";
 import { cn } from "@/lib/utils";
 import type { DisplayServer, PublicGroup } from "@/types/server";
 
+declare const __BUILD_TIME__: string;
+
 type ViewMode = "card" | "list";
 
 export default function DisplayPage() {
@@ -45,6 +47,22 @@ export default function DisplayPage() {
   }, [servers, activeGroupId, groups]);
 
   const onlineCount = servers.filter((s) => s.status === 1).length;
+
+  const formatBuildTime = (isoTime: string) => {
+    try {
+      const date = new Date(isoTime);
+      return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    } catch {
+      return isoTime;
+    }
+  };
 
   return (
     <TooltipProvider>
@@ -131,6 +149,17 @@ export default function DisplayPage() {
             <ServerTable servers={filteredServers} />
           )}
         </main>
+
+        {/* Footer: Build Time */}
+        <footer className="border-t bg-muted/30 py-3 px-4">
+          <div className="container mx-auto text-center">
+            <p className="text-xs text-muted-foreground">
+              {t("display.buildTime", {
+                time: formatBuildTime(__BUILD_TIME__),
+              })}
+            </p>
+          </div>
+        </footer>
       </div>
     </TooltipProvider>
   );

@@ -72,6 +72,7 @@ export default {
       networkDownload: "下载",
       status: "状态",
     },
+    buildTime: "构建于 {{time}}",
   },
   detail: {
     notFound: "未找到该服务器",
