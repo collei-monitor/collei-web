@@ -98,11 +98,8 @@ export function useWebSocketState(): WebSocketState {
 
       const protocol =
         window.location.protocol === "https:" ? "wss:" : "ws:";
-    //   const ws = new WebSocket(
-    //     `${protocol}//${window.location.host}/api/v1/ws`
-    //   );
         const ws = new WebSocket(
-        `${protocol}//127.0.0.1:8000/api/v1/ws`
+        `${protocol}//${window.location.host}/api/v1/ws`
       );
       wsRef.current = ws;
 
