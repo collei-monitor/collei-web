@@ -4,7 +4,7 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ command }) => {
   return {
     plugins: [react(), tailwindcss()],
     resolve: {

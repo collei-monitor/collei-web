@@ -24,9 +24,9 @@ export const api = {
     }
 
     // 设置默认请求头
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      ...fetchOptions.headers,
+      ...(fetchOptions.headers as Record<string, string>),
     };
 
     // 添加 Token（如果存在）
