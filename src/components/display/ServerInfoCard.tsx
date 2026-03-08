@@ -35,16 +35,16 @@ interface ServerInfoCardProps {
 
 // ── 辅助：格式化开机时间 ─────────────────────────────────────────────────────
 
-function formatUptime(bootTime: number | null): string {
+function formatUptime(bootTime: number | null, t: (key: string) => string): string {
   if (!bootTime) return "-";
   const seconds = Math.floor(Date.now() / 1000) - bootTime;
-  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 60) return `${seconds}${t("time.sec")}`;
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  if (days > 0) return `${days}d ${hours}h ${minutes}m`;
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
+  if (days > 0) return `${days}${t("time.day")} ${hours}${t("time.hour")} ${minutes}${t("time.min")}`;
+  if (hours > 0) return `${hours}${t("time.hour")} ${minutes}${t("time.min")}`;
+  return `${minutes}${t("time.min")}`;
 }
 
 // ── 组件 ──────────────────────────────────────────────────────────────────────
@@ -115,7 +115,7 @@ export function ServerInfoCard({ server }: ServerInfoCardProps) {
           <InfoItem
             icon={<Clock className="h-4 w-4" />}
             label={t("detail.info.uptime")}
-            value={isOnline ? formatUptime(server.boot_time) : "-"}
+            value={isOnline ? formatUptime(server.boot_time, t) : "-"}
           />
         </div>
 

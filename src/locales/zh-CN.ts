@@ -19,6 +19,12 @@ export default {
     username: "用户名",
     password: "密码",
   },
+  time: {
+    day: "天",
+    hour: "小时",
+    min: "分钟",
+    sec: "秒",
+  },
   notFound: {
     title: "页面未找到",
     description: "抱歉，您访问的页面不存在。请检查 URL 或返回首页。",

@@ -19,6 +19,12 @@ export default {
     username: "Username",
     password: "Password",
   },
+  time: {
+    day: "d",
+    hour: "h",
+    min: "m",
+    sec: "s",
+  },
   notFound: {
     title: "Page Not Found",
     description:

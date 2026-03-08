@@ -64,10 +64,15 @@ const WS_RECONNECT_DELAY = 3000;
 interface WebSocketState {
   connected: boolean;
   snapshots: Map<string, ServerSnapshot>;
+  /** 首次收到 WS 快照（或超时兜底）后变为 true */
+  wsReady: boolean;
 }
 
 /** WebSocket 状态 Context，由 WebSocketProvider 提供 */
 export const WebSocketContext = createContext<WebSocketState | null>(null);
+
+/** WS 就绪等待超时（ms），超时后不再阻塞页面展示 */
+const WS_READY_TIMEOUT = 8000;
 
 /** 内部 Hook：包含完整的 WS 连接逻辑，仅供 WebSocketProvider 使用 */
 export function useWebSocketState(): WebSocketState {
@@ -75,11 +80,18 @@ export function useWebSocketState(): WebSocketState {
   const [snapshots, setSnapshots] = useState<Map<string, ServerSnapshot>>(
     new Map()
   );
+  const [wsReady, setWsReady] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const readyTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     let disposed = false;
+
+    // 超时兜底：WS 迟迟未返回数据时，仍放行页面展示
+    readyTimer.current = setTimeout(() => {
+      if (!disposed) setWsReady(true);
+    }, WS_READY_TIMEOUT);
 
     function connect() {
       if (disposed) return;
@@ -105,6 +117,11 @@ export function useWebSocketState(): WebSocketState {
             setSnapshots(
               new Map(message.servers.map((s) => [s.uuid, s]))
             );
+            // 首次收到快照，取消兜底计时器并标记就绪
+            if (!disposed) {
+              clearTimeout(readyTimer.current);
+              setWsReady(true);
+            }
           }
         } catch {
           /* ignore parse errors */
@@ -127,11 +144,12 @@ export function useWebSocketState(): WebSocketState {
     return () => {
       disposed = true;
       clearTimeout(reconnectTimer.current);
+      clearTimeout(readyTimer.current);
       wsRef.current?.close();
     };
   }, []);
 
-  return { connected, snapshots };
+  return { connected, snapshots, wsReady };
 }
 
 /** 从 WebSocketContext 读取 WS 状态，需在 WebSocketProvider 内部使用 */
@@ -145,8 +163,8 @@ export function useServerWebSocket(): WebSocketState {
 
 /** 获取展示用的服务器列表（HTTP + WebSocket 合并） */
 export function useDisplayServers() {
-  const { data: httpServers, isLoading, error } = usePublicServers();
-  const { connected, snapshots } = useServerWebSocket();
+  const { data: httpServers, isLoading: httpLoading, error } = usePublicServers();
+  const { connected, snapshots, wsReady } = useServerWebSocket();
 
   const servers = useMemo<DisplayServer[]>(() => {
     if (!httpServers) return [];
@@ -163,7 +181,7 @@ export function useDisplayServers() {
           swap_total: snapshot.swap_total,
           disk_total: snapshot.disk_total,
           last_online: snapshot.last_online,
-          boot_time: snapshot.boot_time,
+            ...(snapshot.boot_time !== undefined ? { boot_time: snapshot.boot_time } : {}),
         };
       }
       // WS 已连接但该服务器不在快照中，标记为离线
@@ -179,6 +197,9 @@ export function useDisplayServers() {
       (a, b) => b.top - a.top || a.name.localeCompare(b.name)
     );
   }, [httpServers, snapshots, connected]);
+
+  // HTTP 加载完成且 WS 首帧到达（或超时兜底）后才放行
+  const isLoading = httpLoading || !wsReady;
 
   return { servers, isLoading, error, wsConnected: connected };
 }
