@@ -12,14 +12,28 @@ export interface Group {
   created_at: number;
 }
 
+/** 带服务器 UUID 列表的分组（来自公开接口） */
+export interface GroupWithServers extends Group {
+  server_uuids: string[];
+}
+
 export interface CreateGroupPayload {
   name: string;
   top?: number;
+  server_uuids?: string[];
 }
 
 export interface UpdateGroupPayload {
   name?: string;
   top?: number;
+  server_uuids?: string[];
+}
+
+export interface BatchUpdateGroupTopsResult {
+  total: number;
+  updated: number;
+  failed: number;
+  failed_ids: string[];
 }
 
 // ── 服务器 ────────────────────────────────────────────────────────────────────

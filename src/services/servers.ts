@@ -9,10 +9,12 @@ import api from "@/lib/api";
 import type {
   Server,
   Group,
+  GroupWithServers,
   UpdateServerPayload,
   SetServerGroupsPayload,
   CreateGroupPayload,
   UpdateGroupPayload,
+  BatchUpdateGroupTopsResult,
 } from "@/types/server";
 
 // ── Query Keys ────────────────────────────────────────────────────────────────
@@ -111,6 +113,22 @@ const groupApi = {
     const { status, data } = await api.delete(`/clients/groups/${id}`);
     if (status !== 200) throw new Error(data?.detail || "Failed to delete group");
   },
+
+  /** 批量更新分组排序值 */
+  async batchUpdateTops(updates: Record<string, number>): Promise<BatchUpdateGroupTopsResult> {
+    const { status, data } = await api.post("/clients/groups/batch/update-tops", { updates });
+    if (status !== 200) throw new Error(data?.detail || "Failed to batch update group tops");
+    return data as BatchUpdateGroupTopsResult;
+  },
+};
+
+/** 公开分组 API（含 server_uuids） */
+const publicGroupApi = {
+  async list(): Promise<GroupWithServers[]> {
+    const { status, data } = await api.get("/clients/public/groups");
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch groups");
+    return data as GroupWithServers[];
+  },
 };
 
 // ── TanStack Query Hooks — 服务器 ─────────────────────────────────────────────
@@ -184,11 +202,20 @@ export function useBatchUpdateTops() {
 
 // ── TanStack Query Hooks — 分组 ───────────────────────────────────────────────
 
-/** 获取分组列表 */
+/** 获取分组列表（管理端，不含 server_uuids） */
 export function useGroups() {
   return useQuery({
     queryKey: groupKeys.lists(),
     queryFn: groupApi.list,
+  });
+}
+
+/** 获取分组列表（公开端点，含 server_uuids，已登录时返回全量） */
+export function usePublicGroups(options?: { refetchInterval?: number | false }) {
+  return useQuery({
+    queryKey: [...groupKeys.lists(), "public"] as const,
+    queryFn: publicGroupApi.list,
+    refetchInterval: options?.refetchInterval,
   });
 }
 
@@ -223,6 +250,18 @@ export function useDeleteGroup() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: groupKeys.lists() });
       qc.invalidateQueries({ queryKey: serverKeys.lists() });
+    },
+  });
+}
+
+/** 批量更新分组排序值 */
+export function useBatchUpdateGroupTops() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (updates: Record<string, number>) =>
+      groupApi.batchUpdateTops(updates),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: groupKeys.lists() });
     },
   });
 }

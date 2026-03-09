@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Server, LayoutDashboard, Bell, Users, Settings, Activity } from "lucide-react";
+import { Server, LayoutDashboard, Bell, Users, Settings, Activity, Layers } from "lucide-react";
 
 interface NavItem {
   title: string;
@@ -29,9 +29,9 @@ function SidebarNavItem({ item }: { item: NavItem }) {
   const match = useMatch({ path: item.url, end: item.end });
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={!!match}>
+      <SidebarMenuButton asChild isActive={!!match} className="h-9">
         <NavLink to={item.url} end={item.end}>
-          <item.icon className="h-4 w-4" />
+          <item.icon className="h-6 w-6" />
           <span>{item.title}</span>
         </NavLink>
       </SidebarMenuButton>
@@ -61,6 +61,12 @@ export function AdminSidebar() {
           title: t("admin.sidebar.nodes"),
           url: "/admin/nodes",
           icon: Server,
+          end: false,
+        },
+        {
+          title: t("admin.sidebar.groups"),
+          url: "/admin/groups",
+          icon: Layers,
           end: false,
         },
         {

@@ -33,7 +33,7 @@ export function DisplayHeader() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button asChild size="icon" variant="outline">
-                    <Link to="/admin">
+                      <Link to="/admin" target="_blank" rel="noopener noreferrer">
                       <Settings className="h-4 w-4" />
                     </Link>
                   </Button>

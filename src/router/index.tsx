@@ -5,6 +5,7 @@ import LoginPage from "@/pages/LoginPage";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import DashboardPage from "@/pages/admin/DashboardPage";
 import NodesPage from "@/pages/admin/nodes/NodesPage";
+import GroupsPage from "@/pages/admin/groups/GroupsPage";
 import MetricsPage from "@/pages/admin/MetricsPage";
 import AlertsPage from "@/pages/admin/AlertsPage";
 import UsersPage from "@/pages/admin/UsersPage";
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <DashboardPage /> },
           { path: "nodes", element: <NodesPage /> },
+          { path: "groups", element: <GroupsPage /> },
           { path: "metrics", element: <MetricsPage /> },
           { path: "alerts", element: <AlertsPage /> },
           { path: "users", element: <UsersPage /> },
