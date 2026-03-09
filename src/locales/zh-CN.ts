@@ -1,10 +1,10 @@
 export default {
-    theme: {
-      toggle: "切换主题",
-      light: "明亮",
-      dark: "暗黑",
-      system: "系统",
-    },
+  theme: {
+    toggle: "切换主题",
+    light: "明亮",
+    dark: "暗黑",
+    system: "系统",
+  },
   common: {
     appTitle: "Collei Monitor",
     appSubtitle: "自托管服务器监控平台",
@@ -137,7 +137,8 @@ export default {
     setup: {
       title: "启用两步验证",
       step1Title: "扫描二维码",
-      step1Desc: "使用 Google Authenticator、Authy 等验证器应用扫描下方二维码，或手动输入密钥。",
+      step1Desc:
+        "使用 Google Authenticator、Authy 等验证器应用扫描下方二维码，或手动输入密钥。",
       secret: "手动输入密钥",
       nextStep: "下一步：验证",
       step2Title: "输入验证码",
@@ -156,7 +157,8 @@ export default {
     },
     disable: {
       title: "关闭两步验证",
-      description: "确定要关闭两步验证吗？关闭后登录将不再需要验证码，安全性会降低。",
+      description:
+        "确定要关闭两步验证吗？关闭后登录将不再需要验证码，安全性会降低。",
       confirm: "确认关闭",
       cancel: "取消",
       disabling: "关闭中…",
@@ -194,6 +196,9 @@ export default {
       empty: "暂无服务器节点",
       visible: "显示",
       hidden: "已隐藏",
+      searchPlaceholder: "搜索名称…",
+      columns: "自定义列",
+      add: "添加",
       table: {
         sort: "排序",
         name: "名称",
@@ -227,7 +232,8 @@ export default {
       },
       delete: {
         title: "确认删除",
-        description: '确定要删除服务器 "{{name}}" 吗？此操作不可恢复，所有关联数据将被清除。',
+        description:
+          '确定要删除服务器 "{{name}}" 吗？此操作不可恢复，所有关联数据将被清除。',
         cancel: "取消",
         confirm: "确认删除",
       },
@@ -237,6 +243,22 @@ export default {
         empty: "暂无可用分组",
         cancel: "取消",
         save: "保存",
+      },
+      toast: {
+        sortResetting: "重新排序中…",
+        sortResetSuccess: "排序已重置",
+        sortResetFailed: "重置排序失败",
+        refreshing: "刷新中…",
+        refreshSuccess: "列表已刷新",
+        refreshFailed: "刷新失败",
+        editSaving: "保存中…",
+        editSuccess: "服务器信息已更新",
+        editFailed: "更新失败，请重试",
+        showSuccess: "已设为显示",
+        hideSuccess: "已设为隐藏",
+        visibilityFailed: "操作失败，请重试",
+        approveSuccess: "已批准服务器",
+        approveFailed: "批准失败，请重试",
       },
     },
     sidebar: {

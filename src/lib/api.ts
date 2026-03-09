@@ -3,6 +3,7 @@
  */
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+const API_TIMEOUT_MS = 15_000;
 
 export const api = {
   async request(
@@ -35,10 +36,14 @@ export const api = {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+
     const response = await fetch(url, {
       ...fetchOptions,
       headers,
-    });
+      signal: fetchOptions.signal ?? controller.signal,
+    }).finally(() => clearTimeout(timeoutId));
 
     // 处理 401 未授权：清除 token 并广播事件，由 AuthInitializer 统一处理跳转
     if (response.status === 401) {

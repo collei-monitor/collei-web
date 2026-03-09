@@ -1,10 +1,11 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
@@ -20,10 +21,19 @@ export default defineConfig(({ command }) => {
     // 开发服务器配置 - 代理 API 请求解决 CORS 问题
     server: {
       proxy: {
-        "/api": {
-          target: process.env.VITE_BACKEND_URL || "http://localhost:8000",
+        // WebSocket 代理：/api/v1/ws → ws(s)://backend/api/v1/ws（路径不重写）
+        "/api/v1/ws": {
+          target: (env.VITE_BACKEND_URL || "http://localhost:8000").replace(
+            /^http/,
+            "ws"
+          ),
           changeOrigin: true,
-          // 重写路由：/api/xxx → /api/v1/xxx
+          ws: true,
+        },
+        // HTTP 代理：/api/xxx → backend/api/v1/xxx
+        "/api": {
+          target: env.VITE_BACKEND_URL || "http://localhost:8000",
+          changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api(?!\/)/, "/api/v1"),
         },
       },

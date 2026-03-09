@@ -5,11 +5,11 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 
 export default function AdminLayout() {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="overflow-x-hidden">
       <AdminSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-w-0 overflow-x-hidden">
         <AdminHeader />
-        <main className="flex-1 overflow-auto p-4 md:p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6">
           <Outlet />
         </main>
       </SidebarInset>

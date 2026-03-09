@@ -4,7 +4,7 @@ import ServerDetailPage from "@/pages/ServerDetailPage";
 import LoginPage from "@/pages/LoginPage";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import DashboardPage from "@/pages/admin/DashboardPage";
-import NodesPage from "@/pages/admin/NodesPage";
+import NodesPage from "@/pages/admin/nodes/NodesPage";
 import MetricsPage from "@/pages/admin/MetricsPage";
 import AlertsPage from "@/pages/admin/AlertsPage";
 import UsersPage from "@/pages/admin/UsersPage";

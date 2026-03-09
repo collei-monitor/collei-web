@@ -116,10 +116,11 @@ const groupApi = {
 // ── TanStack Query Hooks — 服务器 ─────────────────────────────────────────────
 
 /** 获取服务器列表 */
-export function useServers() {
+export function useServers(options?: { refetchInterval?: number | false }) {
   return useQuery({
     queryKey: serverKeys.lists(),
     queryFn: serverApi.list,
+    refetchInterval: options?.refetchInterval,
   });
 }
 

@@ -80,7 +80,7 @@ export function ServerInfoCard({ server }: ServerInfoCardProps) {
             variant="secondary"
             className={cn(
               "shrink-0",
-              isOnline ? "bg-green-100" : "bg-gray-100",
+              isOnline ? "bg-green-100" : "bg-gray-100","dark:text-gray-300 dark:bg-gray-700"
             )}
           >
             <span
