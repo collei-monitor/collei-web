@@ -49,6 +49,12 @@ export default {
       online: "{{count}} online",
       total: "{{count}} total",
     },
+    summary: {
+      total: "Total Nodes",
+      online: "Online",
+      offline: "Offline",
+      network: "Network",
+    },
     ws: {
       connected: "Live",
       disconnected: "Disconnected",

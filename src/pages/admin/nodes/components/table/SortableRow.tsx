@@ -1,4 +1,6 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { Server } from "@/types/server";
 import { ServerApproval, ServerVisibility } from "@/types/server";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FlagIcon } from "@/components/display/FlagIcon";
-import { GripVertical, EyeOff } from "lucide-react";
+import { GripVertical, EyeOff, Copy, Check } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { SortInput } from "../SortInput";
@@ -43,10 +45,19 @@ export function SortableRow({
     isDragging,
   } = useSortable({ id: server.uuid });
 
+  const isMobile = useIsMobile();
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : undefined,
+  };
+
+  const [copiedIp, setCopiedIp] = React.useState<string | null>(null);
+
+  const handleCopyIp = (ip: string) => {
+    navigator.clipboard.writeText(ip);
+    setCopiedIp(ip);
+    setTimeout(() => setCopiedIp(null), 2000);
   };
 
   return (
@@ -106,11 +117,39 @@ export function SortableRow({
         <TableCell>
           <div className="space-y-0.5">
             {server.ipv4 && (
-              <div className="text-xs font-mono">{server.ipv4}</div>
+              <div className="flex items-center gap-1 group">
+                <span className="text-xs font-mono">{server.ipv4}</span>
+                <button
+                  type="button"
+                  onClick={() => handleCopyIp(server.ipv4!)}
+                  className={isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+                  title={t("common.copy")}
+                >
+                  {copiedIp === server.ipv4 ? (
+                    <Check className="h-3 w-3 text-green-600" />
+                  ) : (
+                    <Copy className="h-3 w-3 text-muted-foreground" />
+                  )}
+                </button>
+              </div>
             )}
             {server.ipv6 && (
-              <div className="text-xs font-mono text-muted-foreground">
-                {server.ipv6}
+              <div className="flex items-center gap-1 group">
+                <span className="text-xs font-mono text-muted-foreground">
+                  {server.ipv6}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleCopyIp(server.ipv6!)}
+                  className={isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+                  title={t("common.copy")}
+                >
+                  {copiedIp === server.ipv6 ? (
+                    <Check className="h-3 w-3 text-green-600" />
+                  ) : (
+                    <Copy className="h-3 w-3 text-muted-foreground" />
+                  )}
+                </button>
               </div>
             )}
             {!server.ipv4 && !server.ipv6 && (

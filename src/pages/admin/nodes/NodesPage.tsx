@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useServers, useUpdateServer } from "@/services/servers";
+import { useServers } from "@/services/servers";
 import type { Server } from "@/types/server";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,6 @@ import { GroupsDialog } from "./components/dialogs/GroupsDialog";
 export default function NodesPage() {
   const { t } = useTranslation();
   const { data: servers = [], isLoading, isError, refetch } = useServers({ refetchInterval: 5000 });
-  const updateServer = useUpdateServer();
 
   const [editTarget, setEditTarget] = useState<Server | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Server | null>(null);
@@ -61,20 +60,13 @@ export default function NodesPage() {
     });
   }, [refetch, t]);
 
-  const handleSortCommit = useCallback(
-    (uuid: string, top: number) => {
-      updateServer.mutate({ uuid, payload: { top } });
-    },
-    [updateServer],
-  );
-
   const sortedServers = [...servers].sort((a, b) => a.top - b.top);
   const filteredServers = searchQuery
     ? sortedServers.filter((s) =>
         s.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : sortedServers;
-  const { sensors, handleDragEnd, handleResetSort, isUpdating } =
+  const { sensors, handleDragEnd, handleResetSort, handleSortCommit, isUpdating } =
     useNodeDnd(sortedServers);
 
   return (
@@ -229,7 +221,7 @@ export default function NodesPage() {
                         key={server.uuid}
                         server={server}
                         onSortCommit={handleSortCommit}
-                        sortDisabled={updateServer.isPending}
+                        sortDisabled={isUpdating}
                         onEdit={setEditTarget}
                         onDelete={setDeleteTarget}
                         onGroups={setGroupsTarget}

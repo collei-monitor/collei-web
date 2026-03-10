@@ -47,6 +47,12 @@ export default {
       online: "在线 {{count}}",
       total: "共 {{count}}",
     },
+    summary: {
+      total: "总节点",
+      online: "在线节点",
+      offline: "离线节点",
+      network: "网络流量",
+    },
     ws: {
       connected: "实时",
       disconnected: "未连接",

@@ -9,12 +9,13 @@ import {
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useBatchUpdateTops } from "@/services/servers";
+import { useBatchUpdateTops, useUpdateServer } from "@/services/servers";
 import type { Server } from "@/types/server";
 
 export function useNodeDnd(sortedServers: Server[]) {
   const { t } = useTranslation();
   const batchUpdateTops = useBatchUpdateTops();
+  const updateServer = useUpdateServer();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -86,10 +87,18 @@ export function useNodeDnd(sortedServers: Server[]) {
     }
   }, [sortedServers, batchUpdateTops, t]);
 
+  const handleSortCommit = useCallback(
+    (uuid: string, top: number) => {
+      updateServer.mutate({ uuid, payload: { top } });
+    },
+    [updateServer],
+  );
+
   return {
     sensors,
     handleDragEnd,
     handleResetSort,
-    isUpdating: batchUpdateTops.isPending,
+    handleSortCommit,
+    isUpdating: batchUpdateTops.isPending || updateServer.isPending,
   };
 }

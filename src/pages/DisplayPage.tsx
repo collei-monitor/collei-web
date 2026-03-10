@@ -1,15 +1,28 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { LayoutGrid, List, WifiOff, Wifi } from "lucide-react";
+import {
+  LayoutGrid,
+  List,
+  WifiOff,
+  Wifi,
+  Server,
+  CheckCircle2,
+  XCircle,
+  ArrowUp,
+  ArrowDown,
+  Activity,
+} from "lucide-react";
 import { DisplayHeader } from "@/components/display/DisplayHeader";
 import { ServerCard } from "@/components/display/ServerCard";
 import { ServerTable } from "@/components/display/ServerTable";
 import { GroupFilter } from "@/components/display/GroupFilter";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useDisplayServers, usePublicGroups } from "@/services/display";
 import { cn } from "@/lib/utils";
+import { formatSpeed } from "@/lib/display-utils";
 import type { DisplayServer, PublicGroup } from "@/types/server";
 
 declare const __BUILD_TIME__: string;
@@ -20,6 +33,9 @@ export default function DisplayPage() {
   const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"online" | "offline" | null>(
+    null,
+  );
 
   const { servers, isLoading, error, wsConnected } = useDisplayServers();
   const { data: groups = [] } = usePublicGroups();
@@ -33,10 +49,14 @@ export default function DisplayPage() {
         const uuidSet = new Set(group.server_uuids);
         list = servers.filter(
           (s: DisplayServer) =>
-            uuidSet.has(s.uuid) ||
-            s.groups.some((g) => g.id === activeGroupId)
+            uuidSet.has(s.uuid) || s.groups.some((g) => g.id === activeGroupId),
         );
       }
+    }
+    if (statusFilter === "online") {
+      list = list.filter((s) => s.status === 1);
+    } else if (statusFilter === "offline") {
+      list = list.filter((s) => s.status !== 1);
     }
     return [...list].sort((a, b) => {
       const aOffline = a.status !== 1 ? 1 : 0;
@@ -44,9 +64,15 @@ export default function DisplayPage() {
       if (aOffline !== bOffline) return aOffline - bOffline;
       return a.top - b.top;
     });
-  }, [servers, activeGroupId, groups]);
+  }, [servers, activeGroupId, groups, statusFilter]);
 
   const onlineCount = servers.filter((s) => s.status === 1).length;
+  const offlineCount = servers.length - onlineCount;
+  const totalNetIn = servers.reduce((sum, s) => sum + (s.load?.net_in ?? 0), 0);
+  const totalNetOut = servers.reduce(
+    (sum, s) => sum + (s.load?.net_out ?? 0),
+    0,
+  );
 
   const formatBuildTime = (isoTime: string) => {
     try {
@@ -69,8 +95,106 @@ export default function DisplayPage() {
       <div className="min-h-screen flex flex-col bg-background">
         <DisplayHeader />
         <main className="flex-1 container mx-auto px-4 py-6 space-y-4">
-          {/* 工具栏：分组筛选 + 统计 + 视图切换 */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          {/* 汇总卡片 */}
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-24 w-full rounded-lg" />
+              ))
+            ) : (
+              <>
+                <Card
+                  className={cn(
+                    "h-24 cursor-pointer transition-colors hover:border-primary",
+                    statusFilter === null && "border-primary",
+                  )}
+                  onClick={() => setStatusFilter(null)}
+                >
+                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5">
+                      <Server className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        {t("display.summary.total")}
+                      </span>
+                    </div>
+                    <p className="text-2xl font-bold mt-1">{servers.length}</p>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={cn(
+                    "h-24 cursor-pointer transition-colors hover:border-emerald-500",
+                    statusFilter === "online" && "border-emerald-500",
+                  )}
+                  onClick={() =>
+                    setStatusFilter(statusFilter === "online" ? null : "online")
+                  }
+                >
+                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                      <span className="text-xs text-muted-foreground">
+                        {t("display.summary.online")}
+                      </span>
+                    </div>
+                    <p className="text-2xl font-bold mt-1 text-emerald-500">
+                      {onlineCount}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className={cn(
+                    "h-24 cursor-pointer transition-colors hover:border-destructive",
+                    statusFilter === "offline" && "border-destructive",
+                  )}
+                  onClick={() =>
+                    setStatusFilter(
+                      statusFilter === "offline" ? null : "offline",
+                    )
+                  }
+                >
+                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5">
+                      <XCircle className="h-3.5 w-3.5 text-rose-400" />
+                      <span className="text-xs text-muted-foreground">
+                        {t("display.summary.offline")}
+                      </span>
+                    </div>
+                    <p className="text-2xl font-bold mt-1 text-rose-400">
+                      {offlineCount}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="h-24">
+                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5">
+                      <Activity className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        {t("display.summary.network")}
+                      </span>
+                    </div>
+                    <div className="mt-1 space-y-0.5">
+                      <div className="flex items-center gap-1 text-xs font-medium">
+                        <ArrowUp className="h-3 w-3 text-orange-500 shrink-0" />
+                        <span>{formatSpeed(totalNetOut)}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs font-medium">
+                        <ArrowDown className="h-3 w-3 text-sky-500 shrink-0" />
+                        <span>{formatSpeed(totalNetIn)}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </div>
+
+          {/* 工具栏：分组筛选 + 视图切换 */}
+          {/* <div className="flex flex-col items-start sm:items-center justify-between gap-3"></div> */}
+
+          <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3 flex-wrap">
               {groups.length > 0 && (
                 <GroupFilter
@@ -79,19 +203,14 @@ export default function DisplayPage() {
                   onGroupChange={setActiveGroupId}
                 />
               )}
-              {!isLoading && (
-                <span className="text-xs text-muted-foreground">
-                  {t("display.stats.online", { count: onlineCount })} / {t("display.stats.total", { count: servers.length })}
-                </span>
-              )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3 ml-auto">
               {/* WS 连接状态 */}
               <span
                 className={cn(
                   "flex items-center gap-1 text-xs",
-                  wsConnected ? "text-emerald-500" : "text-muted-foreground"
+                  wsConnected ? "text-emerald-500" : "text-muted-foreground",
                 )}
               >
                 {wsConnected ? (
@@ -99,7 +218,9 @@ export default function DisplayPage() {
                 ) : (
                   <WifiOff className="h-3 w-3" />
                 )}
-                {wsConnected ? t("display.ws.connected") : t("display.ws.disconnected")}
+                {wsConnected
+                  ? t("display.ws.connected")
+                  : t("display.ws.disconnected")}
               </span>
 
               {/* 视图切换 */}

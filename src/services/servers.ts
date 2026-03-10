@@ -194,7 +194,25 @@ export function useBatchUpdateTops() {
   return useMutation({
     mutationFn: (updates: Record<string, number>) =>
       serverApi.batchUpdateTops(updates),
-    onSuccess: () => {
+    onMutate: async (updates) => {
+      await qc.cancelQueries({ queryKey: serverKeys.lists() });
+      const previous = qc.getQueryData<Server[]>(serverKeys.lists());
+      if (previous) {
+        qc.setQueryData<Server[]>(
+          serverKeys.lists(),
+          previous.map((s) =>
+            updates[s.uuid] !== undefined ? { ...s, top: updates[s.uuid] } : s,
+          ),
+        );
+      }
+      return { previous };
+    },
+    onError: (_err, _updates, context) => {
+      if (context?.previous) {
+        qc.setQueryData(serverKeys.lists(), context.previous);
+      }
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: serverKeys.lists() });
     },
   });
