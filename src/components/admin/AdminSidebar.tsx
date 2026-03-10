@@ -1,5 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { NavLink, useMatch } from "react-router";
+import { NavLink, useMatch, useLocation } from "react-router";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
@@ -10,14 +15,32 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
-import { Server, LayoutDashboard, Bell, Users, Settings, Activity, Layers } from "lucide-react";
+import {
+  Server,
+  LayoutDashboard,
+  Bell,
+  Users,
+  Settings,
+  Activity,
+  Layers,
+  ChevronRight,
+} from "lucide-react";
+
+interface NavSubItem {
+  title: string;
+  url: string;
+}
 
 interface NavItem {
   title: string;
   url: string;
   icon: React.ComponentType<{ className?: string }>;
   end: boolean;
+  children?: NavSubItem[];
 }
 
 interface NavGroup {
@@ -27,6 +50,44 @@ interface NavGroup {
 
 function SidebarNavItem({ item }: { item: NavItem }) {
   const match = useMatch({ path: item.url, end: item.end });
+  const location = useLocation();
+
+  if (item.children && item.children.length > 0) {
+    const isAnyChildActive = item.children.some((child) =>
+      location.pathname.startsWith(child.url),
+    );
+    return (
+      <SidebarMenuItem>
+        <Collapsible
+          defaultOpen={isAnyChildActive}
+          className="group/collapsible"
+        >
+          <CollapsibleTrigger asChild>
+            <SidebarMenuButton className="h-9">
+              <item.icon className="h-6 w-6" />
+              <span>{item.title}</span>
+              <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </SidebarMenuButton>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {item.children.map((child) => {
+                const childMatch = location.pathname.startsWith(child.url);
+                return (
+                  <SidebarMenuSubItem key={child.url}>
+                    <SidebarMenuSubButton asChild isActive={childMatch}>
+                      <NavLink to={child.url}>{child.title}</NavLink>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                );
+              })}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </Collapsible>
+      </SidebarMenuItem>
+    );
+  }
+
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={!!match} className="h-9">
@@ -80,6 +141,24 @@ export function AdminSidebar() {
           url: "/admin/alerts",
           icon: Bell,
           end: false,
+          children: [
+            {
+              title: t("admin.sidebar.alertRules"),
+              url: "/admin/alerts/rules",
+            },
+            {
+              title: t("admin.sidebar.notificationChannels"),
+              url: "/admin/alerts/channels",
+            },
+            {
+              title: t("admin.sidebar.eventCenter"),
+              url: "/admin/alerts/events",
+            },
+            {
+              title: t("admin.sidebar.alertEngine"),
+              url: "/admin/alerts/engine",
+            },
+          ],
         },
       ],
     },
@@ -110,7 +189,9 @@ export function AdminSidebar() {
             <Server className="h-4 w-4" />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-semibold text-sm">{t("common.appTitle")}</span>
+            <span className="font-semibold text-sm">
+              {t("common.appTitle")}
+            </span>
           </div>
         </div>
       </SidebarHeader>

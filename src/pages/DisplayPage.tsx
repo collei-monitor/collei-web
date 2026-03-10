@@ -110,7 +110,7 @@ export default function DisplayPage() {
                   )}
                   onClick={() => setStatusFilter(null)}
                 >
-                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                  <CardContent className="p-3 h-full flex flex-col justify-center pl-6">
                     <div className="flex items-center gap-1.5">
                       <Server className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className="text-xs text-muted-foreground">
@@ -130,7 +130,7 @@ export default function DisplayPage() {
                     setStatusFilter(statusFilter === "online" ? null : "online")
                   }
                 >
-                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                  <CardContent className="p-3 h-full flex flex-col justify-center pl-6">
                     <div className="flex items-center gap-1.5">
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                       <span className="text-xs text-muted-foreground">
@@ -154,7 +154,7 @@ export default function DisplayPage() {
                     )
                   }
                 >
-                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                  <CardContent className="p-3 h-full flex flex-col justify-center pl-6">
                     <div className="flex items-center gap-1.5">
                       <XCircle className="h-3.5 w-3.5 text-rose-400" />
                       <span className="text-xs text-muted-foreground">
@@ -168,7 +168,7 @@ export default function DisplayPage() {
                 </Card>
 
                 <Card className="h-24">
-                  <CardContent className="p-3 h-full flex flex-col justify-center">
+                  <CardContent className="p-3 h-full flex flex-col justify-center pl-6">
                     <div className="flex items-center gap-1.5">
                       <Activity className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className="text-xs text-muted-foreground">

@@ -7,7 +7,10 @@ import DashboardPage from "@/pages/admin/DashboardPage";
 import NodesPage from "@/pages/admin/nodes/NodesPage";
 import GroupsPage from "@/pages/admin/groups/GroupsPage";
 import MetricsPage from "@/pages/admin/MetricsPage";
-import AlertsPage from "@/pages/admin/AlertsPage";
+import AlertRulesPage from "@/pages/admin/alerts/AlertRulesPage";
+import NotificationChannelsPage from "@/pages/admin/alerts/NotificationChannelsPage";
+import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
+import AlertEnginePage from "@/pages/admin/alerts/AlertEnginePage";
 import UsersPage from "@/pages/admin/UsersPage";
 import SettingsPage from "@/pages/admin/SettingsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -45,7 +48,10 @@ const router = createBrowserRouter([
           { path: "nodes", element: <NodesPage /> },
           { path: "groups", element: <GroupsPage /> },
           { path: "metrics", element: <MetricsPage /> },
-          { path: "alerts", element: <AlertsPage /> },
+          { path: "alerts/rules", element: <AlertRulesPage /> },
+          { path: "alerts/channels", element: <NotificationChannelsPage /> },
+          { path: "alerts/events", element: <EventCenterPage /> },
+          { path: "alerts/engine", element: <AlertEnginePage /> },
           { path: "users", element: <UsersPage /> },
           { path: "settings", element: <SettingsPage /> },
         ],
