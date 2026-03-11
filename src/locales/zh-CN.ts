@@ -551,6 +551,7 @@ export default {
           title: "通知渠道",
           add: "新建渠道",
           empty: "暂无渠道",
+          test: "发送测试通知",
           table: {
             name: "渠道名称",
             provider: "提供商",
@@ -595,6 +596,9 @@ export default {
             deleting: "删除中…",
             deleteSuccess: "渠道已删除",
             deleteFailed: "删除失败，请重试",
+            testing: "发送测试通知中…",
+            testSuccess: "测试通知已发送",
+            testFailed: "测试通知发送失败",
           },
         },
         toast: {

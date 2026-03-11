@@ -128,6 +128,12 @@ const channelApi = {
     if (status !== 200) throw new Error(data?.detail || "Failed to delete channel");
     return data as MessageResponse;
   },
+
+  async test(id: number): Promise<MessageResponse> {
+    const { status, data } = await api.post(`/notifications/channels/${id}/test`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to test channel");
+    return data as MessageResponse;
+  },
 };
 
 // ── Rule API ──────────────────────────────────────────────────────────────────
@@ -188,10 +194,11 @@ const mappingApi = {
     ruleId: number,
     targetType: string,
     targetId: string,
+    channelId: number,
   ): Promise<MessageResponse> {
     const { status, data } = await api.delete(
       `/notifications/rules/${ruleId}/mappings`,
-      { target_type: targetType, target_id: targetId },
+      { target_type: targetType, target_id: targetId, channel_id: channelId },
     );
     if (status !== 200) throw new Error(data?.detail || "Failed to delete mapping");
     return data as MessageResponse;
@@ -331,6 +338,12 @@ export function useDeleteChannel() {
   });
 }
 
+export function useTestChannel() {
+  return useMutation({
+    mutationFn: (id: number) => channelApi.test(id),
+  });
+}
+
 // ── TanStack Query Hooks — Rule ───────────────────────────────────────────────
 
 export function useRules() {
@@ -405,11 +418,13 @@ export function useDeleteMapping() {
       ruleId,
       targetType,
       targetId,
+      channelId,
     }: {
       ruleId: number;
       targetType: string;
       targetId: string;
-    }) => mappingApi.remove(ruleId, targetType, targetId),
+      channelId: number;
+    }) => mappingApi.remove(ruleId, targetType, targetId, channelId),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ruleKeys.mappings(variables.ruleId) });
     },

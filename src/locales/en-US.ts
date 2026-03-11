@@ -557,6 +557,7 @@ export default {
           title: "Notification Channels",
           add: "New Channel",
           empty: "No channels found",
+          test: "Send Test Notification",
           table: {
             name: "Channel Name",
             provider: "Provider",
@@ -601,6 +602,9 @@ export default {
             deleting: "Deleting\u2026",
             deleteSuccess: "Channel deleted",
             deleteFailed: "Delete failed, please try again",
+            testing: "Sending test notification\u2026",
+            testSuccess: "Test notification sent",
+            testFailed: "Test notification failed",
           },
         },
         toast: {

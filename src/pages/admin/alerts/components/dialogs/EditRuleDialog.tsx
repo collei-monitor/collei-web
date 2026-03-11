@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/dialog";
 
 const METRICS: AlertMetric[] = [
-  "cpu", "ram", "swap", "disk", "load",
-  "net_in", "net_out", "tcp", "udp", "process", "offline",
+  "offline", "cpu", "ram", "swap", "disk", "load",
+  "net_in", "net_out", "tcp", "udp", "process",
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];
@@ -68,11 +68,14 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
     e.preventDefault();
     if (!rule) return;
 
+    const isOffline = metric === "offline";
     const payload: UpdateRulePayload = {};
     if (name !== rule.name) payload.name = name;
     if (metric !== rule.metric) payload.metric = metric;
-    if (condition !== rule.condition) payload.condition = condition;
-    if (Number(threshold) !== rule.threshold) payload.threshold = Number(threshold);
+    const newCondition = isOffline ? "==" : condition;
+    if (newCondition !== rule.condition) payload.condition = newCondition;
+    const newThreshold = isOffline ? 1 : Number(threshold);
+    if (newThreshold !== rule.threshold) payload.threshold = newThreshold;
     if (Number(duration) !== rule.duration) payload.duration = Number(duration);
     const newEnabled = enabled ? 1 : 0;
     if (newEnabled !== rule.enabled) payload.enabled = newEnabled;
@@ -98,6 +101,8 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
       },
     );
   };
+
+  const isOffline = metric === "offline";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -132,34 +137,38 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>{t("admin.alerts.rules.edit.condition")}</Label>
-              <Select value={condition} onValueChange={setCondition}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CONDITIONS.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {!isOffline && (
+              <div className="space-y-2">
+                <Label>{t("admin.alerts.rules.edit.condition")}</Label>
+                <Select value={condition} onValueChange={setCondition}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CONDITIONS.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>{t("admin.alerts.rules.edit.threshold")}</Label>
-              <Input
-                type="number"
-                step="any"
-                value={threshold}
-                onChange={(e) => setThreshold(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
+            {!isOffline && (
+              <div className="space-y-2">
+                <Label>{t("admin.alerts.rules.edit.threshold")}</Label>
+                <Input
+                  type="number"
+                  step="any"
+                  value={threshold}
+                  onChange={(e) => setThreshold(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+            <div className={isOffline ? "col-span-2" : "space-y-2"}>
               <Label>{t("admin.alerts.rules.edit.duration")}</Label>
               <Input
                 type="number"

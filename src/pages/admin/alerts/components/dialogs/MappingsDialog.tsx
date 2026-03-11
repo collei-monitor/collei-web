@@ -82,10 +82,10 @@ export function MappingsDialog({ rule, open, onOpenChange }: Props) {
     );
   };
 
-  const handleDelete = (tType: string, tId: string) => {
+  const handleDelete = (tType: string, tId: string, cId: number) => {
     if (!rule) return;
     deleteMapping.mutate(
-      { ruleId: rule.id, targetType: tType, targetId: tId },
+      { ruleId: rule.id, targetType: tType, targetId: tId, channelId: cId },
       {
         onSuccess: () => {
           toast.success(t("admin.alerts.rules.toast.mappingDeleted"));
@@ -199,7 +199,7 @@ export function MappingsDialog({ rule, open, onOpenChange }: Props) {
                         size="icon"
                         variant="ghost"
                         className="h-7 w-7 text-destructive"
-                        onClick={() => handleDelete(m.target_type, m.target_id)}
+                        onClick={() => handleDelete(m.target_type, m.target_id, m.channel_id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>

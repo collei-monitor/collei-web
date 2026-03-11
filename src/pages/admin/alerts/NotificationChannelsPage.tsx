@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useProviders, useChannels } from "@/services/notifications";
+import { useProviders, useChannels, useTestChannel } from "@/services/notifications";
 import type { ProviderRead, AlertChannelRead } from "@/types/notification";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
+import { RefreshCw, Plus, Pencil, Trash2, Send } from "lucide-react";
 import { CreateProviderDialog } from "./components/dialogs/CreateProviderDialog";
 import { EditProviderDialog } from "./components/dialogs/EditProviderDialog";
 import { DeleteProviderDialog } from "./components/dialogs/DeleteProviderDialog";
@@ -53,6 +53,26 @@ export default function NotificationChannelsPage() {
   const [createChannelOpen, setCreateChannelOpen] = useState(false);
   const [editChannel, setEditChannel] = useState<AlertChannelRead | null>(null);
   const [deleteChannel, setDeleteChannel] = useState<AlertChannelRead | null>(null);
+  const [testingChannelId, setTestingChannelId] = useState<number | null>(null);
+
+  const { mutate: testChannel, isPending: isTesting } = useTestChannel();
+
+  const handleTestChannel = useCallback((ch: AlertChannelRead) => {
+    setTestingChannelId(ch.id);
+    toast.promise(
+      new Promise<void>((resolve, reject) => {
+        testChannel(ch.id, {
+          onSuccess: () => { setTestingChannelId(null); resolve(); },
+          onError: (err) => { setTestingChannelId(null); reject(err); },
+        });
+      }),
+      {
+        loading: t("admin.alerts.channels.channels.toast.testing"),
+        success: t("admin.alerts.channels.channels.toast.testSuccess"),
+        error: (err) => err?.message || t("admin.alerts.channels.channels.toast.testFailed"),
+      },
+    );
+  }, [testChannel, t]);
 
   const handleRefresh = useCallback(() => {
     toast.promise(Promise.all([refetchProviders(), refetchChannels()]), {
@@ -230,6 +250,24 @@ export default function NotificationChannelsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => handleTestChannel(ch)}
+                              disabled={isTesting}
+                            >
+                              {testingChannelId === ch.id ? (
+                                <RefreshCw className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("admin.alerts.channels.channels.test")}</TooltipContent>
+                        </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button

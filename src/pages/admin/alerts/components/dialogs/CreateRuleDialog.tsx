@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/dialog";
 
 const METRICS: AlertMetric[] = [
-  "cpu", "ram", "swap", "disk", "load",
-  "net_in", "net_out", "tcp", "udp", "process", "offline",
+  "offline", "cpu", "ram", "swap", "disk", "load",
+  "net_in", "net_out", "tcp", "udp", "process",
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];
@@ -50,11 +50,12 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const isOffline = form.metric === "offline";
     const payload: CreateRulePayload = {
       name: form.name,
       metric: form.metric,
-      condition: form.condition,
-      threshold: Number(form.threshold),
+      condition: isOffline ? "==" : form.condition,
+      threshold: isOffline ? 1 : Number(form.threshold),
       duration: form.duration ? Number(form.duration) : undefined,
       enabled: form.enabled ? 1 : 0,
       notify_recovery: form.notify_recovery ? 1 : 0,
@@ -80,8 +81,9 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
     onOpenChange(v);
   };
 
+  const isOffline = form.metric === "offline";
   const canSubmit =
-    form.name.trim() && form.metric && form.condition && form.threshold !== "";
+    form.name.trim() && form.metric && (isOffline || (form.condition && form.threshold !== ""));
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -120,38 +122,42 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>{t("admin.alerts.rules.create.condition")}</Label>
-              <Select
-                value={form.condition}
-                onValueChange={(v) => setForm((p) => ({ ...p, condition: v }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("admin.alerts.rules.create.conditionPlaceholder")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {CONDITIONS.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {!isOffline && (
+              <div className="space-y-2">
+                <Label>{t("admin.alerts.rules.create.condition")}</Label>
+                <Select
+                  value={form.condition}
+                  onValueChange={(v) => setForm((p) => ({ ...p, condition: v }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("admin.alerts.rules.create.conditionPlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CONDITIONS.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>{t("admin.alerts.rules.create.threshold")}</Label>
-              <Input
-                type="number"
-                step="any"
-                value={form.threshold}
-                onChange={(e) => setForm((p) => ({ ...p, threshold: e.target.value }))}
-                placeholder={t("admin.alerts.rules.create.thresholdPlaceholder")}
-                required
-              />
-            </div>
-            <div className="space-y-2">
+            {!isOffline && (
+              <div className="space-y-2">
+                <Label>{t("admin.alerts.rules.create.threshold")}</Label>
+                <Input
+                  type="number"
+                  step="any"
+                  value={form.threshold}
+                  onChange={(e) => setForm((p) => ({ ...p, threshold: e.target.value }))}
+                  placeholder={t("admin.alerts.rules.create.thresholdPlaceholder")}
+                  required
+                />
+              </div>
+            )}
+            <div className={isOffline ? "col-span-2" : "space-y-2"}>
               <Label>{t("admin.alerts.rules.create.duration")}</Label>
               <Input
                 type="number"
