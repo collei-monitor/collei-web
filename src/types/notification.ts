@@ -72,6 +72,7 @@ export interface AlertRuleRead {
   threshold: number;
   duration: number;
   enabled: number;
+  notify_recovery: number;
   created_at: number | null;
 }
 
@@ -82,6 +83,7 @@ export interface CreateRulePayload {
   threshold: number;
   duration?: number;
   enabled?: number;
+  notify_recovery?: number;
 }
 
 export interface UpdateRulePayload {
@@ -91,6 +93,7 @@ export interface UpdateRulePayload {
   threshold?: number | null;
   duration?: number | null;
   enabled?: number | null;
+  notify_recovery?: number | null;
 }
 
 // ── 告警规则映射 ──────────────────────────────────────────────────────────────

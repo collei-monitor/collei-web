@@ -45,6 +45,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
   const [threshold, setThreshold] = useState<string>(String(rule?.threshold ?? ""));
   const [duration, setDuration] = useState<string>(String(rule?.duration ?? ""));
   const [enabled, setEnabled] = useState(rule?.enabled === 1);
+  const [notifyRecovery, setNotifyRecovery] = useState(rule?.notify_recovery === 1);
 
   const [prevRule, setPrevRule] = useState<AlertRuleRead | null>(null);
   const [prevOpen, setPrevOpen] = useState(false);
@@ -59,6 +60,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
       setThreshold(String(rule.threshold));
       setDuration(String(rule.duration));
       setEnabled(rule.enabled === 1);
+      setNotifyRecovery(rule.notify_recovery === 1);
     }
   }
 
@@ -74,6 +76,8 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
     if (Number(duration) !== rule.duration) payload.duration = Number(duration);
     const newEnabled = enabled ? 1 : 0;
     if (newEnabled !== rule.enabled) payload.enabled = newEnabled;
+    const newNotifyRecovery = notifyRecovery ? 1 : 0;
+    if (newNotifyRecovery !== rule.notify_recovery) payload.notify_recovery = newNotifyRecovery;
 
     if (Object.keys(payload).length === 0) {
       toast.info(t("admin.alerts.rules.toast.noChanges"));
@@ -174,6 +178,16 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               className="h-4 w-4 rounded border-input"
             />
             <Label htmlFor="edit-rule-enabled">{t("admin.alerts.rules.edit.enabled")}</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="edit-rule-notify-recovery"
+              checked={notifyRecovery}
+              onChange={(e) => setNotifyRecovery(e.target.checked)}
+              className="h-4 w-4 rounded border-input"
+            />
+            <Label htmlFor="edit-rule-notify-recovery">{t("admin.alerts.rules.edit.notifyRecovery")}</Label>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

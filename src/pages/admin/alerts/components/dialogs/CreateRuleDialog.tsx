@@ -45,6 +45,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
     threshold: "",
     duration: "",
     enabled: true,
+    notify_recovery: true,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -56,6 +57,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
       threshold: Number(form.threshold),
       duration: form.duration ? Number(form.duration) : undefined,
       enabled: form.enabled ? 1 : 0,
+      notify_recovery: form.notify_recovery ? 1 : 0,
     };
     const toastId = toast.loading(t("admin.alerts.rules.toast.creating"));
     createRule.mutate(payload, {
@@ -71,7 +73,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
   };
 
   const resetForm = () =>
-    setForm({ name: "", metric: "", condition: "", threshold: "", duration: "", enabled: true });
+    setForm({ name: "", metric: "", condition: "", threshold: "", duration: "", enabled: true, notify_recovery: true });
 
   const handleOpenChange = (v: boolean) => {
     if (!v) resetForm();
@@ -169,6 +171,16 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
               className="h-4 w-4 rounded border-input"
             />
             <Label htmlFor="create-rule-enabled">{t("admin.alerts.rules.create.enabled")}</Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="create-rule-notify-recovery"
+              checked={form.notify_recovery}
+              onChange={(e) => setForm((p) => ({ ...p, notify_recovery: e.target.checked }))}
+              className="h-4 w-4 rounded border-input"
+            />
+            <Label htmlFor="create-rule-notify-recovery">{t("admin.alerts.rules.create.notifyRecovery")}</Label>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>

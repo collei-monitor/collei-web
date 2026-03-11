@@ -229,7 +229,7 @@ export default function AlertEnginePage() {
                   <TableRow key={`${s.server_uuid}-${s.rule_id}-${i}`}>
                     <TableCell>
                       <div className="text-sm font-medium">{s.server_name ?? "-"}</div>
-                      <div className="text-xs text-muted-foreground font-mono truncate max-w-[180px]">
+                      <div className="text-xs text-muted-foreground font-mono truncate max-w-45">
                         {s.server_uuid}
                       </div>
                     </TableCell>
