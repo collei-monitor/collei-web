@@ -26,11 +26,13 @@ import {
   Pencil,
   Trash2,
   Link,
+  Bell,
 } from "lucide-react";
 import { CreateRuleDialog } from "./components/dialogs/CreateRuleDialog";
 import { EditRuleDialog } from "./components/dialogs/EditRuleDialog";
 import { DeleteRuleDialog } from "./components/dialogs/DeleteRuleDialog";
 import { MappingsDialog } from "./components/dialogs/MappingsDialog";
+import { ChannelBindingDialog } from "./components/dialogs/ChannelBindingDialog";
 
 export default function AlertRulesPage() {
   const { t } = useTranslation();
@@ -48,6 +50,7 @@ export default function AlertRulesPage() {
   const [editRule, setEditRule] = useState<AlertRuleRead | null>(null);
   const [deleteRule, setDeleteRule] = useState<AlertRuleRead | null>(null);
   const [mappingsRule, setMappingsRule] = useState<AlertRuleRead | null>(null);
+  const [channelsRule, setChannelsRule] = useState<AlertRuleRead | null>(null);
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
@@ -192,6 +195,19 @@ export default function AlertRulesPage() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setChannelsRule(rule)}
+                          >
+                            <Bell className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t("admin.alerts.rules.table.channels")}</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             className="h-8 w-8 text-destructive hover:text-destructive"
                             onClick={() => setDeleteRule(rule)}
                           >
@@ -225,6 +241,11 @@ export default function AlertRulesPage() {
         rule={mappingsRule}
         open={!!mappingsRule}
         onOpenChange={(o) => !o && setMappingsRule(null)}
+      />
+      <ChannelBindingDialog
+        rule={channelsRule}
+        open={!!channelsRule}
+        onOpenChange={(o) => !o && setChannelsRule(null)}
       />
     </div>
   );

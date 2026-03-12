@@ -100,16 +100,30 @@ export interface UpdateRulePayload {
 
 export type TargetType = "server" | "group" | "global";
 
-export interface AlertRuleMappingRead {
+// ── 规则目标绑定 ──────────────────────────────────────────────────────────────
+
+export interface RuleTargetRead {
   rule_id: number;
   target_type: string;
   target_id: string;
-  channel_id: number;
+  is_exclude: number;
 }
 
-export interface CreateMappingPayload {
+export interface RuleTargetItem {
   target_type: string;
   target_id: string;
+  is_exclude?: number;
+}
+
+export interface DeleteRuleTargetItem {
+  target_type: string;
+  target_id: string;
+}
+
+// ── 规则渠道绑定 ──────────────────────────────────────────────────────────────
+
+export interface RuleChannelBindingRead {
+  rule_id: number;
   channel_id: number;
 }
 

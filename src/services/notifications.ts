@@ -16,8 +16,10 @@ import type {
   AlertRuleRead,
   CreateRulePayload,
   UpdateRulePayload,
-  AlertRuleMappingRead,
-  CreateMappingPayload,
+  RuleTargetRead,
+  RuleTargetItem,
+  DeleteRuleTargetItem,
+  RuleChannelBindingRead,
   AlertHistoryRead,
   AlertHistoryParams,
   AlertEngineStatus,
@@ -43,7 +45,8 @@ export const ruleKeys = {
   all: ["rules"] as const,
   lists: () => [...ruleKeys.all, "list"] as const,
   detail: (id: number) => [...ruleKeys.all, "detail", id] as const,
-  mappings: (id: number) => [...ruleKeys.all, "mappings", id] as const,
+  targets: (id: number) => [...ruleKeys.all, "targets", id] as const,
+  channels: (id: number) => [...ruleKeys.all, "channels", id] as const,
 };
 
 export const historyKeys = {
@@ -171,45 +174,54 @@ const ruleApi = {
   },
 };
 
-// ── Mapping API ───────────────────────────────────────────────────────────────
+// ── Target Binding API ───────────────────────────────────────────────────────
 
-const mappingApi = {
-  async list(ruleId: number): Promise<AlertRuleMappingRead[]> {
-    const { status, data } = await api.get(`/notifications/rules/${ruleId}/mappings`);
-    if (status !== 200) throw new Error(data?.detail || "Failed to fetch mappings");
-    return data as AlertRuleMappingRead[];
+const targetApi = {
+  async list(ruleId: number): Promise<RuleTargetRead[]> {
+    const { status, data } = await api.get(`/notifications/rules/${ruleId}/targets`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch targets");
+    return data as RuleTargetRead[];
   },
 
-  async create(ruleId: number, payload: CreateMappingPayload): Promise<AlertRuleMappingRead> {
+  async create(ruleId: number, targets: RuleTargetItem[]): Promise<RuleTargetRead[]> {
     const { status, data } = await api.post(
-      `/notifications/rules/${ruleId}/mappings`,
-      payload,
+      `/notifications/rules/${ruleId}/targets`,
+      { targets },
     );
     if (status !== 201 && status !== 200)
-      throw new Error(data?.detail || "Failed to create mapping");
-    return data as AlertRuleMappingRead;
+      throw new Error(data?.detail || "Failed to add targets");
+    return data as RuleTargetRead[];
   },
 
-  async remove(
-    ruleId: number,
-    targetType: string,
-    targetId: string,
-    channelId: number,
-  ): Promise<MessageResponse> {
-    const { status, data } = await api.delete(
-      `/notifications/rules/${ruleId}/mappings`,
-      { target_type: targetType, target_id: targetId, channel_id: channelId },
+  async remove(ruleId: number, targets: DeleteRuleTargetItem[]): Promise<MessageResponse> {
+    const { status, data } = await api.request(
+      `/notifications/rules/${ruleId}/targets`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ targets }),
+      },
     );
-    if (status !== 200) throw new Error(data?.detail || "Failed to delete mapping");
+    if (status !== 200) throw new Error(data?.detail || "Failed to delete targets");
     return data as MessageResponse;
   },
+};
 
-  async removeAll(ruleId: number): Promise<MessageResponse> {
-    const { status, data } = await api.delete(
-      `/notifications/rules/${ruleId}/mappings/all`,
+// ── Rule Channel Binding API ─────────────────────────────────────────────────
+
+const ruleChannelApi = {
+  async list(ruleId: number): Promise<RuleChannelBindingRead[]> {
+    const { status, data } = await api.get(`/notifications/rules/${ruleId}/channels`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch channel bindings");
+    return data as RuleChannelBindingRead[];
+  },
+
+  async replace(ruleId: number, channelIds: number[]): Promise<RuleChannelBindingRead[]> {
+    const { status, data } = await api.put(
+      `/notifications/rules/${ruleId}/channels`,
+      { channel_ids: channelIds },
     );
-    if (status !== 200) throw new Error(data?.detail || "Failed to delete mappings");
-    return data as MessageResponse;
+    if (status !== 200) throw new Error(data?.detail || "Failed to update channel bindings");
+    return data as RuleChannelBindingRead[];
   },
 };
 
@@ -385,58 +397,70 @@ export function useDeleteRule() {
   });
 }
 
-// ── TanStack Query Hooks — Mapping ────────────────────────────────────────────
+// ── TanStack Query Hooks — Rule Targets ───────────────────────────────────────
 
-export function useRuleMappings(ruleId: number) {
+export function useRuleTargets(ruleId: number) {
   return useQuery({
-    queryKey: ruleKeys.mappings(ruleId),
-    queryFn: () => mappingApi.list(ruleId),
+    queryKey: ruleKeys.targets(ruleId),
+    queryFn: () => targetApi.list(ruleId),
     enabled: ruleId > 0,
   });
 }
 
-export function useCreateMapping() {
+export function useCreateRuleTargets() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({
       ruleId,
-      payload,
+      targets,
     }: {
       ruleId: number;
-      payload: CreateMappingPayload;
-    }) => mappingApi.create(ruleId, payload),
+      targets: RuleTargetItem[];
+    }) => targetApi.create(ruleId, targets),
     onSuccess: (_data, variables) => {
-      qc.invalidateQueries({ queryKey: ruleKeys.mappings(variables.ruleId) });
+      qc.invalidateQueries({ queryKey: ruleKeys.targets(variables.ruleId) });
     },
   });
 }
 
-export function useDeleteMapping() {
+export function useDeleteRuleTargets() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({
       ruleId,
-      targetType,
-      targetId,
-      channelId,
+      targets,
     }: {
       ruleId: number;
-      targetType: string;
-      targetId: string;
-      channelId: number;
-    }) => mappingApi.remove(ruleId, targetType, targetId, channelId),
+      targets: DeleteRuleTargetItem[];
+    }) => targetApi.remove(ruleId, targets),
     onSuccess: (_data, variables) => {
-      qc.invalidateQueries({ queryKey: ruleKeys.mappings(variables.ruleId) });
+      qc.invalidateQueries({ queryKey: ruleKeys.targets(variables.ruleId) });
     },
   });
 }
 
-export function useDeleteAllMappings() {
+// ── TanStack Query Hooks — Rule Channels ──────────────────────────────────────
+
+export function useRuleChannelBindings(ruleId: number) {
+  return useQuery({
+    queryKey: ruleKeys.channels(ruleId),
+    queryFn: () => ruleChannelApi.list(ruleId),
+    enabled: ruleId > 0,
+  });
+}
+
+export function useUpdateRuleChannels() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (ruleId: number) => mappingApi.removeAll(ruleId),
-    onSuccess: (_data, ruleId) => {
-      qc.invalidateQueries({ queryKey: ruleKeys.mappings(ruleId) });
+    mutationFn: ({
+      ruleId,
+      channelIds,
+    }: {
+      ruleId: number;
+      channelIds: number[];
+    }) => ruleChannelApi.replace(ruleId, channelIds),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ruleKeys.channels(variables.ruleId) });
     },
   });
 }
