@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   MoreHorizontal,
-  Pencil,
   Trash2,
   ShieldCheck,
   Eye,
@@ -23,12 +22,10 @@ import {
 
 export function ServerActions({
   server,
-  onEdit,
   onDelete,
   onGroups,
 }: {
   server: Server;
-  onEdit: (s: Server) => void;
   onDelete: (s: Server) => void;
   onGroups: (s: Server) => void;
 }) {
@@ -62,10 +59,6 @@ export function ServerActions({
             {t("admin.nodes.actions.approve")}
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem onClick={() => onEdit(server)}>
-          <Pencil className="mr-2 h-4 w-4" />
-          {t("admin.nodes.actions.edit")}
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onGroups(server)}>
           <Tags className="mr-2 h-4 w-4" />
           {t("admin.nodes.actions.groups")}

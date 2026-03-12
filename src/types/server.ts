@@ -42,18 +42,30 @@ export interface Server {
   uuid: string;
   name: string;
   cpu_name: string | null;
+  virtualization: string | null;
   arch: string | null;
+  cpu_cores: number | null;
   os: string | null;
-  region: string | null;
+  kernel_version: string | null;
   ipv4: string | null;
   ipv6: string | null;
+  region: string | null;
+  mem_total: number | null;
+  swap_total: number | null;
+  disk_total: number | null;
   version: string | null;
+  remark: string | null;
   top: number;
   hidden: number;
   is_approved: number;
-  created_at: number;
+  enable_statistics_mode: number;
+  created_at: number | null;
   status: number;
   last_online: number | null;
+  boot_time: number | null;
+  current_run_id: string | null;
+  total_flow_out: number | null;
+  total_flow_in: number | null;
   groups: Group[];
 }
 

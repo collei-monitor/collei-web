@@ -11,9 +11,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FlagIcon } from "@/components/display/FlagIcon";
-import { GripVertical, EyeOff, Copy, Check } from "lucide-react";
+import { GripVertical, EyeOff, Copy, Check, Pencil } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Button } from "@/components/ui/button";
 import { SortInput } from "../SortInput";
 import { StatusBadge } from "../StatusBadge";
 import { ServerActions } from "./ServerActions";
@@ -25,6 +26,7 @@ export function SortableRow({
   onEdit,
   onDelete,
   onGroups,
+  onDetail,
   visibleColumns,
 }: {
   server: Server;
@@ -33,6 +35,7 @@ export function SortableRow({
   onEdit: (s: Server) => void;
   onDelete: (s: Server) => void;
   onGroups: (s: Server) => void;
+  onDetail: (s: Server) => void;
   visibleColumns: { ip: boolean; groups: boolean; status: boolean };
 }) {
   const { t } = useTranslation();
@@ -95,7 +98,13 @@ export function SortableRow({
               <FlagIcon region={server.region} size="md" />
             </span>
           )}
-          <span>{server.name}</span>
+          <button
+            type="button"
+            className="hover:underline cursor-pointer text-left"
+            onClick={() => onDetail(server)}
+          >
+            {server.name}
+          </button>
           {server.hidden === ServerVisibility.HIDDEN && (
             <Tooltip>
               <TooltipTrigger>
@@ -185,12 +194,21 @@ export function SortableRow({
 
       {/* 操作 */}
       <TableCell>
-        <ServerActions
-          server={server}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onGroups={onGroups}
-        />
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onEdit(server)}
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <ServerActions
+            server={server}
+            onDelete={onDelete}
+            onGroups={onGroups}
+          />
+        </div>
       </TableCell>
     </TableRow>
   );

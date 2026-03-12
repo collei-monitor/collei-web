@@ -37,6 +37,7 @@ import { TableSkeleton } from "./components/table/TableSkeleton";
 import { EditServerDialog } from "./components/dialogs/EditServerDialog";
 import { DeleteServerDialog } from "./components/dialogs/DeleteServerDialog";
 import { GroupsDialog } from "./components/dialogs/GroupsDialog";
+import { ServerDetailDrawer } from "./components/ServerDetailDrawer";
 
 export default function NodesPage() {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ export default function NodesPage() {
   const [editTarget, setEditTarget] = useState<Server | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Server | null>(null);
   const [groupsTarget, setGroupsTarget] = useState<Server | null>(null);
+  const [detailTarget, setDetailTarget] = useState<Server | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleColumns, setVisibleColumns] = useState({
     ip: true,
@@ -189,7 +191,7 @@ export default function NodesPage() {
                 {visibleColumns.status && (
                   <TableHead>{t("admin.nodes.table.status")}</TableHead>
                 )}
-                <TableHead className="w-12" />
+                <TableHead className="w-24" />
               </TableRow>
             </TableHeader>
 
@@ -225,6 +227,7 @@ export default function NodesPage() {
                         onEdit={setEditTarget}
                         onDelete={setDeleteTarget}
                         onGroups={setGroupsTarget}
+                        onDetail={setDetailTarget}
                         visibleColumns={visibleColumns}
                       />
                     ))}
@@ -253,6 +256,11 @@ export default function NodesPage() {
         server={groupsTarget}
         open={!!groupsTarget}
         onOpenChange={(v) => !v && setGroupsTarget(null)}
+      />
+      <ServerDetailDrawer
+        server={detailTarget}
+        open={!!detailTarget}
+        onOpenChange={(v) => !v && setDetailTarget(null)}
       />
     </div>
   );

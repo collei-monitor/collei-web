@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -100,23 +107,25 @@ export function EditServerDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-hidden">
-                {t("admin.nodes.edit.visibility")}
-              </Label>
-              <select
-                id="edit-hidden"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                value={form.hidden ?? 0}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    hidden: parseInt(e.target.value, 10),
-                  }))
+              <Label>{t("admin.nodes.edit.visibility")}</Label>
+              <Select
+                value={String(form.hidden ?? 0)}
+                onValueChange={(v) =>
+                  setForm((p) => ({ ...p, hidden: parseInt(v, 10) }))
                 }
               >
-                <option value={0}>{t("admin.nodes.visible")}</option>
-                <option value={1}>{t("admin.nodes.hidden")}</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">
+                    {t("admin.nodes.visible")}
+                  </SelectItem>
+                  <SelectItem value="1">
+                    {t("admin.nodes.hidden")}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
