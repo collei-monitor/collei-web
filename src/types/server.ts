@@ -115,9 +115,34 @@ export interface ServerLoad {
   process: number;
 }
 
-/** WebSocket 推送的服务器快照 */
-export interface ServerSnapshot {
+// ── WebSocket 新消息格式 ───────────────────────────────────────────────────────
+
+/** WS nodes 消息中的服务器基础信息 */
+export interface WsNodeServer {
   uuid: string;
+  name: string;
+  cpu_name: string | null;
+  arch: string | null;
+  os: string | null;
+  region: string | null;
+  top: number;
+  status: number;
+  last_online: number | null;
+  boot_time: number | null;
+  groups: Group[];
+}
+
+/** WS status 消息中单台服务器的状态对象 */
+export interface WsServerStatusInfo {
+  status: number;
+  last_online: number;
+  boot_time: number | null;
+  total_flow_out: number;
+  total_flow_in: number;
+}
+
+/** WS status 消息中单台服务器的完整快照 */
+export interface WsStatusServer {
   name: string;
   top: number;
   cpu_name: string | null;
@@ -129,20 +154,36 @@ export interface ServerSnapshot {
   swap_total: number;
   disk_total: number;
   virtualization: string | null;
-  status: number;
-  last_online: number;
-  boot_time: number | null;
+  enable_statistics_mode: number;
+  status: WsServerStatusInfo;
   load: ServerLoad;
 }
 
-/** WebSocket 消息 */
-export interface WsMessage {
-  type: "snapshot";
+/** WS nodes 消息（首次推送或节点变化时） */
+export interface WsNodesMessage {
+  type: "nodes";
   timestamp: number;
-  servers: ServerSnapshot[];
+  servers: WsNodeServer[];
+  groups: PublicGroup[];
 }
 
-/** 公开分组 (GET /clients/public/groups) */
+/** WS status 消息（定时推送快照） */
+export interface WsStatusMessage {
+  type: "status";
+  timestamp: number;
+  servers: Record<string, WsStatusServer>;
+}
+
+/** WS pong 消息（心跳响应） */
+export interface WsPongMessage {
+  type: "pong";
+  timestamp: number;
+}
+
+/** WebSocket 消息联合类型 */
+export type WsMessage = WsNodesMessage | WsStatusMessage | WsPongMessage;
+
+/** 公开分组 */
 export interface PublicGroup {
   id: string;
   name: string;
@@ -169,6 +210,30 @@ export interface DisplayServer {
   mem_total?: number;
   swap_total?: number;
   disk_total?: number;
+  virtualization?: string | null;
+  enable_statistics_mode?: number;
+  total_flow_out?: number | null;
+  total_flow_in?: number | null;
+}
+
+/** @deprecated 旧快照格式，保留以兼容 server-detail.ts 中的类型引用 */
+export interface ServerSnapshot {
+  uuid: string;
+  name: string;
+  top: number;
+  cpu_name: string | null;
+  cpu_cores: number;
+  arch: string | null;
+  os: string | null;
+  region: string | null;
+  mem_total: number;
+  swap_total: number;
+  disk_total: number;
+  virtualization: string | null;
+  status: number;
+  last_online: number;
+  boot_time: number | null;
+  load: ServerLoad;
 }
 
 /** 服务器节点历史记录 (GET /clients/public/servers/:uuid/stats) */

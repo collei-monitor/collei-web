@@ -1,70 +1,32 @@
 /**
  * 公开展示页 API 服务
- * 封装 /clients/public/* 接口 + WebSocket 实时数据
+ * WebSocket 实时数据（nodes + status 新格式）
+ * /clients/public/servers 与 /clients/public/groups 已弃用，数据改由 WS 推送
  */
 
-import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useRef, useState, useMemo } from "react";
-import api from "@/lib/api";
+import { useAuthStore } from "@/store/auth";
 import type {
-  PublicServer,
   PublicGroup,
   DisplayServer,
-  ServerSnapshot,
   WsMessage,
+  WsNodeServer,
+  WsStatusServer,
   ServerLoad,
 } from "@/types/server";
 import { ServerStatus } from "@/types/server";
 
-// ── Query Keys ────────────────────────────────────────────────────────────────
-
-export const displayKeys = {
-  servers: ["public", "servers"] as const,
-  groups: ["public", "groups"] as const,
-};
-
-// ── Public API ────────────────────────────────────────────────────────────────
-
-const displayApi = {
-  async getServers(): Promise<PublicServer[]> {
-    const { status, data } = await api.get("/clients/public/servers");
-    if (status !== 200)
-      throw new Error(data?.detail || "Failed to fetch servers");
-    return data as PublicServer[];
-  },
-
-  async getGroups(): Promise<PublicGroup[]> {
-    const { status, data } = await api.get("/clients/public/groups");
-    if (status !== 200)
-      throw new Error(data?.detail || "Failed to fetch groups");
-    return data as PublicGroup[];
-  },
-};
-
-/** 获取公开服务器列表 */
-export function usePublicServers() {
-  return useQuery({
-    queryKey: displayKeys.servers,
-    queryFn: displayApi.getServers,
-  });
-}
-
-/** 获取公开分组列表 */
-export function usePublicGroups() {
-  return useQuery({
-    queryKey: displayKeys.groups,
-    queryFn: displayApi.getGroups,
-  });
-}
-
 // ── WebSocket Hook ────────────────────────────────────────────────────────────
 
 const WS_RECONNECT_DELAY = 3000;
+const WS_PING_INTERVAL = 30000;
 
 interface WebSocketState {
   connected: boolean;
-  snapshots: Map<string, ServerSnapshot>;
-  /** 首次收到 WS 快照（或超时兜底）后变为 true */
+  wsNodes: WsNodeServer[];
+  groups: PublicGroup[];
+  snapshots: Map<string, WsStatusServer>;
+  /** 首次同时收到 nodes 与 status 消息（或超时兜底）后变为 true */
   wsReady: boolean;
 }
 
@@ -77,49 +39,78 @@ const WS_READY_TIMEOUT = 8000;
 /** 内部 Hook：包含完整的 WS 连接逻辑，仅供 WebSocketProvider 使用 */
 export function useWebSocketState(): WebSocketState {
   const [connected, setConnected] = useState(false);
-  const [snapshots, setSnapshots] = useState<Map<string, ServerSnapshot>>(
-    new Map()
-  );
+  const [wsNodes, setWsNodes] = useState<WsNodeServer[]>([]);
+  const [groups, setGroups] = useState<PublicGroup[]>([]);
+  const [snapshots, setSnapshots] = useState<Map<string, WsStatusServer>>(new Map());
   const [wsReady, setWsReady] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const readyTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const pingTimer = useRef<ReturnType<typeof setInterval>>(undefined);
+  // 用 ref 追踪两帧是否都已到达，避免 state 闭包问题
+  const nodesReceivedRef = useRef(false);
+  const statusReceivedRef = useRef(false);
+  const wsToken = useAuthStore((s) => s.user?.ws_token);
 
   useEffect(() => {
     let disposed = false;
 
-    // 超时兜底：WS 迟迟未返回数据时，仍放行页面展示
+    // 超时兜底：WS 迟迟未同时返回 nodes+status 时，仍放行页面展示
     readyTimer.current = setTimeout(() => {
       if (!disposed) setWsReady(true);
     }, WS_READY_TIMEOUT);
 
+    function checkReady() {
+      if (nodesReceivedRef.current && statusReceivedRef.current) {
+        clearTimeout(readyTimer.current);
+        setWsReady(true);
+      }
+    }
+
     function connect() {
       if (disposed) return;
 
-      const protocol =
-        window.location.protocol === "https:" ? "wss:" : "ws:";
-        const ws = new WebSocket(
-        `${protocol}//${window.location.host}/api/v1/ws`
-      );
+      // 每次重连时重置就绪标记
+      nodesReceivedRef.current = false;
+      statusReceivedRef.current = false;
+
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const url = wsToken
+        ? `${protocol}//${window.location.host}/api/v1/ws?token=${encodeURIComponent(wsToken)}`
+        : `${protocol}//${window.location.host}/api/v1/ws`;
+      const ws = new WebSocket(url);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        if (!disposed) setConnected(true);
+        if (!disposed) {
+          setConnected(true);
+          // 启动心跳
+          pingTimer.current = setInterval(() => {
+            if (ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify({ action: "ping" }));
+            }
+          }, WS_PING_INTERVAL);
+        }
       };
 
       ws.onmessage = (event) => {
         try {
-          const message: WsMessage = JSON.parse(event.data);
-          if (message.type === "snapshot") {
-            setSnapshots(
-              new Map(message.servers.map((s) => [s.uuid, s]))
-            );
-            // 首次收到快照，取消兜底计时器并标记就绪
+          const message: WsMessage = JSON.parse(event.data as string);
+          if (message.type === "nodes") {
             if (!disposed) {
-              clearTimeout(readyTimer.current);
-              setWsReady(true);
+              setWsNodes(message.servers);
+              setGroups(message.groups);
+              nodesReceivedRef.current = true;
+              checkReady();
+            }
+          } else if (message.type === "status") {
+            if (!disposed) {
+              setSnapshots(new Map(Object.entries(message.servers)));
+              statusReceivedRef.current = true;
+              checkReady();
             }
           }
+          // "pong" 消息不需要处理
         } catch {
           /* ignore parse errors */
         }
@@ -129,6 +120,7 @@ export function useWebSocketState(): WebSocketState {
         if (!disposed) {
           setConnected(false);
           wsRef.current = null;
+          clearInterval(pingTimer.current);
           reconnectTimer.current = setTimeout(connect, WS_RECONNECT_DELAY);
         }
       };
@@ -142,11 +134,12 @@ export function useWebSocketState(): WebSocketState {
       disposed = true;
       clearTimeout(reconnectTimer.current);
       clearTimeout(readyTimer.current);
+      clearInterval(pingTimer.current);
       wsRef.current?.close();
     };
-  }, []);
+  }, [wsToken]);
 
-  return { connected, snapshots, wsReady };
+  return { connected, wsNodes, groups, snapshots, wsReady };
 }
 
 /** 从 WebSocketContext 读取 WS 状态，需在 WebSocketProvider 内部使用 */
@@ -158,47 +151,96 @@ export function useServerWebSocket(): WebSocketState {
 
 // ── 合并 Hook ─────────────────────────────────────────────────────────────────
 
-/** 获取展示用的服务器列表（HTTP + WebSocket 合并） */
+/** 获取展示用的服务器列表（WebSocket nodes + status 合并） */
 export function useDisplayServers() {
-  const { data: httpServers, isLoading: httpLoading, error } = usePublicServers();
-  const { connected, snapshots, wsReady } = useServerWebSocket();
+  const { connected, wsNodes, snapshots, wsReady } = useServerWebSocket();
 
   const servers = useMemo<DisplayServer[]>(() => {
-    if (!httpServers) return [];
+    const nodeUuids = new Set(wsNodes.map((s) => s.uuid));
 
-    const result = httpServers.map((server): DisplayServer => {
-      const snapshot = snapshots.get(server.uuid);
-      if (snapshot) {
+    const result = wsNodes.map((node): DisplayServer => {
+      const snap = snapshots.get(node.uuid);
+      if (snap) {
         return {
-          ...server,
-          status: ServerStatus.ONLINE,
-          load: snapshot.load,
-          cpu_cores: snapshot.cpu_cores,
-          mem_total: snapshot.mem_total,
-          swap_total: snapshot.swap_total,
-          disk_total: snapshot.disk_total,
-          last_online: snapshot.last_online,
-            ...(snapshot.boot_time !== undefined ? { boot_time: snapshot.boot_time } : {}),
+          uuid: node.uuid,
+          name: snap.name || node.name,
+          cpu_name: snap.cpu_name,
+          arch: snap.arch,
+          os: snap.os,
+          region: snap.region,
+          top: snap.top,
+          status: snap.status.status,
+          last_online: snap.status.last_online,
+          boot_time: snap.status.boot_time,
+          groups: node.groups,
+          load: snap.load,
+          cpu_cores: snap.cpu_cores,
+          mem_total: snap.mem_total,
+          swap_total: snap.swap_total,
+          disk_total: snap.disk_total,
+          virtualization: snap.virtualization,
+          enable_statistics_mode: snap.enable_statistics_mode,
+          total_flow_out: snap.status.total_flow_out,
+          total_flow_in: snap.status.total_flow_in,
         };
       }
-      // WS 已连接但该服务器不在快照中，标记为离线
-      if (connected) {
-        return { ...server, status: ServerStatus.OFFLINE, load: undefined };
-      }
-      // WS 未连接，使用 HTTP 状态
-      return { ...server };
+      // 有节点信息但无快照，WS 已连接则标记为离线
+      return {
+        uuid: node.uuid,
+        name: node.name,
+        cpu_name: node.cpu_name,
+        arch: node.arch,
+        os: node.os,
+        region: node.region,
+        top: node.top,
+        status: connected ? ServerStatus.OFFLINE : node.status,
+        last_online: node.last_online,
+        boot_time: node.boot_time,
+        groups: node.groups,
+      };
     });
 
+    // 快照中有但 nodes 列表中没有的服务器（节点变更前的快照残留），也加入
+    for (const [uuid, snap] of snapshots.entries()) {
+      if (!nodeUuids.has(uuid)) {
+        result.push({
+          uuid,
+          name: snap.name,
+          cpu_name: snap.cpu_name,
+          arch: snap.arch,
+          os: snap.os,
+          region: snap.region,
+          top: snap.top,
+          status: snap.status.status,
+          last_online: snap.status.last_online,
+          boot_time: snap.status.boot_time,
+          groups: [],
+          load: snap.load,
+          cpu_cores: snap.cpu_cores,
+          mem_total: snap.mem_total,
+          swap_total: snap.swap_total,
+          disk_total: snap.disk_total,
+          virtualization: snap.virtualization,
+          enable_statistics_mode: snap.enable_statistics_mode,
+          total_flow_out: snap.status.total_flow_out,
+          total_flow_in: snap.status.total_flow_in,
+        });
+      }
+    }
+
     // 按 top 降序，再按名称排序
-    return result.sort(
-      (a, b) => b.top - a.top || a.name.localeCompare(b.name)
-    );
-  }, [httpServers, snapshots, connected]);
+    return result.sort((a, b) => b.top - a.top || a.name.localeCompare(b.name));
+  }, [wsNodes, snapshots, connected]);
 
-  // HTTP 加载完成且 WS 首帧到达（或超时兜底）后才放行
-  const isLoading = httpLoading || !wsReady;
+  const isLoading = !wsReady;
 
-  return { servers, isLoading, error, wsConnected: connected };
+  return { servers, isLoading, error: null, wsConnected: connected };
+}
+
+/** 从 WS Context 获取分组列表 */
+export function useDisplayGroups(): PublicGroup[] {
+  const { groups } = useServerWebSocket();
+  return groups;
 }
 
 // ── 导出类型便捷引用 ─────────────────────────────────────────────────────────

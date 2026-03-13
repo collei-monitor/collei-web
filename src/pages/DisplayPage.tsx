@@ -20,9 +20,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useDisplayServers, usePublicGroups } from "@/services/display";
+import { useDisplayServers, useDisplayGroups } from "@/services/display";
 import { cn } from "@/lib/utils";
-import { formatSpeed } from "@/lib/display-utils";
+import { formatSpeed, formatBytes } from "@/lib/display-utils";
 import type { DisplayServer, PublicGroup } from "@/types/server";
 
 declare const __BUILD_TIME__: string;
@@ -38,7 +38,7 @@ export default function DisplayPage() {
   );
 
   const { servers, isLoading, error, wsConnected } = useDisplayServers();
-  const { data: groups = [] } = usePublicGroups();
+  const groups = useDisplayGroups();
 
   // 按分组筛选服务器，并排序：top 升序，离线服务器排最后
   const filteredServers = useMemo(() => {
@@ -69,10 +69,9 @@ export default function DisplayPage() {
   const onlineCount = servers.filter((s) => s.status === 1).length;
   const offlineCount = servers.length - onlineCount;
   const totalNetIn = servers.reduce((sum, s) => sum + (s.load?.net_in ?? 0), 0);
-  const totalNetOut = servers.reduce(
-    (sum, s) => sum + (s.load?.net_out ?? 0),
-    0,
-  );
+  const totalNetOut = servers.reduce((sum, s) => sum + (s.load?.net_out ?? 0), 0);
+  const totalFlowIn = servers.reduce((sum, s) => sum + (s.total_flow_in ?? 0), 0);
+  const totalFlowOut = servers.reduce((sum, s) => sum + (s.total_flow_out ?? 0), 0);
 
   const formatBuildTime = (isoTime: string) => {
     try {
@@ -175,14 +174,22 @@ export default function DisplayPage() {
                         {t("display.summary.network")}
                       </span>
                     </div>
-                    <div className="mt-1 space-y-0.5">
+                    <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5">
                       <div className="flex items-center gap-1 text-xs font-medium">
                         <ArrowUp className="h-3 w-3 text-orange-500 shrink-0" />
                         <span>{formatSpeed(totalNetOut)}</span>
                       </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <ArrowUp className="h-3 w-3 text-orange-300 shrink-0" />
+                        <span>{formatBytes(totalFlowOut)}</span>
+                      </div>
                       <div className="flex items-center gap-1 text-xs font-medium">
                         <ArrowDown className="h-3 w-3 text-sky-500 shrink-0" />
                         <span>{formatSpeed(totalNetIn)}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <ArrowDown className="h-3 w-3 text-sky-300 shrink-0" />
+                        <span>{formatBytes(totalFlowIn)}</span>
                       </div>
                     </div>
                   </CardContent>

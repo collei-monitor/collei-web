@@ -87,10 +87,13 @@ export default {
     info: {
       arch: "Architecture",
       uptime: "Uptime",
-      upload: "Upload",
-      download: "Download",
+      upload: "Upload Speed",
+      download: "Download Speed",
       connections: "Connections",
       process: "Processes",
+      virtualization: "Virtualization",
+      totalUpload: "Total Upload",
+      totalDownload: "Total Download",
     },
     chart: {
       title: "Historical Metrics (Last 1 Minute)",

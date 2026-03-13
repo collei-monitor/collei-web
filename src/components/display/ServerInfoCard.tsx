@@ -13,6 +13,7 @@ import {
   ArrowDown,
   Network,
   Activity,
+  Server,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,8 +26,7 @@ import {
   formatSpeed,
   calcPercent,
   getUsageColor,
-} from "@/lib/display-utils";
-import { ServerStatus } from "@/types/server";
+} from "@/lib/display-utils";import { ServerStatus } from "@/types/server";
 import type { DisplayServer } from "@/types/server";
 
 interface ServerInfoCardProps {
@@ -117,6 +117,13 @@ export function ServerInfoCard({ server }: ServerInfoCardProps) {
             label={t("detail.info.uptime")}
             value={isOnline ? formatUptime(server.boot_time, t) : "-"}
           />
+          {server.virtualization && (
+            <InfoItem
+              icon={<Server className="h-4 w-4" />}
+              label={t("detail.info.virtualization")}
+              value={server.virtualization}
+            />
+          )}
         </div>
 
         {/* 资源使用情况 */}
@@ -157,27 +164,43 @@ export function ServerInfoCard({ server }: ServerInfoCardProps) {
 
         {/* 网络 + 连接 */}
         {isOnline && load && (
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 text-sm border-t pt-4">
-            <InfoItem
-              icon={<ArrowUp className="h-4 w-4 text-emerald-500" />}
-              label={t("detail.info.upload")}
-              value={formatSpeed(load.net_out)}
-            />
-            <InfoItem
-              icon={<ArrowDown className="h-4 w-4 text-blue-500" />}
-              label={t("detail.info.download")}
-              value={formatSpeed(load.net_in)}
-            />
-            <InfoItem
-              icon={<Network className="h-4 w-4" />}
-              label={t("detail.info.connections")}
-              value={`TCP ${load.tcp} / UDP ${load.udp}`}
-            />
-            <InfoItem
-              icon={<Activity className="h-4 w-4" />}
-              label={t("detail.info.process")}
-              value={String(load.process)}
-            />
+          <div className="space-y-3 border-t pt-4">
+            <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 text-sm">
+              <InfoItem
+                icon={<ArrowUp className="h-4 w-4 text-emerald-500" />}
+                label={t("detail.info.upload")}
+                value={formatSpeed(load.net_out)}
+              />
+              <InfoItem
+                icon={<ArrowDown className="h-4 w-4 text-blue-500" />}
+                label={t("detail.info.download")}
+                value={formatSpeed(load.net_in)}
+              />
+              <InfoItem
+                icon={<Network className="h-4 w-4" />}
+                label={t("detail.info.connections")}
+                value={`TCP ${load.tcp} / UDP ${load.udp}`}
+              />
+              <InfoItem
+                icon={<Activity className="h-4 w-4" />}
+                label={t("detail.info.process")}
+                value={String(load.process)}
+              />
+            </div>
+            {(server.total_flow_out != null || server.total_flow_in != null) && (
+              <div className="grid gap-3 grid-cols-2 text-sm border-t pt-3">
+                <InfoItem
+                  icon={<ArrowUp className="h-4 w-4 text-emerald-400" />}
+                  label={t("detail.info.totalUpload")}
+                  value={formatBytes(server.total_flow_out ?? 0)}
+                />
+                <InfoItem
+                  icon={<ArrowDown className="h-4 w-4 text-blue-400" />}
+                  label={t("detail.info.totalDownload")}
+                  value={formatBytes(server.total_flow_in ?? 0)}
+                />
+              </div>
+            )}
           </div>
         )}
       </CardContent>

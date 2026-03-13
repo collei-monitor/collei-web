@@ -85,10 +85,13 @@ export default {
     info: {
       arch: "架构",
       uptime: "运行时间",
-      upload: "上传",
-      download: "下载",
+      upload: "上传速度",
+      download: "下载速度",
       connections: "连接数",
       process: "进程数",
+      virtualization: "虚拟化",
+      totalUpload: "总上传",
+      totalDownload: "总下载",
     },
     chart: {
       title: "历史监控数据（最近 1 分钟）",

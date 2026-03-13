@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -26,6 +26,18 @@ interface ServerCardProps {
   server: DisplayServer;
 }
 
+function formatUptime(bootTime: number | null | undefined, t: (key: string) => string): string {
+  if (!bootTime) return "-";
+  const seconds = Math.floor(Date.now() / 1000) - bootTime;
+  if (seconds < 60) return `${seconds}${t("time.sec")}`;
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  if (days > 0) return `${days}${t("time.day")} ${hours}${t("time.hour")}`;
+  if (hours > 0) return `${hours}${t("time.hour")} ${minutes}${t("time.min")}`;
+  return `${minutes}${t("time.min")}`;
+}
+
 export function ServerCard({ server }: ServerCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -35,6 +47,10 @@ export function ServerCard({ server }: ServerCardProps) {
   const cpuPercent = load?.cpu ?? 0;
   const ramPercent = load ? calcPercent(load.ram, load.ram_total) : 0;
   const diskPercent = load ? calcPercent(load.disk, load.disk_total) : 0;
+
+  const hasTotalFlow =
+    (server.total_flow_out != null && server.total_flow_out > 0) ||
+    (server.total_flow_in != null && server.total_flow_in > 0);
 
   return (
     <Card
@@ -79,13 +95,23 @@ export function ServerCard({ server }: ServerCardProps) {
           </Badge>
         </div>
 
-        {/* OS 信息 */}
-        {server.os && (
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <OsIcon os={server.os} className="h-3.5 w-3.5" />
-            <span className="truncate">{server.os}</span>
-          </div>
-        )}
+        {/* OS 信息 + 运行时间 */}
+        <div className="flex items-center justify-between gap-2">
+          {server.os ? (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
+              <OsIcon os={server.os} className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{server.os}</span>
+            </div>
+          ) : (
+            <span />
+          )}
+          {isOnline && server.boot_time && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+              <Clock className="h-3 w-3" />
+              <span>{formatUptime(server.boot_time, t)}</span>
+            </div>
+          )}
+        </div>
 
         {/* 资源用量 */}
         {isOnline && load ? (
@@ -114,17 +140,31 @@ export function ServerCard({ server }: ServerCardProps) {
           </div>
         )}
 
-        {/* 网络速度 */}
+        {/* 网络速度 + 总流量 */}
         {isOnline && load && (
-          <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t">
-            <div className="flex items-center gap-1">
-              <ArrowUp className="h-3 w-3 text-emerald-500" />
-              <span>{formatSpeed(load.net_out)}</span>
+          <div className="pt-1 border-t space-y-1">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <ArrowUp className="h-3 w-3 text-emerald-500" />
+                <span>{formatSpeed(load.net_out)}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <ArrowDown className="h-3 w-3 text-blue-500" />
+                <span>{formatSpeed(load.net_in)}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <ArrowDown className="h-3 w-3 text-blue-500" />
-              <span>{formatSpeed(load.net_in)}</span>
-            </div>
+            {hasTotalFlow && (
+              <div className="flex items-center justify-between text-xs text-muted-foreground/70">
+                <div className="flex items-center gap-1">
+                  <ArrowUp className="h-3 w-3 text-emerald-300" />
+                  <span>{formatBytes(server.total_flow_out ?? 0)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <ArrowDown className="h-3 w-3 text-blue-300" />
+                  <span>{formatBytes(server.total_flow_in ?? 0)}</span>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </CardContent>

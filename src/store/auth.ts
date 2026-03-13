@@ -10,6 +10,7 @@ export interface AuthUser {
   two_factor_enabled: boolean;
   created_at: number;
   updated_at: number;
+  ws_token?: string;
 }
 
 /**
