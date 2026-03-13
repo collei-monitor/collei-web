@@ -117,7 +117,7 @@ export default function AlertRulesPage() {
               <TableHead>{t("admin.alerts.rules.table.condition")}</TableHead>
               <TableHead>{t("admin.alerts.rules.table.duration")}</TableHead>
               <TableHead>{t("admin.alerts.rules.table.enabled")}</TableHead>
-              <TableHead className="w-[60px]" />
+              <TableHead className="w-15" />
             </TableRow>
           </TableHeader>
           <TableBody>
