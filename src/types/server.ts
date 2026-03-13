@@ -36,6 +36,43 @@ export interface BatchUpdateGroupTopsResult {
   failed_ids: string[];
 }
 
+// ── 计费 ──────────────────────────────────────────────────────────────────────
+
+/** 计费摘要（服务器列表 / WS 推送中的 billing 字段） */
+export interface BillingSummary {
+  billing_cycle: number;
+  billing_cycle_cost: number;
+  billing_cycle_cost_code: string;
+  traffic_threshold: number;
+  traffic_used: number;
+  accounting_mode: number;
+  expiry_date: number;
+}
+
+/** 完整计费规则（GET/PUT /billing） */
+export interface BillingRule {
+  uuid: string;
+  billing_cycle: number;
+  billing_cycle_data: number;
+  billing_cycle_cost: number;
+  traffic_reset_day: number;
+  traffic_threshold: number;
+  accounting_mode: number;
+  billing_cycle_cost_code: string;
+  expiry_date: number;
+}
+
+export interface UpsertBillingPayload {
+  billing_cycle?: number;
+  billing_cycle_data?: number;
+  billing_cycle_cost?: number;
+  traffic_reset_day?: number;
+  traffic_threshold?: number;
+  accounting_mode?: number;
+  billing_cycle_cost_code?: string;
+  expiry_date?: number;
+}
+
 // ── 服务器 ────────────────────────────────────────────────────────────────────
 
 export interface Server {
@@ -67,6 +104,7 @@ export interface Server {
   total_flow_out: number | null;
   total_flow_in: number | null;
   groups: Group[];
+  billing: BillingSummary | null;
 }
 
 export interface UpdateServerPayload {
@@ -130,6 +168,7 @@ export interface WsNodeServer {
   last_online: number | null;
   boot_time: number | null;
   groups: Group[];
+  billing: BillingSummary | null;
 }
 
 /** WS status 消息中单台服务器的状态对象 */
@@ -214,6 +253,7 @@ export interface DisplayServer {
   enable_statistics_mode?: number;
   total_flow_out?: number | null;
   total_flow_in?: number | null;
+  billing?: BillingSummary | null;
 }
 
 /** @deprecated 旧快照格式，保留以兼容 server-detail.ts 中的类型引用 */

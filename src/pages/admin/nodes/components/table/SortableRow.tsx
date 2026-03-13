@@ -11,7 +11,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { FlagIcon } from "@/components/display/FlagIcon";
-import { GripVertical, EyeOff, Copy, Check, Pencil } from "lucide-react";
+import {
+  GripVertical,
+  EyeOff,
+  Copy,
+  Check,
+  Pencil,
+  CircleDollarSign,
+} from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@/components/ui/button";
@@ -27,6 +34,7 @@ export function SortableRow({
   onDelete,
   onGroups,
   onDetail,
+  onBilling,
   visibleColumns,
 }: {
   server: Server;
@@ -36,6 +44,7 @@ export function SortableRow({
   onDelete: (s: Server) => void;
   onGroups: (s: Server) => void;
   onDetail: (s: Server) => void;
+  onBilling: (s: Server) => void;
   visibleColumns: { ip: boolean; groups: boolean; status: boolean };
 }) {
   const { t } = useTranslation();
@@ -67,7 +76,7 @@ export function SortableRow({
     <TableRow
       ref={setNodeRef}
       style={style}
-    //   className={server.hidden === ServerVisibility.HIDDEN ? "opacity-50" : ""}
+      //   className={server.hidden === ServerVisibility.HIDDEN ? "opacity-50" : ""}
     >
       {/* 拖动手柄 */}
       <TableCell>
@@ -131,7 +140,11 @@ export function SortableRow({
                 <button
                   type="button"
                   onClick={() => handleCopyIp(server.ipv4!)}
-                  className={isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+                  className={
+                    isMobile
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100 transition-opacity"
+                  }
                   title={t("common.copy")}
                 >
                   {copiedIp === server.ipv4 ? (
@@ -150,7 +163,11 @@ export function SortableRow({
                 <button
                   type="button"
                   onClick={() => handleCopyIp(server.ipv6!)}
-                  className={isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+                  className={
+                    isMobile
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100 transition-opacity"
+                  }
                   title={t("common.copy")}
                 >
                   {copiedIp === server.ipv6 ? (
@@ -195,14 +212,32 @@ export function SortableRow({
       {/* 操作 */}
       <TableCell>
         <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onEdit(server)}
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onEdit(server)}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{t("admin.nodes.actions.edit")}</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onBilling(server)}
+              >
+                <CircleDollarSign className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{t("admin.nodes.billing.title")}</TooltipContent>
+          </Tooltip>
           <ServerActions
             server={server}
             onDelete={onDelete}

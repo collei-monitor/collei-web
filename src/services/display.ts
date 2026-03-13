@@ -182,6 +182,7 @@ export function useDisplayServers() {
           enable_statistics_mode: snap.enable_statistics_mode,
           total_flow_out: snap.status.total_flow_out,
           total_flow_in: snap.status.total_flow_in,
+          billing: node.billing,
         };
       }
       // 有节点信息但无快照，WS 已连接则标记为离线
@@ -197,6 +198,7 @@ export function useDisplayServers() {
         last_online: node.last_online,
         boot_time: node.boot_time,
         groups: node.groups,
+        billing: node.billing,
       };
     });
 
@@ -224,6 +226,7 @@ export function useDisplayServers() {
           enable_statistics_mode: snap.enable_statistics_mode,
           total_flow_out: snap.status.total_flow_out,
           total_flow_in: snap.status.total_flow_in,
+          billing: null,
         });
       }
     }

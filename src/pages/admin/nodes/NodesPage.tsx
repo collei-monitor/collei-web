@@ -37,6 +37,7 @@ import { TableSkeleton } from "./components/table/TableSkeleton";
 import { EditServerDialog } from "./components/dialogs/EditServerDialog";
 import { DeleteServerDialog } from "./components/dialogs/DeleteServerDialog";
 import { GroupsDialog } from "./components/dialogs/GroupsDialog";
+import { BillingDialog } from "./components/dialogs/BillingDialog";
 import { ServerDetailDrawer } from "./components/ServerDetailDrawer";
 
 export default function NodesPage() {
@@ -46,6 +47,7 @@ export default function NodesPage() {
   const [editTarget, setEditTarget] = useState<Server | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Server | null>(null);
   const [groupsTarget, setGroupsTarget] = useState<Server | null>(null);
+  const [billingTarget, setBillingTarget] = useState<Server | null>(null);
   const [detailTarget, setDetailTarget] = useState<Server | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleColumns, setVisibleColumns] = useState({
@@ -228,6 +230,7 @@ export default function NodesPage() {
                         onDelete={setDeleteTarget}
                         onGroups={setGroupsTarget}
                         onDetail={setDetailTarget}
+                        onBilling={setBillingTarget}
                         visibleColumns={visibleColumns}
                       />
                     ))}
@@ -256,6 +259,12 @@ export default function NodesPage() {
         server={groupsTarget}
         open={!!groupsTarget}
         onOpenChange={(v) => !v && setGroupsTarget(null)}
+      />
+      <BillingDialog
+        key={billingTarget?.uuid}
+        server={billingTarget}
+        open={!!billingTarget}
+        onOpenChange={(v) => !v && setBillingTarget(null)}
       />
       <ServerDetailDrawer
         server={detailTarget}

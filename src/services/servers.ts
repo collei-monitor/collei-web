@@ -15,6 +15,8 @@ import type {
   CreateGroupPayload,
   UpdateGroupPayload,
   BatchUpdateGroupTopsResult,
+  BillingRule,
+  UpsertBillingPayload,
 } from "@/types/server";
 
 // ── Query Keys ────────────────────────────────────────────────────────────────
@@ -24,6 +26,7 @@ export const serverKeys = {
   lists: () => [...serverKeys.all, "list"] as const,
   detail: (uuid: string) => [...serverKeys.all, "detail", uuid] as const,
   groups: (uuid: string) => [...serverKeys.all, "groups", uuid] as const,
+  billing: (uuid: string) => [...serverKeys.all, "billing", uuid] as const,
 };
 
 export const groupKeys = {
@@ -80,6 +83,26 @@ const serverApi = {
     const { status, data } = await api.post("/clients/servers/batch/update-tops", { updates });
     if (status !== 200) throw new Error(data?.detail || "Failed to batch update tops");
     return data as { total: number; updated: number; failed: number; failed_uuids: string[] };
+  },
+
+  /** 获取计费规则 */
+  async getBilling(uuid: string): Promise<BillingRule> {
+    const { status, data } = await api.get(`/clients/servers/${uuid}/billing`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch billing");
+    return data as BillingRule;
+  },
+
+  /** 创建/更新计费规则 */
+  async upsertBilling(uuid: string, payload: UpsertBillingPayload): Promise<BillingRule> {
+    const { status, data } = await api.put(`/clients/servers/${uuid}/billing`, payload);
+    if (status !== 200) throw new Error(data?.detail || "Failed to update billing");
+    return data as BillingRule;
+  },
+
+  /** 删除计费规则 */
+  async deleteBilling(uuid: string): Promise<void> {
+    const { status, data } = await api.delete(`/clients/servers/${uuid}/billing`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to delete billing");
   },
 };
 
@@ -213,6 +236,40 @@ export function useBatchUpdateTops() {
       }
     },
     onSettled: () => {
+      qc.invalidateQueries({ queryKey: serverKeys.lists() });
+    },
+  });
+}
+
+/** 获取计费规则 */
+export function useServerBilling(uuid: string | null) {
+  return useQuery({
+    queryKey: serverKeys.billing(uuid ?? ""),
+    queryFn: () => serverApi.getBilling(uuid!),
+    enabled: !!uuid,
+  });
+}
+
+/** 创建/更新计费规则 */
+export function useUpsertBilling() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ uuid, payload }: { uuid: string; payload: UpsertBillingPayload }) =>
+      serverApi.upsertBilling(uuid, payload),
+    onSuccess: (_data, { uuid }) => {
+      qc.invalidateQueries({ queryKey: serverKeys.billing(uuid) });
+      qc.invalidateQueries({ queryKey: serverKeys.lists() });
+    },
+  });
+}
+
+/** 删除计费规则 */
+export function useDeleteBilling() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (uuid: string) => serverApi.deleteBilling(uuid),
+    onSuccess: (_data, uuid) => {
+      qc.invalidateQueries({ queryKey: serverKeys.billing(uuid) });
       qc.invalidateQueries({ queryKey: serverKeys.lists() });
     },
   });
