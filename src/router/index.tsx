@@ -12,7 +12,7 @@ import NotificationChannelsPage from "@/pages/admin/alerts/NotificationChannelsP
 import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
 import AlertEnginePage from "@/pages/admin/alerts/AlertEnginePage";
 import UsersPage from "@/pages/admin/UsersPage";
-import SettingsPage from "@/pages/admin/SettingsPage";
+import SettingsPage from "@/pages/admin/settings/SettingsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
 import { WebSocketProvider } from "@/components/WebSocketProvider";
