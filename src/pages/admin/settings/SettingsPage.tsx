@@ -13,7 +13,6 @@ import {
   useConfigList,
   useSetConfig,
   useBatchSetConfig,
-  useDeleteConfig,
   type ConfigBatchItem,
 } from "@/services/config";
 import { ConfigSkeleton } from "./components/ConfigSkeleton";
@@ -26,7 +25,6 @@ export default function SettingsPage() {
   const { data: configs, isLoading } = useConfigList();
   const setConfig = useSetConfig();
   const batchSetConfig = useBatchSetConfig();
-  const deleteConfig = useDeleteConfig();
 
   const handleSave = (key: string, value: string) => {
     setConfig.mutate({ key, value }, {
@@ -48,17 +46,6 @@ export default function SettingsPage() {
         if (e.status === 409) toast.error(t("settings.toast.saveConflict"));
         else if (e.status === 422) toast.error(t("settings.toast.saveInvalid"), { description: e.message });
         else toast.error(t("settings.toast.saveFailed"));
-      },
-    });
-  };
-
-  const handleDelete = (key: string) => {
-    deleteConfig.mutate(key, {
-      onSuccess: () => toast.success(t("settings.toast.deleteSuccess")),
-      onError: (err) => {
-        const status = (err as { status?: number })?.status;
-        if (status === 409) toast.error(t("settings.toast.deleteConflict"));
-        else toast.error(t("settings.toast.deleteFailed"));
       },
     });
   };
@@ -99,8 +86,6 @@ export default function SettingsPage() {
                 currentValue={configs?.["app_name"]}
                 onSave={handleSave}
                 saving={setConfig.isPending && setConfig.variables?.key === "app_name"}
-                onDelete={handleDelete}
-                deleting={deleteConfig.isPending && deleteConfig.variables === "app_name"}
               />
               <Separator />
               <TextConfigField
@@ -109,11 +94,9 @@ export default function SettingsPage() {
                 description={t("settings.general.regTokenDesc")}
                 placeholder={t("settings.general.regTokenPlaceholder")}
                 currentValue={configs?.["global_registration_token"]}
-                secret
+                generateRandom
                 onSave={handleSave}
-                onDelete={handleDelete}
                 saving={setConfig.isPending && setConfig.variables?.key === "global_registration_token"}
-                deleting={deleteConfig.isPending && deleteConfig.variables === "global_registration_token"}
               />
             </>
           )}

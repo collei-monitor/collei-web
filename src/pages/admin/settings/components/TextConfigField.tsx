@@ -2,16 +2,24 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Save,
-  Trash2,
   RefreshCw,
   Eye,
   EyeOff,
   Copy,
   Check,
+  Shuffle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+function generateRandomString(length: number): string {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, (b) => RANDOM_CHARS[b % RANDOM_CHARS.length]).join("");
+}
 
 export function TextConfigField({
   configKey,
@@ -20,10 +28,9 @@ export function TextConfigField({
   placeholder,
   currentValue,
   secret,
+  generateRandom,
   onSave,
-  onDelete,
   saving,
-  deleting,
 }: {
   configKey: string;
   label: string;
@@ -31,10 +38,9 @@ export function TextConfigField({
   placeholder?: string;
   currentValue: string | null | undefined;
   secret?: boolean;
+  generateRandom?: boolean;
   onSave: (key: string, value: string) => void;
-  onDelete?: (key: string) => void;
   saving: boolean;
-  deleting: boolean;
 }) {
   const { t } = useTranslation();
   const [value, setValue] = useState(currentValue ?? "");
@@ -100,6 +106,17 @@ export function TextConfigField({
             </div>
           )}
         </div>
+        {generateRandom && (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => setValue(generateRandomString(16))}
+            tabIndex={-1}
+          >
+            <Shuffle className="h-4 w-4" />
+          </Button>
+        )}
         <Button
           size="sm"
           disabled={!isDirty || saving || !value.trim()}
@@ -112,20 +129,6 @@ export function TextConfigField({
           )}
           <span className="ml-1.5">{t("settings.action.save")}</span>
         </Button>
-        {onDelete && currentValue != null && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={deleting || saving}
-            onClick={() => onDelete(configKey)}
-          >
-            {deleting ? (
-              <RefreshCw className="h-4 w-4 animate-spin" />
-            ) : (
-              <Trash2 className="h-4 w-4" />
-            )}
-          </Button>
-        )}
       </div>
     </div>
   );
