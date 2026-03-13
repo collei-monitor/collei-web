@@ -6,6 +6,8 @@ import type { AlertRuleRead, UpdateRulePayload, AlertMetric, AlertCondition } fr
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -25,9 +27,13 @@ import {
 const METRICS: AlertMetric[] = [
   "offline", "cpu", "ram", "swap", "disk", "load",
   "net_in", "net_out", "tcp", "udp", "process",
+  "expiry", "login", "traffic_percent",
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];
+
+/** Metrics that hide condition/threshold inputs */
+const FIXED_METRICS = new Set<string>(["offline", "login"]);
 
 interface Props {
   rule: AlertRuleRead | null;
@@ -46,6 +52,10 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
   const [duration, setDuration] = useState<string>(String(rule?.duration ?? ""));
   const [enabled, setEnabled] = useState(rule?.enabled === 1);
   const [notifyRecovery, setNotifyRecovery] = useState(rule?.notify_recovery === 1);
+  const [customMessage, setCustomMessage] = useState(rule?.custom_message ?? "");
+  const [trafficNotifyStep, setTrafficNotifyStep] = useState<string>(
+    rule?.traffic_notify_step != null ? String(rule.traffic_notify_step) : ""
+  );
 
   const [prevRule, setPrevRule] = useState<AlertRuleRead | null>(null);
   const [prevOpen, setPrevOpen] = useState(false);
@@ -61,6 +71,8 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
       setDuration(String(rule.duration));
       setEnabled(rule.enabled === 1);
       setNotifyRecovery(rule.notify_recovery === 1);
+      setCustomMessage(rule.custom_message ?? "");
+      setTrafficNotifyStep(rule.traffic_notify_step != null ? String(rule.traffic_notify_step) : "");
     }
   }
 
@@ -68,19 +80,25 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
     e.preventDefault();
     if (!rule) return;
 
-    const isOffline = metric === "offline";
+    const isFixed = FIXED_METRICS.has(metric);
     const payload: UpdateRulePayload = {};
     if (name !== rule.name) payload.name = name;
     if (metric !== rule.metric) payload.metric = metric;
-    const newCondition = isOffline ? "==" : condition;
+    const newCondition = isFixed ? "==" : condition;
     if (newCondition !== rule.condition) payload.condition = newCondition;
-    const newThreshold = isOffline ? 1 : Number(threshold);
+    const newThreshold = isFixed ? 1 : Number(threshold);
     if (newThreshold !== rule.threshold) payload.threshold = newThreshold;
     if (Number(duration) !== rule.duration) payload.duration = Number(duration);
     const newEnabled = enabled ? 1 : 0;
     if (newEnabled !== rule.enabled) payload.enabled = newEnabled;
     const newNotifyRecovery = notifyRecovery ? 1 : 0;
     if (newNotifyRecovery !== rule.notify_recovery) payload.notify_recovery = newNotifyRecovery;
+
+    const newCustomMessage = customMessage.trim() || null;
+    if (newCustomMessage !== (rule.custom_message ?? null)) payload.custom_message = newCustomMessage;
+
+    const newTrafficStep = trafficNotifyStep ? Number(trafficNotifyStep) : null;
+    if (newTrafficStep !== (rule.traffic_notify_step ?? null)) payload.traffic_notify_step = newTrafficStep;
 
     if (Object.keys(payload).length === 0) {
       toast.info(t("admin.alerts.rules.toast.noChanges"));
@@ -102,7 +120,8 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
     );
   };
 
-  const isOffline = metric === "offline";
+  const isFixed = FIXED_METRICS.has(metric);
+  const isTrafficPercent = metric === "traffic_percent";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -137,7 +156,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            {!isOffline && (
+            {!isFixed && (
               <div className="space-y-2">
                 <Label>{t("admin.alerts.rules.edit.condition")}</Label>
                 <Select value={condition} onValueChange={setCondition}>
@@ -156,7 +175,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
             )}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {!isOffline && (
+            {!isFixed && (
               <div className="space-y-2">
                 <Label>{t("admin.alerts.rules.edit.threshold")}</Label>
                 <Input
@@ -168,7 +187,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
                 />
               </div>
             )}
-            <div className={isOffline ? "col-span-2" : "space-y-2"}>
+            <div className={isFixed ? "col-span-2 space-y-2" : "space-y-2"}>
               <Label>{t("admin.alerts.rules.edit.duration")}</Label>
               <Input
                 type="number"
@@ -178,23 +197,44 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               />
             </div>
           </div>
+          {isTrafficPercent && (
+            <div className="space-y-2">
+              <Label>{t("admin.alerts.rules.edit.trafficNotifyStep")}</Label>
+              <Input
+                type="number"
+                min={1}
+                max={100}
+                value={trafficNotifyStep}
+                onChange={(e) => setTrafficNotifyStep(e.target.value)}
+                placeholder={t("admin.alerts.rules.create.trafficNotifyStepPlaceholder")}
+              />
+            </div>
+          )}
+          <div className="space-y-2">
+            <Label>{t("admin.alerts.rules.edit.customMessage")}</Label>
+            <Textarea
+              value={customMessage}
+              onChange={(e) => setCustomMessage(e.target.value)}
+              placeholder={t("admin.alerts.rules.create.customMessagePlaceholder")}
+              rows={3}
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("admin.alerts.rules.create.customMessageHint")}
+            </p>
+          </div>
           <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
+            <Checkbox
               id="edit-rule-enabled"
               checked={enabled}
-              onChange={(e) => setEnabled(e.target.checked)}
-              className="h-4 w-4 rounded border-input"
+              onCheckedChange={(v) => setEnabled(v === true)}
             />
             <Label htmlFor="edit-rule-enabled">{t("admin.alerts.rules.edit.enabled")}</Label>
           </div>
           <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
+            <Checkbox
               id="edit-rule-notify-recovery"
               checked={notifyRecovery}
-              onChange={(e) => setNotifyRecovery(e.target.checked)}
-              className="h-4 w-4 rounded border-input"
+              onCheckedChange={(v) => setNotifyRecovery(v === true)}
             />
             <Label htmlFor="edit-rule-notify-recovery">{t("admin.alerts.rules.edit.notifyRecovery")}</Label>
           </div>

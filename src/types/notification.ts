@@ -60,7 +60,10 @@ export type AlertMetric =
   | "tcp"
   | "udp"
   | "process"
-  | "offline";
+  | "offline"
+  | "expiry"
+  | "login"
+  | "traffic_percent";
 
 export type AlertCondition = ">" | "<" | ">=" | "<=" | "==" | "!=";
 
@@ -73,6 +76,8 @@ export interface AlertRuleRead {
   duration: number;
   enabled: number;
   notify_recovery: number;
+  custom_message: string | null;
+  traffic_notify_step: number | null;
   created_at: number | null;
 }
 
@@ -84,6 +89,8 @@ export interface CreateRulePayload {
   duration?: number;
   enabled?: number;
   notify_recovery?: number;
+  custom_message?: string | null;
+  traffic_notify_step?: number | null;
 }
 
 export interface UpdateRulePayload {
@@ -94,6 +101,8 @@ export interface UpdateRulePayload {
   duration?: number | null;
   enabled?: number | null;
   notify_recovery?: number | null;
+  custom_message?: string | null;
+  traffic_notify_step?: number | null;
 }
 
 // ── 告警规则映射 ──────────────────────────────────────────────────────────────

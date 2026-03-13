@@ -95,7 +95,7 @@ export default function DisplayPage() {
         <DisplayHeader />
         <main className="flex-1 container mx-auto px-4 py-6 space-y-4">
           {/* 汇总卡片 */}
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
+          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
             {isLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <Skeleton key={i} className="h-24 w-full rounded-lg" />

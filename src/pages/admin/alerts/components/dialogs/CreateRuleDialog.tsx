@@ -6,6 +6,8 @@ import type { CreateRulePayload, AlertMetric, AlertCondition } from "@/types/not
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -25,9 +27,13 @@ import {
 const METRICS: AlertMetric[] = [
   "offline", "cpu", "ram", "swap", "disk", "load",
   "net_in", "net_out", "tcp", "udp", "process",
+  "expiry", "login", "traffic_percent",
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];
+
+/** Metrics that hide condition/threshold inputs */
+const FIXED_METRICS = new Set<string>(["offline", "login"]);
 
 interface Props {
   open: boolean;
@@ -46,20 +52,26 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
     duration: "",
     enabled: true,
     notify_recovery: true,
+    custom_message: "",
+    traffic_notify_step: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const isOffline = form.metric === "offline";
+    const isFixed = FIXED_METRICS.has(form.metric);
     const payload: CreateRulePayload = {
       name: form.name,
       metric: form.metric,
-      condition: isOffline ? "==" : form.condition,
-      threshold: isOffline ? 1 : Number(form.threshold),
+      condition: isFixed ? "==" : form.condition,
+      threshold: isFixed ? 1 : Number(form.threshold),
       duration: form.duration ? Number(form.duration) : undefined,
       enabled: form.enabled ? 1 : 0,
       notify_recovery: form.notify_recovery ? 1 : 0,
+      custom_message: form.custom_message.trim() || null,
     };
+    if (form.metric === "traffic_percent" && form.traffic_notify_step) {
+      payload.traffic_notify_step = Number(form.traffic_notify_step);
+    }
     const toastId = toast.loading(t("admin.alerts.rules.toast.creating"));
     createRule.mutate(payload, {
       onSuccess: () => {
@@ -74,16 +86,17 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
   };
 
   const resetForm = () =>
-    setForm({ name: "", metric: "", condition: "", threshold: "", duration: "", enabled: true, notify_recovery: true });
+    setForm({ name: "", metric: "", condition: "", threshold: "", duration: "", enabled: true, notify_recovery: true, custom_message: "", traffic_notify_step: "" });
 
   const handleOpenChange = (v: boolean) => {
     if (!v) resetForm();
     onOpenChange(v);
   };
 
-  const isOffline = form.metric === "offline";
+  const isFixed = FIXED_METRICS.has(form.metric);
+  const isTrafficPercent = form.metric === "traffic_percent";
   const canSubmit =
-    form.name.trim() && form.metric && (isOffline || (form.condition && form.threshold !== ""));
+    form.name.trim() && form.metric && (isFixed || (form.condition && form.threshold !== ""));
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -122,7 +135,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            {!isOffline && (
+            {!isFixed && (
               <div className="space-y-2">
                 <Label>{t("admin.alerts.rules.create.condition")}</Label>
                 <Select
@@ -144,7 +157,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
             )}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {!isOffline && (
+            {!isFixed && (
               <div className="space-y-2">
                 <Label>{t("admin.alerts.rules.create.threshold")}</Label>
                 <Input
@@ -157,7 +170,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
                 />
               </div>
             )}
-            <div className={isOffline ? "col-span-2" : "space-y-2"}>
+            <div className={isFixed ? "col-span-2 space-y-2" : "space-y-2"}>
               <Label>{t("admin.alerts.rules.create.duration")}</Label>
               <Input
                 type="number"
@@ -168,23 +181,44 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
               />
             </div>
           </div>
+          {isTrafficPercent && (
+            <div className="space-y-2">
+              <Label>{t("admin.alerts.rules.create.trafficNotifyStep")}</Label>
+              <Input
+                type="number"
+                min={1}
+                max={100}
+                value={form.traffic_notify_step}
+                onChange={(e) => setForm((p) => ({ ...p, traffic_notify_step: e.target.value }))}
+                placeholder={t("admin.alerts.rules.create.trafficNotifyStepPlaceholder")}
+              />
+            </div>
+          )}
+          <div className="space-y-2">
+            <Label>{t("admin.alerts.rules.create.customMessage")}</Label>
+            <Textarea
+              value={form.custom_message}
+              onChange={(e) => setForm((p) => ({ ...p, custom_message: e.target.value }))}
+              placeholder={t("admin.alerts.rules.create.customMessagePlaceholder")}
+              rows={3}
+            />
+            <p className="text-xs text-muted-foreground">
+              {t("admin.alerts.rules.create.customMessageHint")}
+            </p>
+          </div>
           <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
+            <Checkbox
               id="create-rule-enabled"
               checked={form.enabled}
-              onChange={(e) => setForm((p) => ({ ...p, enabled: e.target.checked }))}
-              className="h-4 w-4 rounded border-input"
+              onCheckedChange={(v) => setForm((p) => ({ ...p, enabled: v === true }))}
             />
             <Label htmlFor="create-rule-enabled">{t("admin.alerts.rules.create.enabled")}</Label>
           </div>
           <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
+            <Checkbox
               id="create-rule-notify-recovery"
               checked={form.notify_recovery}
-              onChange={(e) => setForm((p) => ({ ...p, notify_recovery: e.target.checked }))}
-              className="h-4 w-4 rounded border-input"
+              onCheckedChange={(v) => setForm((p) => ({ ...p, notify_recovery: v === true }))}
             />
             <Label htmlFor="create-rule-notify-recovery">{t("admin.alerts.rules.create.notifyRecovery")}</Label>
           </div>
