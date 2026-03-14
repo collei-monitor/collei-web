@@ -18,9 +18,17 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar-context";
+import { Separator } from "@/components/ui/separator";
 import {
-  Server,
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/components/ui/hover-card";
+import { cn } from "@/lib/utils";
+import {
   LayoutDashboard,
   Bell,
   Users,
@@ -28,6 +36,7 @@ import {
   Activity,
   Layers,
   ChevronRight,
+  Server,
 } from "lucide-react";
 
 interface NavSubItem {
@@ -51,11 +60,56 @@ interface NavGroup {
 function SidebarNavItem({ item }: { item: NavItem }) {
   const match = useMatch({ path: item.url, end: item.end });
   const location = useLocation();
+  const { state, isMobile } = useSidebar();
 
   if (item.children && item.children.length > 0) {
     const isAnyChildActive = item.children.some((child) =>
       location.pathname.startsWith(child.url),
     );
+
+    // Desktop collapsed: hover popup submenu
+    if (state === "collapsed" && !isMobile) {
+      return (
+        <SidebarMenuItem>
+          <HoverCard openDelay={80} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <SidebarMenuButton isActive={isAnyChildActive} className="h-9">
+                <item.icon className="h-6 w-6" />
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </HoverCardTrigger>
+            <HoverCardContent
+              side="right"
+              align="start"
+              sideOffset={8}
+              className="w-auto min-w-40 p-1"
+            >
+              <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                {item.title}
+              </div>
+              {item.children.map((child) => {
+                const childMatch = location.pathname.startsWith(child.url);
+                return (
+                  <NavLink
+                    key={child.url}
+                    to={child.url}
+                    className={cn(
+                      "flex w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                      childMatch &&
+                        "bg-accent text-accent-foreground font-medium",
+                    )}
+                  >
+                    {child.title}
+                  </NavLink>
+                );
+              })}
+            </HoverCardContent>
+          </HoverCard>
+        </SidebarMenuItem>
+      );
+    }
+
+    // Expanded or mobile: collapsible submenu
     return (
       <SidebarMenuItem>
         <Collapsible
@@ -88,9 +142,15 @@ function SidebarNavItem({ item }: { item: NavItem }) {
     );
   }
 
+  // No children: direct link with tooltip when collapsed
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={!!match} className="h-9">
+      <SidebarMenuButton
+        asChild
+        isActive={!!match}
+        className="h-9"
+        tooltip={item.title}
+      >
         <NavLink to={item.url} end={item.end}>
           <item.icon className="h-6 w-6" />
           <span>{item.title}</span>
@@ -182,18 +242,12 @@ export function AdminSidebar() {
   ];
 
   return (
-    <Sidebar variant="inset">
-      <SidebarHeader className="border-b px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Server className="h-4 w-4" />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-semibold text-sm">
-              {t("common.appTitle")}
-            </span>
-          </div>
-        </div>
+    <Sidebar collapsible="icon">
+      {/* Mobile-only: close button header */}
+      <SidebarHeader className="md:hidden h-14 px-3 py-0 border-b flex-row items-center gap-2">
+        <SidebarTrigger />
+        <Separator orientation="vertical" className="h-6" />
+        <span className="text-sm font-semibold">{t("common.appTitle")}</span>
       </SidebarHeader>
       <SidebarContent>
         {navGroups.map((group) => (

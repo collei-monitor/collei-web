@@ -27,7 +27,7 @@ export interface IpDbTestRequest {
 export interface IpDbTestResult {
   db_name: string;
   ip: string;
-  country_code: string | null;
+  region_code: string | null;
 }
 
 // ── Query Keys ────────────────────────────────────────────────────────────────

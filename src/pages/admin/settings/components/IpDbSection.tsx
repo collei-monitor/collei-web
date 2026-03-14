@@ -55,7 +55,7 @@ export function IpDbSection({
   const [selectedDb, setSelectedDb] = useState(currentDb ?? "");
   const [testIp, setTestIp] = useState("");
   const [testResult, setTestResult] = useState<{
-    country_code: string | null;
+    region_code: string | null;
     db_name: string;
   } | null>(null);
 
@@ -71,13 +71,13 @@ export function IpDbSection({
         db_name: selectedDb,
         ip: testIp.trim(),
       });
-      setTestResult({ country_code: result.country_code, db_name: result.db_name });
+      setTestResult({ region_code: result.region_code, db_name: result.db_name });
       toast.dismiss(tid);
       toast.success(t("settings.ipDb.testSuccess"), {
-        description: result.country_code
+        description: result.region_code
           ? t("settings.ipDb.testResultDesc", {
               ip: result.ip,
-              code: result.country_code,
+              code: result.region_code,
             })
           : t("settings.ipDb.testNotFound"),
       });
@@ -163,8 +163,8 @@ export function IpDbSection({
         {testResult && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground">{t("settings.ipDb.result")}</span>
-            {testResult.country_code ? (
-              <Badge variant="secondary">{testResult.country_code}</Badge>
+            {testResult.region_code ? (
+              <Badge variant="secondary">{testResult.region_code}</Badge>
             ) : (
               <Badge variant="outline">{t("settings.ipDb.resultNull")}</Badge>
             )}

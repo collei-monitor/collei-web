@@ -19,7 +19,7 @@ const SIZE_MAP: Record<FlagSize, string> = {
   lg: "h-6 w-8",
 };
 
-/** 将国家代码渲染为 SVG 旗帜，null 或未知代码显示地球图标 */
+/** 将代码渲染为 SVG 旗帜，null 或未知代码显示地球图标 */
 export function FlagIcon({ region, size = "sm", className }: FlagIconProps) {
   const sizeClass = SIZE_MAP[size];
 

@@ -171,7 +171,7 @@ export default function EventCenterPage() {
               history.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-mono text-xs">{item.id}</TableCell>
-                  <TableCell className="font-mono text-xs max-w-[200px] truncate">
+                  <TableCell className="font-mono text-xs max-w-50 truncate">
                     {item.server_uuid}
                   </TableCell>
                   <TableCell>{item.rule_id}</TableCell>
