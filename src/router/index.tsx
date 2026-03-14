@@ -13,6 +13,8 @@ import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
 import AlertEnginePage from "@/pages/admin/alerts/AlertEnginePage";
 import UsersPage from "@/pages/admin/UsersPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
+import NetworkPage from "@/pages/admin/services/network/NetworkPage";
+import RemotePage from "@/pages/admin/services/remote/RemotePage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
 import { WebSocketProvider } from "@/components/WebSocketProvider";
@@ -54,6 +56,8 @@ const router = createBrowserRouter([
           { path: "alerts/engine", element: <AlertEnginePage /> },
           { path: "users", element: <UsersPage /> },
           { path: "settings", element: <SettingsPage /> },
+          { path: "services/network", element: <NetworkPage /> },
+          { path: "services/remote", element: <RemotePage /> },
         ],
       },
     ],

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Settings, Database, Clock } from "lucide-react";
+import { Settings, Database, Clock, Activity } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -124,6 +124,32 @@ export default function SettingsPage() {
               configs={configs!}
               onBatchSave={handleBatchSave}
               saving={batchSetConfig.isPending}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ── IP 数据库 ── */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Activity className="h-4 w-4" />
+            {t("settings.networkRetain.title")}
+          </CardTitle>
+          <CardDescription>{t("settings.networkRetain.desc")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <ConfigSkeleton />
+          ) : (
+            <TextConfigField
+              configKey="network_status_retain_hours"
+              label={t("settings.networkRetain.label")}
+              description={t("settings.networkRetain.labelDesc")}
+              placeholder="24"
+              currentValue={configs?.["network_status_retain_hours"]}
+              onSave={handleSave}
+              saving={setConfig.isPending && setConfig.variables?.key === "network_status_retain_hours"}
             />
           )}
         </CardContent>

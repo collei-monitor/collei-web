@@ -37,6 +37,7 @@ import {
   Layers,
   ChevronRight,
   Server,
+  Network,
 } from "lucide-react";
 
 interface NavSubItem {
@@ -220,6 +221,22 @@ export function AdminSidebar() {
             },
           ],
         },
+        {
+          title: t("admin.sidebar.servicesGroup"),
+          url: "/admin/services",
+          icon: Network,
+          end: false,
+          children: [
+            {
+              title: t("admin.sidebar.networkMonitor"),
+              url: "/admin/services/network",
+            },
+            {
+              title: t("admin.sidebar.remoteExec"),
+              url: "/admin/services/remote",
+            },
+          ],
+        },
       ],
     },
     {
@@ -239,6 +256,10 @@ export function AdminSidebar() {
         },
       ],
     },
+    // {
+    //   labelKey: "admin.sidebar.services",
+    //   items: [],
+    // },
   ];
 
   return (

@@ -4,9 +4,11 @@ import { ArrowLeft } from "lucide-react";
 import { DisplayHeader } from "@/components/display/DisplayHeader";
 import { ServerInfoCard } from "@/components/display/ServerInfoCard";
 import { ServerCharts } from "@/components/display/ServerCharts";
+import { NetworkProbeChart } from "@/components/display/NetworkProbeChart";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useServerDetail } from "@/services/server-detail";
 
 export default function ServerDetailPage() {
@@ -51,13 +53,30 @@ export default function ServerDetailPage() {
               {/* 服务器信息 */}
               <ServerInfoCard server={server} />
 
-              {/* 历史图表 */}
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  {t("detail.chart.title")}
-                </h3>
-                <ServerCharts history={history} />
-              </div>
+              {/* Tabs: 状态 / 网络 */}
+              <Tabs defaultValue="status">
+                <TabsList>
+                  <TabsTrigger value="status">
+                    {t("detail.tabs.status")}
+                  </TabsTrigger>
+                  <TabsTrigger value="network">
+                    {t("detail.tabs.network")}
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="status">
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">
+                      {t("detail.chart.title")}
+                    </h3>
+                    <ServerCharts history={history} />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="network">
+                  <NetworkProbeChart uuid={uuid!} />
+                </TabsContent>
+              </Tabs>
             </>
           )}
         </main>
