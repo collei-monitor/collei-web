@@ -11,6 +11,7 @@ export interface AuthUser {
   created_at: number;
   updated_at: number;
   ws_token?: string;
+  global_registration_token?: string | null;
 }
 
 /**

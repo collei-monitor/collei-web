@@ -38,6 +38,7 @@ import { EditServerDialog } from "./components/dialogs/EditServerDialog";
 import { DeleteServerDialog } from "./components/dialogs/DeleteServerDialog";
 import { GroupsDialog } from "./components/dialogs/GroupsDialog";
 import { BillingDialog } from "./components/dialogs/BillingDialog";
+import { InstallCommandDialog } from "./components/dialogs/InstallCommandDialog";
 import { ServerDetailDrawer } from "./components/ServerDetailDrawer";
 
 export default function NodesPage() {
@@ -49,6 +50,8 @@ export default function NodesPage() {
   const [groupsTarget, setGroupsTarget] = useState<Server | null>(null);
   const [billingTarget, setBillingTarget] = useState<Server | null>(null);
   const [detailTarget, setDetailTarget] = useState<Server | null>(null);
+  const [installTarget, setInstallTarget] = useState<Server | null>(null);
+  const [showAddInstall, setShowAddInstall] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleColumns, setVisibleColumns] = useState({
     ip: true,
@@ -155,7 +158,7 @@ export default function NodesPage() {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" className="gap-1.5">
+          <Button size="sm" className="gap-1.5" onClick={() => setShowAddInstall(true)}>
             <Plus className="h-4 w-4" />
             {t("admin.nodes.add")}
           </Button>
@@ -231,6 +234,7 @@ export default function NodesPage() {
                         onGroups={setGroupsTarget}
                         onDetail={setDetailTarget}
                         onBilling={setBillingTarget}
+                        onInstall={setInstallTarget}
                         visibleColumns={visibleColumns}
                       />
                     ))}
@@ -270,6 +274,18 @@ export default function NodesPage() {
         server={detailTarget}
         open={!!detailTarget}
         onOpenChange={(v) => !v && setDetailTarget(null)}
+      />
+      <InstallCommandDialog
+        key={`install-${installTarget?.uuid ?? "add"}`}
+        open={!!installTarget || showAddInstall}
+        onOpenChange={(v) => {
+          if (!v) {
+            setInstallTarget(null);
+            setShowAddInstall(false);
+          }
+        }}
+        serverToken={installTarget?.token}
+        serverName={installTarget?.name}
       />
     </div>
   );

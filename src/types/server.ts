@@ -78,6 +78,7 @@ export interface UpsertBillingPayload {
 export interface Server {
   uuid: string;
   name: string;
+  token: string | null;
   cpu_name: string | null;
   virtualization: string | null;
   arch: string | null;
@@ -117,6 +118,17 @@ export interface UpdateServerPayload {
 
 export interface SetServerGroupsPayload {
   group_ids: string[];
+}
+
+export interface CreateServerPayload {
+  name: string;
+  remark?: string;
+}
+
+export interface CreateServerResponse {
+  uuid: string;
+  name: string;
+  token: string;
 }
 
 // ── 公开接口类型 ──────────────────────────────────────────────────────────────

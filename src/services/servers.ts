@@ -12,6 +12,8 @@ import type {
   GroupWithServers,
   UpdateServerPayload,
   SetServerGroupsPayload,
+  CreateServerPayload,
+  CreateServerResponse,
   CreateGroupPayload,
   UpdateGroupPayload,
   BatchUpdateGroupTopsResult,
@@ -37,6 +39,13 @@ export const groupKeys = {
 // ── 服务器 API ────────────────────────────────────────────────────────────────
 
 const serverApi = {
+  /** 创建服务器（被动注册模式） */
+  async create(payload: CreateServerPayload): Promise<CreateServerResponse> {
+    const { status, data } = await api.post("/servers", payload);
+    if (status !== 201 && status !== 200) throw new Error(data?.detail || "Failed to create server");
+    return data as CreateServerResponse;
+  },
+
   /** 获取服务器列表 */
   async list(): Promise<Server[]> {
     const { status, data } = await api.get("/clients/servers");
@@ -162,6 +171,17 @@ export function useServers(options?: { refetchInterval?: number | false }) {
     queryKey: serverKeys.lists(),
     queryFn: serverApi.list,
     refetchInterval: options?.refetchInterval,
+  });
+}
+
+/** 创建服务器（被动注册模式） */
+export function useCreateServer() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateServerPayload) => serverApi.create(payload),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: serverKeys.lists() });
+    },
   });
 }
 

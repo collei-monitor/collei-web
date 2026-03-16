@@ -20,6 +20,7 @@ import {
   Pencil,
   CircleDollarSign,
   TerminalSquare,
+  Download,
 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -37,6 +38,7 @@ export function SortableRow({
   onGroups,
   onDetail,
   onBilling,
+  onInstall,
   visibleColumns,
 }: {
   server: Server;
@@ -47,6 +49,7 @@ export function SortableRow({
   onGroups: (s: Server) => void;
   onDetail: (s: Server) => void;
   onBilling: (s: Server) => void;
+  onInstall: (s: Server) => void;
   visibleColumns: { ip: boolean; groups: boolean; status: boolean };
 }) {
   const { t } = useTranslation();
@@ -215,6 +218,19 @@ export function SortableRow({
       {/* 操作 */}
       <TableCell>
         <div className="flex items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onInstall(server)}
+              >
+                <Download className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{t("admin.nodes.actions.install")}</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
