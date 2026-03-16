@@ -15,6 +15,7 @@ import UsersPage from "@/pages/admin/UsersPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
 import NetworkPage from "@/pages/admin/services/network/NetworkPage";
 import RemotePage from "@/pages/admin/services/remote/RemotePage";
+import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
 import { WebSocketProvider } from "@/components/WebSocketProvider";
@@ -60,6 +61,8 @@ const router = createBrowserRouter([
           { path: "services/remote", element: <RemotePage /> },
         ],
       },
+      // 独立全屏页面（不套 AdminLayout）
+      { path: "terminal", element: <SSHTerminalPage /> },
     ],
   },
   {

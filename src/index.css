@@ -122,3 +122,9 @@
     @apply bg-background text-foreground;
     }
 }
+
+/* react-resizable-panels 外层 flex item 需要 min-width:0 才能收缩 */
+[data-panel] {
+  min-width: 0;
+  overflow: hidden;
+}

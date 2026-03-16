@@ -1,0 +1,192 @@
+/**
+ * SSH WebSocket 连接管理 hook
+ * 处理会话创建、WS 连接、消息收发和生命周期
+ */
+
+import { useRef, useCallback, useState, useEffect } from "react";
+import { api } from "@/lib/api";
+import { createSSHSession, buildSSHWebSocketURL } from "@/services/ssh";
+import type {
+  SSHConnectionStatus,
+  SSHDownMessage,
+  CreateSSHSessionPayload,
+} from "@/types/ssh";
+
+export interface UseSSHConnectionOptions {
+  serverUuid: string;
+  /** xterm 写入入口 */
+  onOutput?: (data: Uint8Array) => void;
+  /** 连接成功 */
+  onConnected?: (cols: number, rows: number) => void;
+  /** 需要密码认证 */
+  onAuthRequired?: (methods: string[]) => void;
+  /** 错误 */
+  onError?: (message: string) => void;
+  /** 连接关闭 */
+  onClosed?: (reason: string) => void;
+}
+
+export function useSSHConnection(options: UseSSHConnectionOptions) {
+  const optionsRef = useRef(options);
+  useEffect(() => { optionsRef.current = options; });
+
+  const [status, setStatus] = useState<SSHConnectionStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const wsRef = useRef<WebSocket | null>(null);
+  const sessionIdRef = useRef<string>("");
+  const pingIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+
+  const cleanup = useCallback(() => {
+    if (pingIntervalRef.current) {
+      clearInterval(pingIntervalRef.current);
+      pingIntervalRef.current = undefined;
+    }
+    if (wsRef.current) {
+      const ws = wsRef.current;
+      wsRef.current = null;
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+        try {
+          ws.send(JSON.stringify({ action: "close" }));
+        } catch {
+          // ignore
+        }
+        ws.close();
+      }
+    }
+  }, []);
+
+  const connect = useCallback(async (payload: CreateSSHSessionPayload = {}) => {
+    cleanup();
+    setErrorMessage("");
+    setStatus("creating");
+
+    try {
+      // 1. 刷新 ws_token（直接请求，不触发 store 更新避免 re-render 循环）
+      const { status: meStatus, data: meData } = await api.get("/auth/me");
+      const wsToken = meStatus === 200 ? (meData as { ws_token?: string }).ws_token : undefined;
+
+      if (!wsToken) {
+        throw new Error("Failed to get WebSocket token");
+      }
+
+      // 2. 创建 SSH 会话
+      const { session_id } = await createSSHSession(optionsRef.current.serverUuid, payload);
+      sessionIdRef.current = session_id;
+
+      // 3. 建立 WebSocket 连接
+      setStatus("waiting");
+      const wsUrl = buildSSHWebSocketURL(session_id, wsToken);
+      const ws = new WebSocket(wsUrl);
+      ws.binaryType = "arraybuffer";
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        // 启动心跳
+        pingIntervalRef.current = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ action: "ping" }));
+          }
+        }, 30_000);
+      };
+
+      ws.onmessage = (event) => {
+        if (event.data instanceof ArrayBuffer) {
+          // Binary 帧 = 终端输出
+          optionsRef.current.onOutput?.(new Uint8Array(event.data));
+          return;
+        }
+
+        // Text 帧 = JSON 控制消息
+        try {
+          const msg = JSON.parse(event.data) as SSHDownMessage;
+          switch (msg.type) {
+            case "connected":
+              setStatus("connected");
+              optionsRef.current.onConnected?.(msg.cols, msg.rows);
+              break;
+            case "auth_required":
+              setStatus("auth_required");
+              optionsRef.current.onAuthRequired?.(msg.methods);
+              break;
+            case "error":
+              setStatus("error");
+              setErrorMessage(msg.message);
+              optionsRef.current.onError?.(msg.message);
+              break;
+            case "closed":
+              setStatus("closed");
+              optionsRef.current.onClosed?.(msg.reason);
+              cleanup();
+              break;
+            case "pong":
+              break;
+          }
+        } catch {
+          // ignore parse errors
+        }
+      };
+
+      ws.onerror = () => {
+        setStatus("error");
+        setErrorMessage("WebSocket connection error");
+        optionsRef.current.onError?.("WebSocket connection error");
+      };
+
+      ws.onclose = (event) => {
+        if (wsRef.current === ws) {
+          const reason = event.reason || `Connection closed (code: ${event.code})`;
+          setStatus("closed");
+          optionsRef.current.onClosed?.(reason);
+        }
+      };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Connection failed";
+      setStatus("error");
+      setErrorMessage(message);
+      optionsRef.current.onError?.(message);
+    }
+  }, [cleanup]);
+
+  const sendInput = useCallback((data: string) => {
+    const ws = wsRef.current;
+    if (ws?.readyState === WebSocket.OPEN) {
+      // 终端输入作为 binary 帧发送
+      const encoder = new TextEncoder();
+      ws.send(encoder.encode(data));
+    }
+  }, []);
+
+  const sendAuth = useCallback((username: string, password: string) => {
+    const ws = wsRef.current;
+    if (ws?.readyState === WebSocket.OPEN) {
+      setStatus("authenticating");
+      ws.send(JSON.stringify({ action: "auth", username, password }));
+    }
+  }, []);
+
+  const sendResize = useCallback((cols: number, rows: number) => {
+    const ws = wsRef.current;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ action: "resize", cols, rows }));
+    }
+  }, []);
+
+  const disconnect = useCallback(() => {
+    cleanup();
+    setStatus("closed");
+  }, [cleanup]);
+
+  // 组件卸载时清理
+  useEffect(() => cleanup, [cleanup]);
+
+  return {
+    status,
+    errorMessage,
+    sessionId: sessionIdRef.current,
+    connect,
+    sendInput,
+    sendAuth,
+    sendResize,
+    disconnect,
+  };
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { Server } from "@/types/server";
 import { ServerApproval, ServerVisibility } from "@/types/server";
@@ -18,6 +19,7 @@ import {
   Check,
   Pencil,
   CircleDollarSign,
+  TerminalSquare,
 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -48,6 +50,7 @@ export function SortableRow({
   visibleColumns: { ip: boolean; groups: boolean; status: boolean };
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const {
     attributes,
     listeners,
@@ -224,6 +227,22 @@ export function SortableRow({
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t("admin.nodes.actions.edit")}</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() =>
+                  navigate(`/admin/terminal?uuid=${server.uuid}&name=${encodeURIComponent(server.name)}`)
+                }
+                disabled={server.status !== 1}
+              >
+                <TerminalSquare className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{t("admin.nodes.actions.terminal")}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>

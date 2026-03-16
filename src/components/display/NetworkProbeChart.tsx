@@ -62,11 +62,11 @@ const PALETTE = [
 type TimeRange = "realtime" | "1h" | "6h" | "12h" | "24h" | "custom";
 
 const RANGE_SECONDS: Record<Exclude<TimeRange, "custom">, number> = {
-  realtime: 300,
-  "1h": 3600,
-  "6h": 21600,
-  "12h": 43200,
-  "24h": 86400,
+  realtime: 0,
+  "1h": 1,
+  "6h": 6,
+  "12h": 12,
+  "24h": 24,
 };
 
 // ── 指标选项 ──────────────────────────────────────────────────────────────────
@@ -253,6 +253,9 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
         start_time: Math.floor(start.getTime() / 1000),
         end_time: Math.floor(end.getTime() / 1000),
       };
+    }
+    if (range === "realtime") {
+      return {};
     }
     if (range !== "custom") {
       return { range: `${RANGE_SECONDS[range]}` };
