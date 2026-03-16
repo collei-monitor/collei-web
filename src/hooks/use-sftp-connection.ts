@@ -50,7 +50,7 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
 
   const wsRef = useRef<WebSocket | null>(null);
   const sessionIdRef = useRef("");
-  const pingIntervalRef = useRef<ReturnType<typeof setInterval>>();
+  const pingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pendingRef = useRef<Map<string, PendingRequest>>(new Map());
   const downloadRef = useRef<DownloadState | null>(null);
 
@@ -59,7 +59,7 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
   const cleanup = useCallback(() => {
     if (pingIntervalRef.current) {
       clearInterval(pingIntervalRef.current);
-      pingIntervalRef.current = undefined;
+      pingIntervalRef.current = null;
     }
     if (wsRef.current) {
       const ws = wsRef.current;

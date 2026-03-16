@@ -720,12 +720,6 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* 认证对话框 */}
-      <AuthDialog
-        open={status === "auth_required"}
-        onSubmit={handleAuthSubmit}
-        onCancel={disconnect}
-      />
     </div>
   );
 }
