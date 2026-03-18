@@ -38,6 +38,7 @@ import {
   ChevronRight,
   Server,
   Network,
+  ScrollText,
 } from "lucide-react";
 
 interface NavSubItem {
@@ -246,6 +247,12 @@ export function AdminSidebar() {
           title: t("admin.sidebar.users"),
           url: "/admin/users",
           icon: Users,
+          end: false,
+        },
+        {
+          title: t("admin.sidebar.logs"),
+          url: "/admin/logs",
+          icon: ScrollText,
           end: false,
         },
         {

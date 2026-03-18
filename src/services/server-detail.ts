@@ -1,6 +1,7 @@
 /**
  * 服务器详情页服务
  * 提供历史数据获取（HTTP）+ WS 实时数据累积（仅保留最近 1 分钟）
+ * 支持多种时间范围查询：实时、固定时间段、自定义时间段
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -14,30 +15,91 @@ import type { DisplayServer, ServerNodeRecord, ServerLoad } from "@/types/server
 /** 保留的历史数据时间窗口（秒） */
 const HISTORY_WINDOW = 80;
 
+// ── 时间范围类型 ──────────────────────────────────────────────────────────────
+
+export type LoadTimeRange = "realtime" | "1h" | "4h" | "1d" | "3d" | "custom";
+
+export interface LoadTimeRangeParams {
+  range: LoadTimeRange;
+  startTime?: number;
+  endTime?: number;
+}
+
 // ── Query Keys ────────────────────────────────────────────────────────────────
 
 export const serverDetailKeys = {
   load: (uuid: string) => ["public", "server", uuid, "load"] as const,
+  loadRange: (uuid: string, params: LoadTimeRangeParams) =>
+    ["public", "server", uuid, "load", params] as const,
 };
+
+// ── API 响应类型 ──────────────────────────────────────────────────────────────
+
+interface LoadDataResponse {
+  load_retain_seconds: number | null;
+  data: ServerNodeRecord[];
+}
 
 // ── API ───────────────────────────────────────────────────────────────────────
 
+const RANGE_HOURS: Record<string, number> = {
+  "1h": 1,
+  "4h": 4,
+  "1d": 24,
+  "3d": 72,
+};
+
 const serverDetailApi = {
-  /** 获取服务器历史负载数据 */
+  /** 获取服务器历史负载数据（实时模式） */
   async getLoad(uuid: string): Promise<ServerNodeRecord[]> {
     const { status, data } = await api.get(`/clients/public/servers/${uuid}/load`);
     if (status !== 200)
       throw new Error(data?.detail || "Failed to fetch server load");
-    return data as ServerNodeRecord[];
+    const resp = data as LoadDataResponse;
+    return resp.data;
+  },
+
+  /** 获取服务器历史负载数据（指定时间范围） */
+  async getLoadRange(
+    uuid: string,
+    params: LoadTimeRangeParams,
+  ): Promise<ServerNodeRecord[]> {
+    const queryParams: Record<string, any> = {};
+
+    if (params.range === "custom" && params.startTime && params.endTime) {
+      queryParams.start_time = params.startTime;
+      queryParams.end_time = params.endTime;
+    } else if (params.range !== "realtime" && RANGE_HOURS[params.range]) {
+      queryParams.range = RANGE_HOURS[params.range];
+    }
+
+    const { status, data } = await api.get(
+      `/clients/public/servers/${uuid}/load`,
+      Object.keys(queryParams).length > 0 ? queryParams : undefined,
+    );
+    if (status !== 200)
+      throw new Error(data?.detail || "Failed to fetch server load");
+    const resp = data as LoadDataResponse;
+    return resp.data;
   },
 };
 
-/** 获取服务器历史负载 */
+/** 获取服务器历史负载（实时） */
 export function useServerLoad(uuid: string) {
   return useQuery({
     queryKey: serverDetailKeys.load(uuid),
     queryFn: () => serverDetailApi.getLoad(uuid),
     enabled: !!uuid,
+  });
+}
+
+/** 获取服务器负载（指定时间范围） */
+export function useServerLoadRange(uuid: string, params: LoadTimeRangeParams) {
+  const isRealtime = params.range === "realtime";
+  return useQuery({
+    queryKey: serverDetailKeys.loadRange(uuid, params),
+    queryFn: () => serverDetailApi.getLoadRange(uuid, params),
+    enabled: !!uuid && !isRealtime,
   });
 }
 
@@ -148,5 +210,42 @@ export function useServerDetail(uuid: string): UseServerDetailResult {
     server,
     history,
     isLoading: serversLoading || loadLoading,
+  };
+}
+
+// ── 带时间范围切换的 Hook ──────────────────────────────────────────────────────
+
+interface UseServerDetailWithRangeResult {
+  server: DisplayServer | undefined;
+  history: ServerNodeRecord[];
+  /** 服务器基础信息尚未加载（仅首次进入页面时为 true） */
+  isServerLoading: boolean;
+  /** 图表数据正在加载（切换时间范围时为 true） */
+  isChartLoading: boolean;
+}
+
+/**
+ * 服务器详情 + 负载数据（支持时间范围切换）
+ * - 实时模式：复用 useServerDetail 的 WS + HTTP 行为
+ * - 历史模式：纯 HTTP 查询，不走 WS
+ */
+export function useServerDetailWithRange(
+  uuid: string,
+  rangeParams: LoadTimeRangeParams,
+): UseServerDetailWithRangeResult {
+  const realtimeResult = useServerDetail(uuid);
+  const { data: rangeData, isLoading: rangeLoading } = useServerLoadRange(
+    uuid,
+    rangeParams,
+  );
+
+  const isRealtime = rangeParams.range === "realtime";
+
+  return {
+    server: realtimeResult.server,
+    history: isRealtime ? realtimeResult.history : (rangeData ?? []),
+    // 仅当服务器信息尚未获取时才为 true，不受图表数据加载影响
+    isServerLoading: !realtimeResult.server && realtimeResult.isLoading,
+    isChartLoading: isRealtime ? false : rangeLoading,
   };
 }

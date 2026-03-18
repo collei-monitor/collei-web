@@ -29,6 +29,11 @@ interface MetricChartProps {
   yFormatter?: (value: number) => string;
   tooltipFormatter?: (value: number, name: string) => string;
   yDomain?: [number | "auto", number | "auto"];
+  timeRange?: string;
+  /** 固定 X 轴时间范围 [startTimestamp, endTimestamp]，确保即使数据不足也显示完整区间 */
+  xDomain?: [number, number];
+  /** 实时模式下在卡片右上角显示的最新数据值 */
+  latestValue?: string;
 }
 
 export interface TooltipPayloadItem {
@@ -44,16 +49,33 @@ interface CustomTooltipProps {
   payload?: TooltipPayloadItem[];
   label?: string | number;
   tooltipFormatter?: (value: number, name: string) => string;
+  timeRange?: string;
 }
 
 // ── 时间格式化 ────────────────────────────────────────────────────────────────
 
-function formatTime(timestamp: number): string {
+function formatTime(timestamp: number, range?: string): string {
   const date = new Date(timestamp * 1000);
-  return date.toLocaleTimeString(undefined, {
+  // 对于短时间范围（实时、1h），只显示时:分:秒
+  if (!range || range === "realtime" || range === "1h") {
+    return date.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+  // 对于较长时间范围，显示日期+时间
+  if (range === "4h") {
+    return date.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+  return date.toLocaleDateString(undefined, {
+    month: "2-digit",
+    day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
   });
 }
 
@@ -64,12 +86,13 @@ const CustomTooltip = ({
   payload,
   label,
   tooltipFormatter,
+  timeRange,
 }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border bg-popover px-3 py-2 text-popover-foreground shadow-md outline-none">
         <p className="mb-2 text-xs font-medium text-muted-foreground">
-          {formatTime(Number(label))}
+          {formatTime(Number(label), timeRange)}
         </p>
         <div className="flex flex-col gap-1.5">
           {payload.map((entry) => (
@@ -107,11 +130,19 @@ export function MetricChart({
   yFormatter,
   tooltipFormatter,
   yDomain,
+  timeRange,
+  xDomain,
+  latestValue,
 }: MetricChartProps) {
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {latestValue && (
+          <span className="text-sm font-mono font-semibold text-foreground">
+            {latestValue}
+          </span>
+        )}
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
@@ -142,11 +173,14 @@ export function MetricChart({
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis
                 dataKey="time"
-                tickFormatter={formatTime}
+                tickFormatter={(ts) => formatTime(ts, timeRange)}
                 fontSize={10}
                 tickLine={false}
                 axisLine={false}
                 minTickGap={30}
+                type={xDomain ? "number" : "category"}
+                domain={xDomain}
+                allowDataOverflow={!!xDomain}
               />
               <YAxis
                 fontSize={10}
@@ -157,7 +191,7 @@ export function MetricChart({
                 domain={yDomain}
               />
               <Tooltip
-                content={<CustomTooltip tooltipFormatter={tooltipFormatter} />}
+                content={<CustomTooltip tooltipFormatter={tooltipFormatter} timeRange={timeRange} />}
                 cursor={{
                   stroke: "hsl(var(--muted-foreground))",
                   strokeWidth: 1,

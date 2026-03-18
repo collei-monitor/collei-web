@@ -1,6 +1,8 @@
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowLeft, CalendarIcon } from "lucide-react";
 import { DisplayHeader } from "@/components/display/DisplayHeader";
 import { ServerInfoCard } from "@/components/display/ServerInfoCard";
 import { ServerCharts } from "@/components/display/ServerCharts";
@@ -9,13 +11,78 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useServerDetail } from "@/services/server-detail";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  useServerDetailWithRange,
+  type LoadTimeRange,
+  type LoadTimeRangeParams,
+} from "@/services/server-detail";
+
+const RANGE_OPTIONS: LoadTimeRange[] = [
+  "realtime",
+  "1h",
+  "4h",
+  "1d",
+  "3d",
+  "custom",
+];
+
+const RANGE_SECONDS: Record<string, number> = {
+  "1h": 3600,
+  "4h": 14400,
+  "1d": 86400,
+  "3d": 259200,
+};
 
 export default function ServerDetailPage() {
   const { t } = useTranslation();
   const { uuid } = useParams<{ uuid: string }>();
   const navigate = useNavigate();
-  const { server, history, isLoading } = useServerDetail(uuid ?? "");
+
+  // ── 时间范围状态 ─────────────────────────
+  const [selectedRange, setSelectedRange] = useState<LoadTimeRange>("realtime");
+  const [customStart, setCustomStart] = useState<Date | undefined>(undefined);
+  const [customEnd, setCustomEnd] = useState<Date | undefined>(undefined);
+
+  const rangeParams: LoadTimeRangeParams = {
+    range: selectedRange,
+    ...(selectedRange === "custom" &&
+      customStart &&
+      customEnd && {
+        startTime: Math.floor(customStart.getTime() / 1000),
+        endTime: Math.floor(customEnd.getTime() / 1000),
+      }),
+  };
+
+  const { server, history, isServerLoading, isChartLoading } =
+    useServerDetailWithRange(uuid ?? "", rangeParams);
+
+  const handleRangeChange = (range: string) => {
+    setSelectedRange(range as LoadTimeRange);
+  };
+
+  // 计算 X 轴时间范围（确保始终显示选定范围的完整区间）
+  const xDomain = useMemo((): [number, number] | undefined => {
+    if (selectedRange === "realtime") return undefined;
+    if (selectedRange === "custom") {
+      if (customStart && customEnd) {
+        return [
+          Math.floor(customStart.getTime() / 1000),
+          Math.floor(customEnd.getTime() / 1000),
+        ];
+      }
+      return undefined;
+    }
+    const seconds = RANGE_SECONDS[selectedRange];
+    if (!seconds) return undefined;
+    const now = Math.floor(Date.now() / 1000);
+    return [now - seconds, now];
+  }, [selectedRange, customStart, customEnd]);
 
   return (
     <TooltipProvider>
@@ -33,7 +100,7 @@ export default function ServerDetailPage() {
             {t("common.backHome")}
           </Button>
 
-          {isLoading ? (
+          {isServerLoading ? (
             <div className="space-y-4">
               <Skeleton className="h-60 w-full rounded-lg" />
               <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
@@ -66,10 +133,93 @@ export default function ServerDetailPage() {
 
                 <TabsContent value="status">
                   <div className="space-y-4">
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      {t("detail.chart.title")}
-                    </h3>
-                    <ServerCharts history={history} />
+                    {/* 标题 + 时间范围选择 */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        {t("detail.chart.title")}
+                      </h3>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Tabs
+                          value={selectedRange}
+                          onValueChange={handleRangeChange}
+                        >
+                          <TabsList className="h-8">
+                            {RANGE_OPTIONS.map((r) => (
+                              <TabsTrigger
+                                key={r}
+                                value={r}
+                                className="text-xs px-2.5 h-6"
+                              >
+                                {t(`detail.chart.range.${r}`)}
+                              </TabsTrigger>
+                            ))}
+                          </TabsList>
+                        </Tabs>
+                      </div>
+                    </div>
+
+                    {/* 自定义日期选择器 */}
+                    {selectedRange === "custom" && (
+                      <div className="flex flex-wrap items-end gap-3">
+                        <div className="space-y-1">
+                          <span className="text-xs text-muted-foreground">
+                            {t("detail.chart.customRange.startDate")}
+                          </span>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-40 justify-start text-left font-normal h-8 text-xs"
+                              >
+                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                                {customStart
+                                  ? format(customStart, "yyyy-MM-dd")
+                                  : "—"}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={customStart}
+                                onSelect={setCustomStart}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-xs text-muted-foreground">
+                            {t("detail.chart.customRange.endDate")}
+                          </span>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className="w-40 justify-start text-left font-normal h-8 text-xs"
+                              >
+                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                                {customEnd
+                                  ? format(customEnd, "yyyy-MM-dd")
+                                  : "—"}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={customEnd}
+                                onSelect={setCustomEnd}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                    )}
+
+                    <ServerCharts
+                      history={history}
+                      timeRange={selectedRange}
+                      xDomain={xDomain}
+                      isLoading={isChartLoading}
+                    />
                   </div>
                 </TabsContent>
 

@@ -7,10 +7,15 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { MetricChart, type ChartSeries } from "@/components/display/MetricChart";
 import { formatSpeed, calcPercent } from "@/lib/display-utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { ServerNodeRecord } from "@/types/server";
+import type { LoadTimeRange } from "@/services/server-detail";
 
 interface ServerChartsProps {
   history: ServerNodeRecord[];
+  timeRange?: LoadTimeRange;
+  xDomain?: [number, number];
+  isLoading?: boolean;
 }
 
 // ── 颜色常量 ──────────────────────────────────────────────────────────────────
@@ -29,8 +34,11 @@ const COLORS = {
 
 // ── 组件 ──────────────────────────────────────────────────────────────────────
 
-export function ServerCharts({ history }: ServerChartsProps) {
+export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoading }: ServerChartsProps) {
   const { t } = useTranslation();
+
+  const isRealtime = timeRange === "realtime";
+  const lastRecord = history.length > 0 ? history[history.length - 1] : null;
 
   // CPU 数据
   const cpuData = useMemo(
@@ -41,6 +49,8 @@ export function ServerCharts({ history }: ServerChartsProps) {
     () => [{ dataKey: "cpu", label: "CPU", color: COLORS.cpu }],
     [],
   );
+  const cpuLatest = isRealtime && lastRecord != null
+    ? `${lastRecord.cpu.toFixed(1)}%` : undefined;
 
   // 内存数据（百分比）
   const memData = useMemo(
@@ -59,6 +69,8 @@ export function ServerCharts({ history }: ServerChartsProps) {
     ],
     [t],
   );
+  const memLatest = isRealtime && lastRecord != null
+    ? `${calcPercent(lastRecord.ram, lastRecord.ram_total).toFixed(1)}%` : undefined;
 
   // 磁盘数据（百分比）
   const diskData = useMemo(
@@ -73,6 +85,8 @@ export function ServerCharts({ history }: ServerChartsProps) {
     () => [{ dataKey: "disk", label: t("detail.chart.disk"), color: COLORS.disk }],
     [t],
   );
+  const diskLatest = isRealtime && lastRecord != null
+    ? `${calcPercent(lastRecord.disk, lastRecord.disk_total).toFixed(1)}%` : undefined;
 
   // 网络速度
   const netData = useMemo(
@@ -91,6 +105,8 @@ export function ServerCharts({ history }: ServerChartsProps) {
     ],
     [t],
   );
+  const netLatest = isRealtime && lastRecord != null
+    ? `↓${formatSpeed(lastRecord.net_in)} ↑${formatSpeed(lastRecord.net_out)}` : undefined;
 
   // 连接数
   const connData = useMemo(
@@ -109,6 +125,8 @@ export function ServerCharts({ history }: ServerChartsProps) {
     ],
     [],
   );
+  const connLatest = isRealtime && lastRecord != null
+    ? `${lastRecord.tcp ?? 0} / ${lastRecord.udp ?? 0}` : undefined;
 
   // 进程数
   const procData = useMemo(
@@ -119,6 +137,18 @@ export function ServerCharts({ history }: ServerChartsProps) {
     () => [{ dataKey: "process", label: t("detail.chart.process"), color: COLORS.process }],
     [t],
   );
+  const procLatest = isRealtime && lastRecord != null
+    ? `${lastRecord.process ?? 0}` : undefined;
+
+  if (isLoading) {
+    return (
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-72 w-full rounded-lg" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
@@ -130,6 +160,9 @@ export function ServerCharts({ history }: ServerChartsProps) {
         yFormatter={(v) => `${v}%`}
         tooltipFormatter={(v) => `${v.toFixed(1)}%`}
         yDomain={[0, 100]}
+        timeRange={timeRange}
+        xDomain={xDomain}
+        latestValue={cpuLatest}
       />
 
       {/* 内存 */}
@@ -140,6 +173,9 @@ export function ServerCharts({ history }: ServerChartsProps) {
         yFormatter={(v) => `${v}%`}
         tooltipFormatter={(v) => `${v.toFixed(1)}%`}
         yDomain={[0, 100]}
+        timeRange={timeRange}
+        xDomain={xDomain}
+        latestValue={memLatest}
       />
 
       {/* 磁盘 */}
@@ -150,6 +186,9 @@ export function ServerCharts({ history }: ServerChartsProps) {
         yFormatter={(v) => `${v}%`}
         tooltipFormatter={(v) => `${v.toFixed(1)}%`}
         yDomain={[0, 100]}
+        timeRange={timeRange}
+        xDomain={xDomain}
+        latestValue={diskLatest}
       />
 
       {/* 网络 */}
@@ -159,6 +198,9 @@ export function ServerCharts({ history }: ServerChartsProps) {
         series={netSeries}
         yFormatter={(v) => formatSpeed(v)}
         tooltipFormatter={(v) => formatSpeed(v)}
+        timeRange={timeRange}
+        xDomain={xDomain}
+        latestValue={netLatest}
       />
 
       {/* 连接数 */}
@@ -167,6 +209,9 @@ export function ServerCharts({ history }: ServerChartsProps) {
         data={connData}
         series={connSeries}
         tooltipFormatter={(v) => String(Math.round(v))}
+        timeRange={timeRange}
+        xDomain={xDomain}
+        latestValue={connLatest}
       />
 
       {/* 进程数 */}
@@ -175,6 +220,9 @@ export function ServerCharts({ history }: ServerChartsProps) {
         data={procData}
         series={procSeries}
         tooltipFormatter={(v) => String(Math.round(v))}
+        timeRange={timeRange}
+        xDomain={xDomain}
+        latestValue={procLatest}
       />
     </div>
   );

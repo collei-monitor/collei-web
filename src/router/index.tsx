@@ -13,6 +13,7 @@ import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
 import AlertEnginePage from "@/pages/admin/alerts/AlertEnginePage";
 import UsersPage from "@/pages/admin/UsersPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
+import LogsPage from "@/pages/admin/LogsPage";
 import NetworkPage from "@/pages/admin/services/network/NetworkPage";
 import RemotePage from "@/pages/admin/services/remote/RemotePage";
 import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
           { path: "alerts/events", element: <EventCenterPage /> },
           { path: "alerts/engine", element: <AlertEnginePage /> },
           { path: "users", element: <UsersPage /> },
+          { path: "logs", element: <LogsPage /> },
           { path: "settings", element: <SettingsPage /> },
           { path: "services/network", element: <NetworkPage /> },
           { path: "services/remote", element: <RemotePage /> },
