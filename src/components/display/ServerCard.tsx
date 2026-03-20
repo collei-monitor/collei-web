@@ -32,6 +32,21 @@ interface ServerCardProps {
   server: DisplayServer;
 }
 
+function formatOfflineDuration(
+  lastOnline: number | null | undefined,
+  t: (key: string) => string,
+): string {
+  if (!lastOnline) return "";
+  const seconds = Math.floor(Date.now() / 1000) - lastOnline;
+  if (seconds < 60) return `${seconds}${t("time.sec")}`;
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  if (days > 0) return `${days}${t("time.day")} ${hours}${t("time.hour")}`;
+  if (hours > 0) return `${hours}${t("time.hour")} ${minutes}${t("time.min")}`;
+  return `${minutes}${t("time.min")}`;
+}
+
 function formatUptime(
   bootTime: number | null | undefined,
   t: (key: string) => string,
@@ -183,10 +198,21 @@ export function ServerCard({ server }: ServerCardProps) {
             )}
           </div>
         ) : (
-          <div className="h-21 flex items-center justify-center text-xs text-muted-foreground">
-            {isOnline
-              ? t("display.server.connecting")
-              : t("display.server.offlineHint")}
+          <div className="h-21 flex flex-col items-center justify-center text-xs text-muted-foreground gap-1">
+            {isOnline ? (
+              <span>{t("display.server.connecting")}</span>
+            ) : (
+              <>
+                <span>{t("display.server.offlineHint")}</span>
+                {server.last_online && (
+                  <span className="text-muted-foreground/60">
+                    {t("display.server.offlineFor", {
+                      duration: formatOfflineDuration(server.last_online, t),
+                    })}
+                  </span>
+                )}
+              </>
+            )}
           </div>
         )}
 
