@@ -3,6 +3,7 @@
  * 基于 recharts，支持多 series 展示
  */
 
+import { memo } from "react";
 import {
   Area,
   AreaChart,
@@ -123,7 +124,7 @@ const CustomTooltip = ({
 
 // ── 主组件 ──────────────────────────────────────────────────────────────────────
 
-export function MetricChart({
+export const MetricChart = memo(function MetricChart({
   title,
   data,
   series,
@@ -223,4 +224,4 @@ export function MetricChart({
       </CardContent>
     </Card>
   );
-}
+});

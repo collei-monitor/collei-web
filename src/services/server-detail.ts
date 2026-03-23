@@ -137,15 +137,6 @@ function trimRecords(records: ServerNodeRecord[]): ServerNodeRecord[] {
   return records.filter((r) => r.time >= cutoff);
 }
 
-/** 按时间去重并排序 */
-function dedupeAndSort(records: ServerNodeRecord[]): ServerNodeRecord[] {
-  const map = new Map<number, ServerNodeRecord>();
-  for (const r of records) {
-    map.set(r.time, r);
-  }
-  return Array.from(map.values()).sort((a, b) => a.time - b.time);
-}
-
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 interface UseServerDetailResult {
@@ -168,10 +159,21 @@ export function useServerDetail(uuid: string): UseServerDetailResult {
     [servers, uuid],
   );
 
-  // 合并 HTTP 历史数据 + WS 实时数据，去重、排序、裁剪
+  // 合并 HTTP 历史数据 + WS 实时数据，去重、裁剪
   const history = useMemo(() => {
     const httpRecords = initialLoad ?? [];
-    return trimRecords(dedupeAndSort([...httpRecords, ...wsRecords]));
+    if (httpRecords.length === 0 && wsRecords.length === 0) return [];
+    // WS 记录按时间追加，只需与 HTTP 记录合并后去重排序一次
+    // 由于 wsRecords 按时间顺序追加，利用 Map 去重即可保持有序
+    const map = new Map<number, ServerNodeRecord>();
+    for (const r of httpRecords) map.set(r.time, r);
+    for (const r of wsRecords) map.set(r.time, r);
+    const cutoff = Math.floor(Date.now() / 1000) - HISTORY_WINDOW;
+    const result: ServerNodeRecord[] = [];
+    for (const r of map.values()) {
+      if (r.time >= cutoff) result.push(r);
+    }
+    return result.sort((a, b) => a.time - b.time);
   }, [initialLoad, wsRecords]);
 
   // 当 WS 推送新数据时，累积到 wsRecords

@@ -3,7 +3,7 @@
  * 包含 CPU / 内存 / 磁盘 / 网络 / 连接数 / 进程数 六组图表
  */
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { MetricChart, type ChartSeries } from "@/components/display/MetricChart";
 import { formatSpeed, calcPercent } from "@/lib/display-utils";
@@ -32,6 +32,10 @@ const COLORS = {
   process: "#8b5cf6",
 } as const;
 
+// ── 稳定常量（避免每次 render 创建新引用） ────────────────────────────────────
+
+const PCT_DOMAIN: [number, number] = [0, 100];
+
 // ── 组件 ──────────────────────────────────────────────────────────────────────
 
 export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoading }: ServerChartsProps) {
@@ -39,6 +43,12 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
 
   const isRealtime = timeRange === "realtime";
   const lastRecord = history.length > 0 ? history[history.length - 1] : null;
+
+  // 稳定的格式化函数引用，避免每次 render 创建新函数导致 MetricChart 重渲染
+  const pctYFormatter = useCallback((v: number) => `${v}%`, []);
+  const pctTooltipFormatter = useCallback((v: number) => `${v.toFixed(1)}%`, []);
+  const speedFormatter = useCallback((v: number) => formatSpeed(v), []);
+  const intFormatter = useCallback((v: number) => String(Math.round(v)), []);
 
   // CPU 数据
   const cpuData = useMemo(
@@ -157,9 +167,9 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         title={t("detail.chart.cpu")}
         data={cpuData}
         series={cpuSeries}
-        yFormatter={(v) => `${v}%`}
-        tooltipFormatter={(v) => `${v.toFixed(1)}%`}
-        yDomain={[0, 100]}
+        yFormatter={pctYFormatter}
+        tooltipFormatter={pctTooltipFormatter}
+        yDomain={PCT_DOMAIN}
         timeRange={timeRange}
         xDomain={xDomain}
         latestValue={cpuLatest}
@@ -170,9 +180,9 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         title={t("detail.chart.memory")}
         data={memData}
         series={memSeries}
-        yFormatter={(v) => `${v}%`}
-        tooltipFormatter={(v) => `${v.toFixed(1)}%`}
-        yDomain={[0, 100]}
+        yFormatter={pctYFormatter}
+        tooltipFormatter={pctTooltipFormatter}
+        yDomain={PCT_DOMAIN}
         timeRange={timeRange}
         xDomain={xDomain}
         latestValue={memLatest}
@@ -183,9 +193,9 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         title={t("detail.chart.disk")}
         data={diskData}
         series={diskSeries}
-        yFormatter={(v) => `${v}%`}
-        tooltipFormatter={(v) => `${v.toFixed(1)}%`}
-        yDomain={[0, 100]}
+        yFormatter={pctYFormatter}
+        tooltipFormatter={pctTooltipFormatter}
+        yDomain={PCT_DOMAIN}
         timeRange={timeRange}
         xDomain={xDomain}
         latestValue={diskLatest}
@@ -196,8 +206,8 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         title={t("detail.chart.network")}
         data={netData}
         series={netSeries}
-        yFormatter={(v) => formatSpeed(v)}
-        tooltipFormatter={(v) => formatSpeed(v)}
+        yFormatter={speedFormatter}
+        tooltipFormatter={speedFormatter}
         timeRange={timeRange}
         xDomain={xDomain}
         latestValue={netLatest}
@@ -208,7 +218,7 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         title={t("detail.chart.connections")}
         data={connData}
         series={connSeries}
-        tooltipFormatter={(v) => String(Math.round(v))}
+        tooltipFormatter={intFormatter}
         timeRange={timeRange}
         xDomain={xDomain}
         latestValue={connLatest}
@@ -219,7 +229,7 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         title={t("detail.chart.process")}
         data={procData}
         series={procSeries}
-        tooltipFormatter={(v) => String(Math.round(v))}
+        tooltipFormatter={intFormatter}
         timeRange={timeRange}
         xDomain={xDomain}
         latestValue={procLatest}
