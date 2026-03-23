@@ -182,7 +182,9 @@ export function useDisplayServers() {
           enable_statistics_mode: snap.enable_statistics_mode,
           total_flow_out: snap.status.total_flow_out,
           total_flow_in: snap.status.total_flow_in,
-          billing: node.billing,
+          billing: node.billing && snap.traffic_used != null
+            ? { ...node.billing, traffic_used: snap.traffic_used }
+            : node.billing,
         };
       }
       // 有节点信息但无快照，WS 已连接则标记为离线

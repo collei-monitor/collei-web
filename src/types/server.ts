@@ -216,6 +216,7 @@ export interface WsStatusServer {
   enable_statistics_mode: number;
   status: WsServerStatusInfo;
   load: ServerLoad;
+  traffic_used?: number | null;
 }
 
 /** WS nodes 消息（首次推送或节点变化时） */
