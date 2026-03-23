@@ -26,24 +26,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Info, Trash2 } from "lucide-react";
-
-function toTrafficGB(bytes: number): string {
-  if (bytes === 0) return "0";
-  return (bytes / 1073741824).toFixed(2);
-}
-
-function fromTrafficGB(gb: string): number {
-  const val = parseFloat(gb);
-  if (isNaN(val) || val <= 0) return 0;
-  return Math.round(val * 1073741824);
-}
 
 function timestampToDateStr(ts: number): string {
   if (!ts) return "";
@@ -115,9 +103,6 @@ function BillingForm({
           billing_cycle: billing.billing_cycle,
           billing_cycle_data: billing.billing_cycle_data,
           billing_cycle_cost: billing.billing_cycle_cost,
-          traffic_reset_day: billing.traffic_reset_day,
-          traffic_threshold: billing.traffic_threshold,
-          accounting_mode: billing.accounting_mode,
           billing_cycle_cost_code: billing.billing_cycle_cost_code,
           expiry_date: billing.expiry_date,
         }
@@ -125,15 +110,9 @@ function BillingForm({
           billing_cycle: 1,
           billing_cycle_data: 1,
           billing_cycle_cost: 0,
-          traffic_reset_day: 1,
-          traffic_threshold: 0,
-          accounting_mode: 1,
           billing_cycle_cost_code: "USD",
           expiry_date: 0,
         },
-  );
-  const [trafficGB, setTrafficGB] = useState(() =>
-    billing ? toTrafficGB(billing.traffic_threshold) : "0",
   );
   const [expiryDate, setExpiryDate] = useState(() =>
     billing ? timestampToDateStr(billing.expiry_date) : "",
@@ -144,7 +123,6 @@ function BillingForm({
     if (!server) return;
     const payload: UpsertBillingPayload = {
       ...form,
-      traffic_threshold: fromTrafficGB(trafficGB),
       expiry_date: dateStrToTimestamp(expiryDate),
     };
     const toastId = toast.loading(t("admin.nodes.billing.toast.saving"));
@@ -277,92 +255,6 @@ function BillingForm({
           </Select>
         </div>
       </div>
-
-      <Separator />
-
-      {/* 流量相关 */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>{t("admin.nodes.billing.trafficThreshold")}</Label>
-          <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              step="0.01"
-              min={0}
-              value={trafficGB}
-              onChange={(e) => setTrafficGB(e.target.value)}
-            />
-            <span className="text-sm text-muted-foreground shrink-0">GB</span>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center gap-1">
-            <Label>{t("admin.nodes.billing.trafficResetDay")}</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <button type="button" className="inline-flex">
-                  <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-72 text-sm" side="right">
-                <p className="font-medium mb-1">{t("admin.nodes.billing.hints.resetDayTitle")}</p>
-                <ul className="space-y-1 text-muted-foreground">
-                  <li><span className="font-mono">0</span> → {t("admin.nodes.billing.hints.resetDay0")}</li>
-                  <li><span className="font-mono">-1</span> → {t("admin.nodes.billing.hints.resetDayMinus1")}</li>
-                  <li><span className="font-mono">1–31</span> → {t("admin.nodes.billing.hints.resetDay131")}</li>
-                </ul>
-                <p className="mt-2 text-muted-foreground">{t("admin.nodes.billing.hints.resetDayFallback")}</p>
-              </PopoverContent>
-            </Popover>
-          </div>
-          <Input
-            type="number"
-            min={-1}
-            max={31}
-            value={form.traffic_reset_day ?? 0}
-            onChange={(e) =>
-              setForm((p) => ({
-                ...p,
-                traffic_reset_day: parseInt(e.target.value, 10) || 0,
-              }))
-            }
-          />
-        </div>
-      </div>
-
-      {/* 流量计算模式 */}
-      <div className="space-y-2">
-        <Label>{t("admin.nodes.billing.accountingMode")}</Label>
-        <Select
-          value={String(form.accounting_mode)}
-          onValueChange={(v) =>
-            setForm((p) => ({ ...p, accounting_mode: parseInt(v, 10) }))
-          }
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1">
-              {t("admin.nodes.billing.modes.outOnly")}
-            </SelectItem>
-            <SelectItem value="2">
-              {t("admin.nodes.billing.modes.inOnly")}
-            </SelectItem>
-            <SelectItem value="3">
-              {t("admin.nodes.billing.modes.sum")}
-            </SelectItem>
-            <SelectItem value="4">
-              {t("admin.nodes.billing.modes.max")}
-            </SelectItem>
-            <SelectItem value="5">
-              {t("admin.nodes.billing.modes.min")}
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <Separator />
 
       {/* 到期时间 */}
       <div className="space-y-2">

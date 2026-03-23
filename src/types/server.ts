@@ -55,9 +55,6 @@ export interface BillingRule {
   billing_cycle: number;
   billing_cycle_data: number;
   billing_cycle_cost: number;
-  traffic_reset_day: number;
-  traffic_threshold: number;
-  accounting_mode: number;
   billing_cycle_cost_code: string;
   expiry_date: number;
 }
@@ -66,11 +63,22 @@ export interface UpsertBillingPayload {
   billing_cycle?: number;
   billing_cycle_data?: number;
   billing_cycle_cost?: number;
-  traffic_reset_day?: number;
-  traffic_threshold?: number;
-  accounting_mode?: number;
   billing_cycle_cost_code?: string;
   expiry_date?: number;
+}
+
+/** 流量统计规则（GET/PUT /traffic-rule） */
+export interface TrafficRule {
+  uuid: string;
+  traffic_reset_day: number | null;
+  traffic_threshold: number;
+  accounting_mode: number;
+}
+
+export interface UpsertTrafficRulePayload {
+  traffic_reset_day?: number | null;
+  traffic_threshold?: number;
+  accounting_mode?: number;
 }
 
 // ── 服务器 ────────────────────────────────────────────────────────────────────

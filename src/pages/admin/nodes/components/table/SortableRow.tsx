@@ -18,9 +18,10 @@ import {
   Copy,
   Check,
   Pencil,
-  CircleDollarSign,
+  Receipt,
   TerminalSquare,
   Download,
+  ArrowDownUp,
 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -38,6 +39,7 @@ export function SortableRow({
   onGroups,
   onDetail,
   onBilling,
+  onTrafficRule,
   onInstall,
   visibleColumns,
 }: {
@@ -49,6 +51,7 @@ export function SortableRow({
   onGroups: (s: Server) => void;
   onDetail: (s: Server) => void;
   onBilling: (s: Server) => void;
+  onTrafficRule: (s: Server) => void;
   onInstall: (s: Server) => void;
   visibleColumns: { ip: boolean; groups: boolean; status: boolean };
 }) {
@@ -251,7 +254,9 @@ export function SortableRow({
                 size="icon"
                 className="h-8 w-8"
                 onClick={() =>
-                  navigate(`/admin/terminal?uuid=${server.uuid}&name=${encodeURIComponent(server.name)}`)
+                  navigate(
+                    `/admin/terminal?uuid=${server.uuid}&name=${encodeURIComponent(server.name)}`,
+                  )
                 }
                 disabled={server.status !== 1}
               >
@@ -268,10 +273,25 @@ export function SortableRow({
                 className="h-8 w-8"
                 onClick={() => onBilling(server)}
               >
-                <CircleDollarSign className="h-4 w-4" />
+                <Receipt className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t("admin.nodes.billing.title")}</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onTrafficRule(server)}
+              >
+                <ArrowDownUp className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {t("admin.nodes.trafficRule.title")}
+            </TooltipContent>
           </Tooltip>
           <ServerActions
             server={server}

@@ -19,6 +19,8 @@ import type {
   BatchUpdateGroupTopsResult,
   BillingRule,
   UpsertBillingPayload,
+  TrafficRule,
+  UpsertTrafficRulePayload,
 } from "@/types/server";
 
 // ── Query Keys ────────────────────────────────────────────────────────────────
@@ -29,6 +31,7 @@ export const serverKeys = {
   detail: (uuid: string) => [...serverKeys.all, "detail", uuid] as const,
   groups: (uuid: string) => [...serverKeys.all, "groups", uuid] as const,
   billing: (uuid: string) => [...serverKeys.all, "billing", uuid] as const,
+  trafficRule: (uuid: string) => [...serverKeys.all, "traffic-rule", uuid] as const,
 };
 
 export const groupKeys = {
@@ -112,6 +115,26 @@ const serverApi = {
   async deleteBilling(uuid: string): Promise<void> {
     const { status, data } = await api.delete(`/clients/servers/${uuid}/billing`);
     if (status !== 200) throw new Error(data?.detail || "Failed to delete billing");
+  },
+
+  /** 获取流量统计规则 */
+  async getTrafficRule(uuid: string): Promise<TrafficRule | null> {
+    const { status, data } = await api.get(`/clients/servers/${uuid}/traffic-rule`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch traffic rule");
+    return data as TrafficRule | null;
+  },
+
+  /** 创建/更新流量统计规则 */
+  async upsertTrafficRule(uuid: string, payload: UpsertTrafficRulePayload): Promise<TrafficRule> {
+    const { status, data } = await api.put(`/clients/servers/${uuid}/traffic-rule`, payload);
+    if (status !== 200) throw new Error(data?.detail || "Failed to update traffic rule");
+    return data as TrafficRule;
+  },
+
+  /** 清除流量统计规则 */
+  async clearTrafficRule(uuid: string): Promise<void> {
+    const { status, data } = await api.delete(`/clients/servers/${uuid}/traffic-rule`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to clear traffic rule");
   },
 };
 
@@ -290,6 +313,41 @@ export function useDeleteBilling() {
     mutationFn: (uuid: string) => serverApi.deleteBilling(uuid),
     onSuccess: (_data, uuid) => {
       qc.invalidateQueries({ queryKey: serverKeys.billing(uuid) });
+      qc.invalidateQueries({ queryKey: serverKeys.trafficRule(uuid) });
+      qc.invalidateQueries({ queryKey: serverKeys.lists() });
+    },
+  });
+}
+
+/** 获取流量统计规则 */
+export function useServerTrafficRule(uuid: string | null) {
+  return useQuery({
+    queryKey: serverKeys.trafficRule(uuid ?? ""),
+    queryFn: () => serverApi.getTrafficRule(uuid!),
+    enabled: !!uuid,
+  });
+}
+
+/** 创建/更新流量统计规则 */
+export function useUpsertTrafficRule() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ uuid, payload }: { uuid: string; payload: UpsertTrafficRulePayload }) =>
+      serverApi.upsertTrafficRule(uuid, payload),
+    onSuccess: (_data, { uuid }) => {
+      qc.invalidateQueries({ queryKey: serverKeys.trafficRule(uuid) });
+      qc.invalidateQueries({ queryKey: serverKeys.lists() });
+    },
+  });
+}
+
+/** 清除流量统计规则 */
+export function useClearTrafficRule() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (uuid: string) => serverApi.clearTrafficRule(uuid),
+    onSuccess: (_data, uuid) => {
+      qc.invalidateQueries({ queryKey: serverKeys.trafficRule(uuid) });
       qc.invalidateQueries({ queryKey: serverKeys.lists() });
     },
   });

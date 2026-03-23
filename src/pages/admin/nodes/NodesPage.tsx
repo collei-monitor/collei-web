@@ -39,6 +39,7 @@ import { DeleteServerDialog } from "./components/dialogs/DeleteServerDialog";
 import { GroupsDialog } from "./components/dialogs/GroupsDialog";
 import { BillingDialog } from "./components/dialogs/BillingDialog";
 import { InstallCommandDialog } from "./components/dialogs/InstallCommandDialog";
+import { TrafficRuleDialog } from "./components/dialogs/TrafficRuleDialog";
 import { ServerDetailDrawer } from "./components/ServerDetailDrawer";
 
 export default function NodesPage() {
@@ -49,6 +50,7 @@ export default function NodesPage() {
   const [deleteTarget, setDeleteTarget] = useState<Server | null>(null);
   const [groupsTarget, setGroupsTarget] = useState<Server | null>(null);
   const [billingTarget, setBillingTarget] = useState<Server | null>(null);
+  const [trafficRuleTarget, setTrafficRuleTarget] = useState<Server | null>(null);
   const [detailTarget, setDetailTarget] = useState<Server | null>(null);
   const [installTarget, setInstallTarget] = useState<Server | null>(null);
   const [showAddInstall, setShowAddInstall] = useState(false);
@@ -234,6 +236,7 @@ export default function NodesPage() {
                         onGroups={setGroupsTarget}
                         onDetail={setDetailTarget}
                         onBilling={setBillingTarget}
+                        onTrafficRule={setTrafficRuleTarget}
                         onInstall={setInstallTarget}
                         visibleColumns={visibleColumns}
                       />
@@ -269,6 +272,12 @@ export default function NodesPage() {
         server={billingTarget}
         open={!!billingTarget}
         onOpenChange={(v) => !v && setBillingTarget(null)}
+      />
+      <TrafficRuleDialog
+        key={`traffic-${trafficRuleTarget?.uuid}`}
+        server={trafficRuleTarget}
+        open={!!trafficRuleTarget}
+        onOpenChange={(v) => !v && setTrafficRuleTarget(null)}
       />
       <ServerDetailDrawer
         server={detailTarget}
