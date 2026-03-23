@@ -13,15 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -29,13 +20,6 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -59,16 +43,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  Folder,
-  File,
-  FileSymlink,
+  FilePlus,
   Upload,
   FolderPlus,
   RefreshCw,
-  MoreHorizontal,
-  Download,
-  Trash2,
-  Pencil,
   ChevronRight,
   Home,
   X,
@@ -78,19 +56,10 @@ import {
   ArrowUp,
 } from "lucide-react";
 import { toast } from "sonner";
+import { SFTPFileListContent } from "./sftp/SFTPFileListContent";
+import { SFTPEditorDialog } from "./sftp/SFTPEditorDialog";
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────────
-
-function formatFileSize(bytes: number): string {
-  if (bytes === 0) return "0 B";
-  const units = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${(bytes / Math.pow(1024, i)).toFixed(i > 0 ? 1 : 0)} ${units[i]}`;
-}
-
-function formatTime(timestamp: number): string {
-  return new Date(timestamp * 1000).toLocaleString();
-}
 
 function joinPath(base: string, name: string): string {
   return base.endsWith("/") ? `${base}${name}` : `${base}/${name}`;
@@ -113,13 +82,6 @@ function pathSegments(path: string): { name: string; path: string }[] {
   }
   return segments;
 }
-
-const fileTypeIcon = (entry: SFTPFileEntry) => {
-  if (entry.type === "dir") return <Folder className="h-4 w-4 text-blue-500" />;
-  if (entry.type === "link")
-    return <FileSymlink className="h-4 w-4 text-purple-500" />;
-  return <File className="h-4 w-4 text-muted-foreground" />;
-};
 
 // ── 属性 ──────────────────────────────────────────────────────────────────────
 
@@ -148,6 +110,13 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
   const [renameName, setRenameName] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<SFTPFileEntry | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editorMode, setEditorMode] = useState<"create" | "edit">("create");
+  const [editorFileName, setEditorFileName] = useState("");
+  const [editorFilePath, setEditorFilePath] = useState("");
+  const [editorContent, setEditorContent] = useState("");
+  const [editorLoading, setEditorLoading] = useState(false);
+  const [editorSaving, setEditorSaving] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const connectedRef = useRef(false);
@@ -161,6 +130,8 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
     disconnect,
     sendAuth,
     ls,
+    cat,
+    write,
     download,
     upload,
     mkdir,
@@ -367,6 +338,73 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
     setMkdirOpen(true);
   }, []);
 
+  const openCreateFileDialog = useCallback(() => {
+    setEditorMode("create");
+    setEditorFileName("");
+    setEditorFilePath(currentPath || "/");
+    setEditorContent("");
+    setEditorLoading(false);
+    setEditorOpen(true);
+  }, [currentPath]);
+
+  const openEditFileDialog = useCallback(
+    async (entry: SFTPFileEntry) => {
+      if (entry.type !== "file") {
+        toast.error(t("sftp.toast.onlyFileEditable"));
+        return;
+      }
+      const filePath = joinPath(currentPath, entry.name);
+      setEditorMode("edit");
+      setEditorFileName(entry.name);
+      setEditorFilePath(filePath);
+      setEditorContent("");
+      setEditorLoading(true);
+      setEditorOpen(true);
+
+      try {
+        const result = await cat(filePath);
+        setEditorContent(result.content);
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : t("sftp.toast.readFailed"),
+        );
+      } finally {
+        setEditorLoading(false);
+      }
+    },
+    [cat, currentPath, t],
+  );
+
+  const handleSaveEditor = useCallback(async () => {
+    const name = editorFileName.trim();
+    if (!name) {
+      toast.error(t("sftp.toast.fileNameRequired"));
+      return;
+    }
+
+    const filePath = joinPath(currentPath, name);
+    setEditorSaving(true);
+    try {
+      await write(filePath, editorContent, "utf-8");
+      toast.success(
+        t(
+          editorMode === "create"
+            ? "sftp.toast.createFileSuccess"
+            : "sftp.toast.saveSuccess",
+          { name },
+        ),
+      );
+      setEditorOpen(false);
+      refresh();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : t("sftp.toast.saveFailed"),
+      );
+    } finally {
+      setEditorSaving(false);
+    }
+  }, [currentPath, editorContent, editorFileName, editorMode, refresh, t, write]);
+
   // ── 渲染 ────────────────────────────────────────────────────────────────────
 
   // 未连接/初始化中
@@ -468,14 +506,27 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => {
-                  setMkdirName("");
-                  setMkdirOpen(true);
+                  openMkdirDialog();
                 }}
               >
                 <FolderPlus className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t("sftp.actions.mkdir")}</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={openCreateFileDialog}
+              >
+                <FilePlus className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{t("sftp.actions.newFile")}</TooltipContent>
           </Tooltip>
 
           <Tooltip>
@@ -556,11 +607,12 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
       {/* 文件列表 */}
       {isMobile ? (
         <div className="flex-1 overflow-auto">
-          <FileListContent
+          <SFTPFileListContent
             entries={entries}
             isLoading={isLoading}
             isMobile={true}
             onEntryClick={handleEntryClick}
+            onEdit={openEditFileDialog}
             onDownload={handleDownload}
             onRename={openRenameDialog}
             onDelete={openDeleteDialog}
@@ -571,11 +623,12 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
         <ContextMenu>
           <ContextMenuTrigger asChild>
             <div className="flex-1 overflow-auto">
-              <FileListContent
+              <SFTPFileListContent
                 entries={entries}
                 isLoading={isLoading}
                 isMobile={false}
                 onEntryClick={handleEntryClick}
+                onEdit={openEditFileDialog}
                 onDownload={handleDownload}
                 onRename={openRenameDialog}
                 onDelete={openDeleteDialog}
@@ -592,6 +645,10 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
             <ContextMenuItem onClick={openMkdirDialog}>
               <FolderPlus className="mr-2 h-4 w-4" />
               {t("sftp.actions.mkdir")}
+            </ContextMenuItem>
+            <ContextMenuItem onClick={openCreateFileDialog}>
+              <FilePlus className="mr-2 h-4 w-4" />
+              {t("sftp.actions.newFile")}
             </ContextMenuItem>
             <ContextMenuItem onClick={() => fileInputRef.current?.click()}>
               <Upload className="mr-2 h-4 w-4" />
@@ -720,6 +777,26 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
         </AlertDialogContent>
       </AlertDialog>
 
+      <SFTPEditorDialog
+        open={editorOpen}
+        mode={editorMode}
+        fileName={editorFileName}
+        filePath={editorFilePath}
+        content={editorContent}
+        loading={editorLoading}
+        saving={editorSaving}
+        onOpenChange={(open) => {
+          setEditorOpen(open);
+          if (!open) {
+            setEditorSaving(false);
+            setEditorLoading(false);
+          }
+        }}
+        onFileNameChange={setEditorFileName}
+        onContentChange={setEditorContent}
+        onSave={handleSaveEditor}
+      />
+
     </div>
   );
 }
@@ -740,176 +817,3 @@ function StatusIcon({ status }: { status: SFTPConnectionStatus }) {
   return null;
 }
 
-// ── 文件列表内容（提取为子组件以便 ContextMenu 包裹） ──────────────────────────
-
-interface FileListContentProps {
-  entries: SFTPFileEntry[];
-  isLoading: boolean;
-  isMobile: boolean;
-  onEntryClick: (entry: SFTPFileEntry) => void;
-  onDownload: (entry: SFTPFileEntry) => void;
-  onRename: (entry: SFTPFileEntry) => void;
-  onDelete: (entry: SFTPFileEntry) => void;
-  t: (key: string) => string;
-}
-
-function FileListContent({
-  entries,
-  isLoading,
-  isMobile,
-  onEntryClick,
-  onDownload,
-  onRename,
-  onDelete,
-  t,
-}: FileListContentProps) {
-  if (isLoading) {
-    return (
-      <div className="p-4 space-y-2">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-8 w-full" />
-        ))}
-      </div>
-    );
-  }
-
-  if (entries.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-sm text-muted-foreground">{t("sftp.empty")}</p>
-      </div>
-    );
-  }
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className={isMobile ? "w-[60%]" : "w-[40%]"}>
-            {t("sftp.table.name")}
-          </TableHead>
-          <TableHead className={isMobile ? "w-[25%]" : "w-[15%]"}>
-            {t("sftp.table.size")}
-          </TableHead>
-          {!isMobile && (
-            <TableHead className="w-[15%]">
-              {t("sftp.table.permissions")}
-            </TableHead>
-          )}
-          {!isMobile && (
-            <TableHead className="w-[20%]">
-              {t("sftp.table.modified")}
-            </TableHead>
-          )}
-          {isMobile && <TableHead className="w-[15%]"></TableHead>}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {entries.map((entry) => {
-          const row = (
-            <TableRow
-              key={entry.name}
-              className={entry.type === "dir" ? "cursor-pointer" : ""}
-              onDoubleClick={() => onEntryClick(entry)}
-            >
-              <TableCell>
-                <div
-                  className="flex items-center gap-2"
-                  role={entry.type === "dir" ? "button" : undefined}
-                  onClick={() => onEntryClick(entry)}
-                >
-                  {fileTypeIcon(entry)}
-                  <span
-                    className={`truncate ${entry.type === "dir" ? "font-medium" : ""}`}
-                  >
-                    {entry.name}
-                  </span>
-                  {entry.type === "link" && entry.link_target && (
-                    <span className="text-xs text-muted-foreground">
-                      → {entry.link_target}
-                    </span>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell className="text-muted-foreground text-xs">
-                {entry.type === "dir" ? "—" : formatFileSize(entry.size)}
-              </TableCell>
-              {!isMobile && (
-                <TableCell>
-                  <code className="text-xs">{entry.permissions}</code>
-                </TableCell>
-              )}
-              {!isMobile && (
-                <TableCell className="text-muted-foreground text-xs">
-                  {formatTime(entry.mtime)}
-                </TableCell>
-              )}
-              {isMobile && (
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                        <MoreHorizontal className="h-3.5 w-3.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {entry.type !== "dir" && (
-                        <DropdownMenuItem onClick={() => onDownload(entry)}>
-                          <Download className="mr-2 h-4 w-4" />
-                          {t("sftp.actions.download")}
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem onClick={() => onRename(entry)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        {t("sftp.actions.rename")}
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={() => onDelete(entry)}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        {t("sftp.actions.delete")}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              )}
-            </TableRow>
-          );
-
-          // 桌面端：每行用 ContextMenu 包裹
-          if (!isMobile) {
-            return (
-              <ContextMenu key={entry.name}>
-                <ContextMenuTrigger asChild>{row}</ContextMenuTrigger>
-                <ContextMenuContent>
-                  {entry.type !== "dir" && (
-                    <ContextMenuItem onClick={() => onDownload(entry)}>
-                      <Download className="mr-2 h-4 w-4" />
-                      {t("sftp.actions.download")}
-                    </ContextMenuItem>
-                  )}
-                  <ContextMenuItem onClick={() => onRename(entry)}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    {t("sftp.actions.rename")}
-                  </ContextMenuItem>
-                  <ContextMenuSeparator />
-                  <ContextMenuItem
-                    variant="destructive"
-                    onClick={() => onDelete(entry)}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    {t("sftp.actions.delete")}
-                  </ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
-            );
-          }
-
-          return row;
-        })}
-      </TableBody>
-    </Table>
-  );
-}

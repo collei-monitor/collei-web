@@ -267,6 +267,23 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
     return res.entry;
   }, [sendRequest]);
 
+  const cat = useCallback(async (path: string, encoding = "utf-8") => {
+    const res = await sendRequest<{ path: string; content: string; encoding: string; size: number }>("cat", {
+      path,
+      encoding,
+    });
+    return res;
+  }, [sendRequest]);
+
+  const write = useCallback(async (path: string, content: string, encoding = "utf-8") => {
+    const res = await sendRequest<{ message: string; path?: string; size?: number }>("write", {
+      path,
+      content,
+      encoding,
+    });
+    return res;
+  }, [sendRequest]);
+
   const download = useCallback(async (path: string) => {
     const result = await sendRequest<{ name: string; size: number; chunks: ArrayBuffer[] }>("download", { path });
     const blob = new Blob(result.chunks);
@@ -362,6 +379,8 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
     sendAuth,
     ls,
     stat,
+    cat,
+    write,
     download,
     upload,
     mkdir,

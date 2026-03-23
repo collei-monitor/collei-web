@@ -10,6 +10,13 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -72,94 +79,118 @@ export function StatusDrawer({ target, open, onOpenChange }: StatusDrawerProps) 
 
   if (!target) return null;
 
-  return (
-    <Drawer
-      open={open}
-      onOpenChange={onOpenChange}
-      direction={isMobile ? "bottom" : "right"}
-    >
-      <DrawerContent className={isMobile ? "" : "sm:max-w-xl"}>
-        <DrawerHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <DrawerTitle>{t("admin.services.network.status.title")}</DrawerTitle>
-              <DrawerDescription className="mt-1">
-                {target.name} — {target.host}
-              </DrawerDescription>
+  const statusContent = isLoading ? (
+    <div className="space-y-2 mt-2">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton key={i} className="h-10 w-full" />
+      ))}
+    </div>
+  ) : statuses.length === 0 ? (
+    <p className="text-sm text-muted-foreground text-center py-8">
+      {t("admin.services.network.status.empty")}
+    </p>
+  ) : (
+    <div className="rounded-md border overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{t("admin.services.network.status.serverName")}</TableHead>
+            <TableHead className="text-right">
+              {t("admin.services.network.status.medianLatency")}
+            </TableHead>
+            <TableHead className="text-right">
+              {t("admin.services.network.status.maxLatency")}
+            </TableHead>
+            <TableHead className="text-right">
+              {t("admin.services.network.status.minLatency")}
+            </TableHead>
+            <TableHead className="text-right">
+              {t("admin.services.network.status.packetLoss")}
+            </TableHead>
+            <TableHead className="text-right text-xs">
+              {t("admin.services.network.status.time")}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {statuses.map((s) => (
+            <TableRow key={s.server_uuid}>
+              <TableCell className="font-medium text-sm">{s.server_name}</TableCell>
+              <TableCell className="text-right tabular-nums text-sm">
+                {formatLatency(s.median_latency)}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-sm">
+                {formatLatency(s.max_latency)}
+              </TableCell>
+              <TableCell className="text-right tabular-nums text-sm">
+                {formatLatency(s.min_latency)}
+              </TableCell>
+              <TableCell className="text-right">
+                <PacketLossBadge value={s.packet_loss} />
+              </TableCell>
+              <TableCell className="text-right text-xs text-muted-foreground">
+                {formatTime(s.time)}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
+        <DrawerContent>
+          <DrawerHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <DrawerTitle>{t("admin.services.network.status.title")}</DrawerTitle>
+                <DrawerDescription className="mt-1">
+                  {target.name} — {target.host}
+                </DrawerDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 mr-2"
+                onClick={() => refetch()}
+                disabled={isLoading}
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+              </Button>
             </div>
+          </DrawerHeader>
+          <div className="overflow-y-auto px-4 pb-6">{statusContent}</div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-4xl max-h-[85vh] p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <DialogTitle>{t("admin.services.network.status.title")}</DialogTitle>
+          <DialogDescription>
+            {target.name} — {target.host}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="px-6 pb-6">
+          <div className="flex justify-end mb-2">
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 mr-2"
+              className="h-8 w-8"
               onClick={() => refetch()}
               disabled={isLoading}
             >
               <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
             </Button>
           </div>
-        </DrawerHeader>
-
-        <div className="overflow-y-auto px-4 pb-6">
-          {isLoading ? (
-            <div className="space-y-2 mt-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
-              ))}
-            </div>
-          ) : statuses.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              {t("admin.services.network.status.empty")}
-            </p>
-          ) : (
-            <div className="rounded-md border overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("admin.services.network.status.serverName")}</TableHead>
-                    <TableHead className="text-right">
-                      {t("admin.services.network.status.medianLatency")}
-                    </TableHead>
-                    <TableHead className="text-right">
-                      {t("admin.services.network.status.maxLatency")}
-                    </TableHead>
-                    <TableHead className="text-right">
-                      {t("admin.services.network.status.minLatency")}
-                    </TableHead>
-                    <TableHead className="text-right">
-                      {t("admin.services.network.status.packetLoss")}
-                    </TableHead>
-                    <TableHead className="text-right text-xs">
-                      {t("admin.services.network.status.time")}
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {statuses.map((s) => (
-                    <TableRow key={s.server_uuid}>
-                      <TableCell className="font-medium text-sm">{s.server_name}</TableCell>
-                      <TableCell className="text-right tabular-nums text-sm">
-                        {formatLatency(s.median_latency)}
-                      </TableCell>
-                      <TableCell className="text-right tabular-nums text-sm">
-                        {formatLatency(s.max_latency)}
-                      </TableCell>
-                      <TableCell className="text-right tabular-nums text-sm">
-                        {formatLatency(s.min_latency)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <PacketLossBadge value={s.packet_loss} />
-                      </TableCell>
-                      <TableCell className="text-right text-xs text-muted-foreground">
-                        {formatTime(s.time)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+          <div className="overflow-y-auto max-h-[65vh]">{statusContent}</div>
         </div>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 }

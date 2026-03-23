@@ -46,6 +46,7 @@ export type SFTPDownMessage =
   | { type: "auth_required"; methods: string[] }
   | { type: "ls"; request_id: string; path: string; entries: SFTPFileEntry[] }
   | { type: "stat"; request_id: string; entry: SFTPFileEntry }
+  | { type: "cat"; request_id: string; path: string; content: string; encoding: string; size: number }
   | { type: "download_start"; request_id: string; name: string; size: number }
   | { type: "download_end"; request_id: string }
   | { type: "upload_progress"; request_id: string; received: number; total: number }
@@ -59,6 +60,8 @@ export type SFTPUpMessage =
   | { action: "auth"; username: string; password: string }
   | { action: "ls"; request_id: string; path: string }
   | { action: "stat"; request_id: string; path: string }
+  | { action: "cat"; request_id: string; path: string; encoding?: string }
+  | { action: "write"; request_id: string; path: string; content: string; encoding?: string }
   | { action: "download"; request_id: string; path: string }
   | { action: "upload"; request_id: string; path: string; size: number }
   | { action: "mkdir"; request_id: string; path: string }
