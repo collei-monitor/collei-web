@@ -34,14 +34,14 @@ export function ChannelBindingDialog({ rule, open, onOpenChange }: Props) {
 
   // Sync selected state when rule.channels changes (React recommended pattern)
   const ruleChannels = rule?.channels ?? [];
-  const bindingsKey = ruleChannels.map((c) => c.id).sort().join(",");
+  const bindingsKey = ruleChannels.map((c) => c.channel_id).sort().join(",");
   if (bindingsKey !== prevBindingsKey) {
     setPrevBindingsKey(bindingsKey);
-    setSelectedIds(new Set(ruleChannels.map((c) => c.id)));
+    setSelectedIds(new Set(ruleChannels.map((c) => c.channel_id)));
   }
 
   const boundSet = useMemo(
-    () => new Set(ruleChannels.map((c) => c.id)),
+    () => new Set(ruleChannels.map((c) => c.channel_id)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [bindingsKey],
   );
