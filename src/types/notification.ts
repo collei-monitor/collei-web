@@ -79,6 +79,8 @@ export interface AlertRuleRead {
   custom_message: string | null;
   traffic_notify_step: number | null;
   created_at: number | null;
+  channels?: AlertChannelRead[];
+  targets?: RuleTargetRead[];
 }
 
 export interface CreateRulePayload {

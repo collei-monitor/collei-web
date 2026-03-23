@@ -1206,15 +1206,25 @@ export default {
       offlineThresholdDesc: "Mark server offline if no report received within this time",
       offlineInterval: "Offline Check Interval",
       offlineIntervalDesc: "How often the heartbeat check runs",
-      loadRetain: "Load Data Retention",
-      loadRetainDesc: "How long historical load data is kept in the database",
+      loadRetain: "Real-time load data retention time",
+      loadRetainDesc: "Load data exceeding this time will be downsampled.",
       seconds: "seconds",
+    },
+    dataRetain: {
+      title: "Data Retention Policy",
+      desc: "Configure how long various types of data are retained in the database",
     },
     networkRetain: {
       title: "Network Probe Data",
       desc: "Configure data retention policy for network probe results",
       label: "Probe Data Retention (hours)",
       labelDesc: "How long network probe results are kept in the database. Default: 24 hours",
+    },
+    loadRetain: {
+      title: "Load Data",
+      desc: "Configure data retention policy for node load metrics",
+      label: "Load Data Retention (hours)",
+      labelDesc: "How long node load data is kept in the database. Default: 72 hours",
     },
     ipDb: {
       title: "IP Geolocation Database",

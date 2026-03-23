@@ -55,7 +55,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-3xl">
       <div>
         <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
         <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
@@ -129,28 +129,43 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* ── IP 数据库 ── */}
+      {/* ── 数据保留策略 ── */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Activity className="h-4 w-4" />
-            {t("settings.networkRetain.title")}
+            {t("settings.dataRetain.title")}
           </CardTitle>
-          <CardDescription>{t("settings.networkRetain.desc")}</CardDescription>
+          <CardDescription>{t("settings.dataRetain.desc")}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           {isLoading ? (
-            <ConfigSkeleton />
+            <>
+              <ConfigSkeleton />
+              <ConfigSkeleton />
+            </>
           ) : (
-            <TextConfigField
-              configKey="network_status_retain_hours"
-              label={t("settings.networkRetain.label")}
-              description={t("settings.networkRetain.labelDesc")}
-              placeholder="24"
-              currentValue={configs?.["network_status_retain_hours"]}
-              onSave={handleSave}
-              saving={setConfig.isPending && setConfig.variables?.key === "network_status_retain_hours"}
-            />
+            <>
+              <TextConfigField
+                configKey="network_status_retain_hours"
+                label={t("settings.networkRetain.label")}
+                description={t("settings.networkRetain.labelDesc")}
+                placeholder="24"
+                currentValue={configs?.["network_status_retain_hours"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "network_status_retain_hours"}
+              />
+              <Separator />
+              <TextConfigField
+                configKey="load_hour_retain_hours"
+                label={t("settings.loadRetain.label")}
+                description={t("settings.loadRetain.labelDesc")}
+                placeholder="72"
+                currentValue={configs?.["load_hour_retain_hours"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "load_hour_retain_hours"}
+              />
+            </>
           )}
         </CardContent>
       </Card>

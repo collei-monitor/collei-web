@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import {
-  useRuleChannelBindings,
   useUpdateRuleChannels,
   useChannels,
 } from "@/services/notifications";
@@ -27,23 +26,24 @@ interface Props {
 
 export function ChannelBindingDialog({ rule, open, onOpenChange }: Props) {
   const { t } = useTranslation();
-  const { data: bindings = [] } = useRuleChannelBindings(rule?.id ?? 0);
-  const { data: channels = [] } = useChannels();
+  const { data: channels = [], isLoading } = useChannels();
   const updateChannels = useUpdateRuleChannels();
 
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [prevBindingsKey, setPrevBindingsKey] = useState("");
 
-  // Sync selected state when bindings data changes (React recommended pattern)
-  const bindingsKey = bindings.map((b) => b.channel_id).sort().join(",");
+  // Sync selected state when rule.channels changes (React recommended pattern)
+  const ruleChannels = rule?.channels ?? [];
+  const bindingsKey = ruleChannels.map((c) => c.id).sort().join(",");
   if (bindingsKey !== prevBindingsKey) {
     setPrevBindingsKey(bindingsKey);
-    setSelectedIds(new Set(bindings.map((b) => b.channel_id)));
+    setSelectedIds(new Set(ruleChannels.map((c) => c.id)));
   }
 
   const boundSet = useMemo(
-    () => new Set(bindings.map((b) => b.channel_id)),
-    [bindings],
+    () => new Set(ruleChannels.map((c) => c.id)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bindingsKey],
   );
 
   const toggleChannel = (id: number) => {
@@ -96,7 +96,11 @@ export function ChannelBindingDialog({ rule, open, onOpenChange }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        {channels.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+          </div>
+        ) : channels.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground text-sm">
             {t("admin.alerts.rules.channelBinding.empty")}
           </div>
@@ -140,13 +144,13 @@ export function ChannelBindingDialog({ rule, open, onOpenChange }: Props) {
           </div>
         )}
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t("admin.alerts.rules.channelBinding.cancel")}
           </Button>
           <Button
             onClick={handleSave}
-            disabled={updateChannels.isPending || !hasChanges}
+            disabled={isLoading || updateChannels.isPending || !hasChanges}
           >
             {t("admin.alerts.rules.channelBinding.save")}
           </Button>

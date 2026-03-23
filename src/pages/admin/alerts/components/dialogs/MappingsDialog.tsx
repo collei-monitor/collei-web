@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  useRuleTargets,
   useCreateRuleTargets,
   useDeleteRuleTargets,
 } from "@/services/notifications";
@@ -75,7 +74,7 @@ interface GroupedTargets {
 
 export function MappingsDialog({ rule, open, onOpenChange }: Props) {
   const { t } = useTranslation();
-  const { data: targets = [], isLoading } = useRuleTargets(rule?.id ?? 0);
+  const targets = rule?.targets ?? [];
   const { data: servers = [] } = useServers();
   const { data: groups = [] } = useGroups();
   const createTargets = useCreateRuleTargets();
@@ -416,11 +415,7 @@ export function MappingsDialog({ rule, open, onOpenChange }: Props) {
         <Separator />
 
         {/* Targets display */}
-        {isLoading ? (
-          <div className="text-center py-6 text-muted-foreground text-sm">
-            {t("common.loading")}
-          </div>
-        ) : !hasWhitelist && !hasBlacklist ? (
+        {!hasWhitelist && !hasBlacklist ? (
           <div className="text-center py-6 text-muted-foreground text-sm">
             {t("admin.alerts.rules.targets.empty")}
           </div>

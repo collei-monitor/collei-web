@@ -1205,15 +1205,25 @@ export default {
       offlineThresholdDesc: "超过此时间未上报则判定为离线",
       offlineInterval: "离线检测间隔",
       offlineIntervalDesc: "心跳检测定时执行的间隔",
-      loadRetain: "负载数据保留时长",
-      loadRetainDesc: "历史负载数据在数据库中保存的最长时间",
+      loadRetain: "实时负载数据保留时长",
+      loadRetainDesc: "超过此时间的负载数据将降采样处理",
       seconds: "秒",
+    },
+    dataRetain: {
+      title: "数据保留策略",
+      desc: "配置各类型数据在数据库中的保留时间",
     },
     networkRetain: {
       title: "网络探测数据",
       desc: "配置网络探测结果的数据保留策略",
       label: "探测数据保留时长（小时）",
       labelDesc: "网络探测结果在数据库中保存的最长时间，默认 24 小时",
+    },
+    loadRetain: {
+      title: "负载数据",
+      desc: "配置节点负载数据的保留策略",
+      label: "负载数据保留时长（小时）",
+      labelDesc: "节点负载数据在数据库中保存的最长时间，默认 72 小时",
     },
     ipDb: {
       title: "IP 归属地数据库",

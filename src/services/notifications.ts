@@ -419,6 +419,7 @@ export function useCreateRuleTargets() {
     }) => targetApi.create(ruleId, targets),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ruleKeys.targets(variables.ruleId) });
+      qc.invalidateQueries({ queryKey: ruleKeys.lists() });
     },
   });
 }
@@ -435,6 +436,7 @@ export function useDeleteRuleTargets() {
     }) => targetApi.remove(ruleId, targets),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ruleKeys.targets(variables.ruleId) });
+      qc.invalidateQueries({ queryKey: ruleKeys.lists() });
     },
   });
 }
@@ -461,6 +463,7 @@ export function useUpdateRuleChannels() {
     }) => ruleChannelApi.replace(ruleId, channelIds),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: ruleKeys.channels(variables.ruleId) });
+      qc.invalidateQueries({ queryKey: ruleKeys.lists() });
     },
   });
 }
