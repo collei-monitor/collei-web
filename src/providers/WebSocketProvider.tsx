@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { WebSocketContext, useWebSocketState } from "@/services/display";
+import { CustomCodeInjector } from "@/components/CustomCodeInjector";
 
 /**
  * 为公开展示页面提供持久的 WebSocket 连接上下文。
@@ -9,6 +10,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const value = useWebSocketState();
   return (
     <WebSocketContext.Provider value={value}>
+      <CustomCodeInjector />
       {children}
     </WebSocketContext.Provider>
   );

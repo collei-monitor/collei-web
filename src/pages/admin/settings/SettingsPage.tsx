@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Settings, Database, Clock, Activity } from "lucide-react";
+import { Settings, Database, Clock, Activity, Code } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -17,6 +17,7 @@ import {
 } from "@/services/config";
 import { ConfigSkeleton } from "./components/ConfigSkeleton";
 import { TextConfigField } from "./components/TextConfigField";
+import { TextareaConfigField } from "./components/TextareaConfigField";
 import { MonitoringSection } from "./components/MonitoringSection";
 import { IpDbSection } from "./components/IpDbSection";
 
@@ -97,6 +98,57 @@ export default function SettingsPage() {
                 generateRandom
                 onSave={handleSave}
                 saving={setConfig.isPending && setConfig.variables?.key === "global_registration_token"}
+              />
+              <Separator />
+              <TextConfigField
+                configKey="agent_url"
+                label={t("settings.general.agentUrl")}
+                description={t("settings.general.agentUrlDesc")}
+                placeholder={t("settings.general.agentUrlPlaceholder")}
+                currentValue={configs?.["agent_url"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "agent_url"}
+              />
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ── 安装脚本定制 ── */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Code className="h-4 w-4" />
+            {t("settings.script.title")}
+          </CardTitle>
+          <CardDescription>{t("settings.script.desc")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {isLoading ? (
+            <>
+              <ConfigSkeleton />
+              <ConfigSkeleton />
+            </>
+          ) : (
+            <>
+              <TextareaConfigField
+                configKey="custom_headers"
+                label={t("settings.script.customHeaders")}
+                description={t("settings.script.customHeadersDesc")}
+                placeholder={t("settings.script.customHeadersPlaceholder")}
+                currentValue={configs?.["custom_headers"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "custom_headers"}
+              />
+              <Separator />
+              <TextareaConfigField
+                configKey="custom_body"
+                label={t("settings.script.customBody")}
+                description={t("settings.script.customBodyDesc")}
+                placeholder={t("settings.script.customBodyPlaceholder")}
+                currentValue={configs?.["custom_body"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "custom_body"}
               />
             </>
           )}

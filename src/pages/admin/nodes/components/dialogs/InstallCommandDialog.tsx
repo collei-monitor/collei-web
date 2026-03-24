@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/collapsible";
 import { useConfigList } from "@/services/config";
 import { useCreateServer } from "@/services/servers";
+import { useAuthStore } from "@/store/auth";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -101,6 +102,7 @@ export function InstallCommandDialog({
   const { t } = useTranslation();
   const { data: configMap } = useConfigList();
   const createServer = useCreateServer();
+  const user = useAuthStore((s) => s.user);
 
   const isPassiveMode = !!serverToken;
 
@@ -123,7 +125,8 @@ export function InstallCommandDialog({
   // 被动注册结果
   const [createdToken, setCreatedToken] = useState<string | null>(null);
 
-  const apiUrl = configMap?.api_base_url || window.location.origin;
+  const agentUrl = configMap?.agent_url || user?.agent_url || "";
+  const apiUrl = agentUrl || configMap?.api_base_url || window.location.origin;
   const regToken = configMap?.global_registration_token || "";
 
   // ── Validation ────────────────────────────────────────────────────────────
