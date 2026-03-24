@@ -38,7 +38,7 @@ import {
   CommandItem,
   CommandGroup,
 } from "@/components/ui/command";
-import { FlagIcon } from "@/components/display/FlagIcon";
+import { FlagIcon } from "@/components/FlagIcon";
 import { ChevronsUpDown, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 

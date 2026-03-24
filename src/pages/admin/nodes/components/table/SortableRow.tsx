@@ -11,7 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { FlagIcon } from "@/components/display/FlagIcon";
+import { FlagIcon } from "@/components/FlagIcon";
 import {
   GripVertical,
   EyeOff,

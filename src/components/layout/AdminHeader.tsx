@@ -9,8 +9,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { House, LogOut } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
-import { LanguageSwitch } from "@/components/language-switch";
+import { ModeToggle } from "@/components/common/ModeToggle";
+import { LanguageSwitch } from "@/components/common/LanguageSwitch";
 import { useAuthStore } from "@/store/auth";
 
 export function AdminHeader() {

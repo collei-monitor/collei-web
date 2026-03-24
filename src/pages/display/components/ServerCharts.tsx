@@ -5,7 +5,7 @@
 
 import { useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MetricChart, type ChartSeries } from "@/components/display/MetricChart";
+import { MetricChart, type ChartSeries } from "@/pages/display/components/MetricChart";
 import { formatSpeed, calcPercent } from "@/lib/display-utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ServerNodeRecord } from "@/types/server";

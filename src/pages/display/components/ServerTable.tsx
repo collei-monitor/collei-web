@@ -15,8 +15,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { OsIcon } from "@/components/display/OsIcon";
-import { FlagIcon } from "@/components/display/FlagIcon";
+import { OsIcon } from "@/components/OsIcon";
+import { FlagIcon } from "@/components/FlagIcon";
 import { cn } from "@/lib/utils";
 import {
   formatBytes,

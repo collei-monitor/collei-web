@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import type { Server } from "@/types/server";
 import { ServerStatus } from "@/types/server";
 import { formatBytes } from "@/lib/display-utils";
-import { FlagIcon } from "@/components/display/FlagIcon";
+import { FlagIcon } from "@/components/FlagIcon";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {

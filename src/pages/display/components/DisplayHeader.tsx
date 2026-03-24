@@ -2,8 +2,8 @@ import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Server, Settings } from "lucide-react";
-import { LanguageSwitch } from "@/components/language-switch";
-import { ModeToggle } from "@/components/mode-toggle";
+import { LanguageSwitch } from "@/components/common/LanguageSwitch";
+import { ModeToggle } from "@/components/common/ModeToggle";
 import { useAuthStore } from "@/store/auth";
 import {
   Tooltip,

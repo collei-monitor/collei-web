@@ -12,10 +12,10 @@ import {
   ArrowDown,
   Activity,
 } from "lucide-react";
-import { DisplayHeader } from "@/components/display/DisplayHeader";
-import { ServerCard } from "@/components/display/ServerCard";
-import { ServerTable } from "@/components/display/ServerTable";
-import { GroupFilter } from "@/components/display/GroupFilter";
+import { DisplayHeader } from "@/pages/display/components/DisplayHeader";
+import { ServerCard } from "@/pages/display/components/ServerCard";
+import { ServerTable } from "@/pages/display/components/ServerTable";
+import { GroupFilter } from "@/pages/display/components/GroupFilter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -18,8 +18,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { OsIcon } from "@/components/display/OsIcon";
-import { FlagIcon } from "@/components/display/FlagIcon";
+import { OsIcon } from "@/components/OsIcon";
+import { FlagIcon } from "@/components/FlagIcon";
 import { cn } from "@/lib/utils";
 import {
   formatBytes,

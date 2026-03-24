@@ -1,6 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router";
-import DisplayPage from "@/pages/DisplayPage";
-import ServerDetailPage from "@/pages/ServerDetailPage";
+import DisplayPage from "@/pages/display/DisplayPage";
+import ServerDetailPage from "@/pages/display/ServerDetailPage";
 import LoginPage from "@/pages/LoginPage";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import DashboardPage from "@/pages/admin/DashboardPage";
@@ -19,7 +19,7 @@ import RemotePage from "@/pages/admin/services/remote/RemotePage";
 import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
-import { WebSocketProvider } from "@/components/WebSocketProvider";
+import { WebSocketProvider } from "@/providers/WebSocketProvider";
 
 const router = createBrowserRouter([
   {
