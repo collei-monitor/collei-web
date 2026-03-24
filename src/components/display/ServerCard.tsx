@@ -77,11 +77,14 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 function formatBillingCost(
   billing: BillingSummary,
   t: (key: string) => string,
-): string {
+): string | null {
+  if (billing.billing_cycle_cost === null || billing.billing_cycle === null)
+    return null;
   if (billing.billing_cycle_cost === 0) return t("display.billing.free");
   const symbol =
-    CURRENCY_SYMBOLS[billing.billing_cycle_cost_code] ??
-    `${billing.billing_cycle_cost_code} `;
+    (billing.billing_cycle_cost_code
+      ? CURRENCY_SYMBOLS[billing.billing_cycle_cost_code]
+      : undefined) ?? `${billing.billing_cycle_cost_code ?? ""} `;
   const cost = `${symbol}${billing.billing_cycle_cost}`;
   if (billing.billing_cycle === 1)
     return `${cost}/${t("display.billing.month")}`;
@@ -266,7 +269,10 @@ export function ServerCard({ server }: ServerCardProps) {
         )}
 
         {/* 标签 + 计费信息 */}
-        {(server.tags.length > 0 || server.billing) && (
+        {(server.tags.length > 0 ||
+          (server.billing &&
+            (server.billing.billing_cycle_cost !== null ||
+              server.billing.expiry_date !== null))) && (
           <div className="pt-1 sm:border-t flex items-center gap-1.5 flex-wrap">
             {server.billing && (
               <BillingSection billing={server.billing} t={t} />
@@ -389,22 +395,25 @@ function BillingSection({
   billing: BillingSummary;
   t: (key: string) => string;
 }) {
-  const remainingDays = getRemainingDays(billing.expiry_date);
+  const remainingDays =
+    billing.expiry_date != null ? getRemainingDays(billing.expiry_date) : null;
   const costLabel = formatBillingCost(billing, t);
 
   return (
     <>
-      <Badge
-        className={cn(
-          "text-[10px] px-1.5 py-0",
-          billing.billing_cycle_cost === 0
-            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-            : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-        )}
-      >
-        {costLabel}
-      </Badge>
-      {billing.expiry_date > 0 && (
+      {costLabel != null && (
+        <Badge
+          className={cn(
+            "text-[10px] px-1.5 py-0",
+            billing.billing_cycle_cost === 0
+              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+              : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+          )}
+        >
+          {costLabel}
+        </Badge>
+      )}
+      {billing.expiry_date != null && billing.expiry_date != null && billing.expiry_date > 0 && remainingDays != null && (
         <Badge
           className={cn(
             "text-[10px] px-1.5 py-0",

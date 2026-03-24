@@ -40,13 +40,13 @@ export interface BatchUpdateGroupTopsResult {
 
 /** 计费摘要（服务器列表 / WS 推送中的 billing 字段） */
 export interface BillingSummary {
-  billing_cycle: number;
-  billing_cycle_cost: number;
-  billing_cycle_cost_code: string;
+  billing_cycle: number | null;
+  billing_cycle_cost: number | null;
+  billing_cycle_cost_code: string | null;
   traffic_threshold: number;
   traffic_used: number;
   accounting_mode: number;
-  expiry_date: number;
+  expiry_date: number | null;
 }
 
 /** 完整计费规则（GET/PUT /billing） */
