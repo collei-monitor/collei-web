@@ -115,12 +115,12 @@ export function ServerCard({ server }: ServerCardProps) {
   return (
     <Card
       className={cn(
-        "transition-all duration-200 hover:shadow-md cursor-pointer",
+        "transition-all duration-200 hover:shadow-md cursor-pointer min-h-80 flex flex-col",
         !isOnline && "opacity-60",
       )}
       onClick={() => navigate(`/server/${server.uuid}`)}
     >
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 flex flex-col flex-1">
         {/* 顶部：旗帜 + 名称 + 状态 */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
@@ -198,7 +198,7 @@ export function ServerCard({ server }: ServerCardProps) {
             )}
           </div>
         ) : (
-          <div className="h-21 flex flex-col items-center justify-center text-xs text-muted-foreground gap-1">
+          <div className="flex-1 flex flex-col items-center justify-center text-xs text-muted-foreground gap-1 py-8">
             {isOnline ? (
               <span>{t("display.server.connecting")}</span>
             ) : (
@@ -244,9 +244,29 @@ export function ServerCard({ server }: ServerCardProps) {
           </div>
         )}
 
-        {/* 计费信息 */}
-        {isOnline && server.last_online != null && server.billing && (
-          <BillingSection billing={server.billing} t={t} />
+        {/* 标签 + 计费信息 */}
+        {(server.tags.length > 0 || server.billing) && (
+          <div className="pt-1 border-t flex items-center gap-1.5 flex-wrap">
+            {server.billing && (
+              <BillingSection billing={server.billing} t={t} />
+            )}
+            {server.tags.length > 0 && (
+              <>
+                {server.tags.map((tag) => (
+                  <Badge
+                    key={tag.name}
+                    className="text-[10px] px-1.5 py-0 font-normal"
+                    style={{
+                      backgroundColor: tag.color + "33",
+                      color: tag.color,
+                    }}
+                  >
+                    {tag.name}
+                  </Badge>
+                ))}
+              </>
+            )}
+          </div>
         )}
       </CardContent>
     </Card>
@@ -326,29 +346,35 @@ function BillingSection({
   const costLabel = formatBillingCost(billing, t);
 
   return (
-    <div className="pt-1 border-t space-y-1.5">
-      {/* 标签：费用 + 剩余天数 */}
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-          {costLabel}
-        </Badge>
-        {billing.expiry_date > 0 && (
-          <Badge
-            variant="outline"
-            className={cn(
-              "text-[10px] px-1.5 py-0",
-              remainingDays <= 3 && "border-red-500 text-red-500",
-              remainingDays > 3 &&
-                remainingDays <= 7 &&
-                "border-amber-500 text-amber-500",
-            )}
-          >
-            {remainingDays > 0
-              ? `${remainingDays}${t("display.billing.daysLeft")}`
-              : t("display.billing.expired")}
-          </Badge>
+    <>
+      <Badge
+        className={cn(
+          "text-[10px] px-1.5 py-0",
+          billing.billing_cycle_cost === 0
+            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+            : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
         )}
-      </div>
-    </div>
+      >
+        {costLabel}
+      </Badge>
+      {billing.expiry_date > 0 && (
+        <Badge
+          className={cn(
+            "text-[10px] px-1.5 py-0",
+            remainingDays <= 3 &&
+              "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+            remainingDays > 3 &&
+              remainingDays <= 7 &&
+              "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+            remainingDays > 7 &&
+              "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+          )}
+        >
+          {remainingDays > 0
+            ? `${remainingDays}${t("display.billing.daysLeft")}`
+            : t("display.billing.expired")}
+        </Badge>
+      )}
+    </>
   );
 }

@@ -173,6 +173,7 @@ export function useDisplayServers() {
           last_online: snap.status.last_online,
           boot_time: snap.status.boot_time,
           groups: node.groups,
+          tags: node.tags,
           load: snap.load,
           cpu_cores: snap.cpu_cores,
           mem_total: snap.mem_total,
@@ -200,6 +201,7 @@ export function useDisplayServers() {
         last_online: node.last_online,
         boot_time: node.boot_time,
         groups: node.groups,
+        tags: node.tags,
         billing: node.billing,
       };
     });
@@ -219,6 +221,7 @@ export function useDisplayServers() {
           last_online: snap.status.last_online,
           boot_time: snap.status.boot_time,
           groups: [],
+          tags: [],
           load: snap.load,
           cpu_cores: snap.cpu_cores,
           mem_total: snap.mem_total,

@@ -22,6 +22,7 @@ import {
   TerminalSquare,
   Download,
   ArrowDownUp,
+  Lock,
 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -123,6 +124,14 @@ export function SortableRow({
           >
             {server.name}
           </button>
+          {!!server.is_region_locked && (
+            <Tooltip>
+              <TooltipTrigger>
+                <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>{t("admin.nodes.regionLocked")}</TooltipContent>
+            </Tooltip>
+          )}
           {server.hidden === ServerVisibility.HIDDEN && (
             <Tooltip>
               <TooltipTrigger>

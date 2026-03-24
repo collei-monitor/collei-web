@@ -113,6 +113,8 @@ export interface Server {
   total_flow_out: number | null;
   total_flow_in: number | null;
   groups: Group[];
+  tags: ServerTag[];
+  is_region_locked: number;
   billing: BillingSummary | null;
 }
 
@@ -122,6 +124,8 @@ export interface UpdateServerPayload {
   top?: number;
   hidden?: number;
   region?: string;
+  is_region_locked?: number;
+  tags?: ServerTag[];
 }
 
 export interface SetServerGroupsPayload {
@@ -176,6 +180,11 @@ export interface ServerLoad {
 // ── WebSocket 新消息格式 ───────────────────────────────────────────────────────
 
 /** WS nodes 消息中的服务器基础信息 */
+export interface ServerTag {
+  name: string;
+  color: string;
+}
+
 export interface WsNodeServer {
   uuid: string;
   name: string;
@@ -188,6 +197,7 @@ export interface WsNodeServer {
   last_online: number | null;
   boot_time: number | null;
   groups: Group[];
+  tags: ServerTag[];
   billing: BillingSummary | null;
 }
 
@@ -265,6 +275,7 @@ export interface DisplayServer {
   last_online: number | null;
   boot_time: number | null;
   groups: Group[];
+  tags: ServerTag[];
   load?: ServerLoad;
   cpu_cores?: number;
   mem_total?: number;
