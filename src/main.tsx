@@ -27,7 +27,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Toaster />
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <TooltipProvider>
           {/* AuthInitializer 在路由渲染前完成 GET /me，确保守卫拿到正确的 auth 状态 */}
           <AuthInitializer>

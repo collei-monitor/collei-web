@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Settings, Database, Clock, Activity, Code } from "lucide-react";
+import { Settings, Database, Clock, Activity } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -17,7 +17,6 @@ import {
 } from "@/services/config";
 import { ConfigSkeleton } from "./components/ConfigSkeleton";
 import { TextConfigField } from "./components/TextConfigField";
-import { TextareaConfigField } from "./components/TextareaConfigField";
 import { MonitoringSection } from "./components/MonitoringSection";
 import { IpDbSection } from "./components/IpDbSection";
 

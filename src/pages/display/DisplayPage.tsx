@@ -31,7 +31,15 @@ type ViewMode = "card" | "list";
 
 export default function DisplayPage() {
   const { t } = useTranslation();
-  const [viewMode, setViewMode] = useState<ViewMode>("card");
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem("display-view-mode");
+    return saved === "list" ? "list" : "card";
+  });
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    localStorage.setItem("display-view-mode", mode);
+  };
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<"online" | "offline" | null>(
     null,
@@ -212,8 +220,6 @@ export default function DisplayPage() {
           </div>
 
           {/* 工具栏：分组筛选 + 视图切换 */}
-          {/* <div className="flex flex-col items-start sm:items-center justify-between gap-3"></div> */}
-
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3 flex-wrap">
               {groups.length > 0 && (
@@ -249,7 +255,7 @@ export default function DisplayPage() {
                   variant={viewMode === "card" ? "secondary" : "ghost"}
                   size="icon"
                   className="h-7 w-7"
-                  onClick={() => setViewMode("card")}
+                  onClick={() => handleViewModeChange("card")}
                   aria-label={t("display.view.card")}
                 >
                   <LayoutGrid className="h-3.5 w-3.5" />
@@ -258,7 +264,7 @@ export default function DisplayPage() {
                   variant={viewMode === "list" ? "secondary" : "ghost"}
                   size="icon"
                   className="h-7 w-7"
-                  onClick={() => setViewMode("list")}
+                  onClick={() => handleViewModeChange("list")}
                   aria-label={t("display.view.list")}
                 >
                   <List className="h-3.5 w-3.5" />
