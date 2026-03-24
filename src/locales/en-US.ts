@@ -1241,7 +1241,6 @@ export default {
       regTokenPlaceholder: "Enter registration token",
       agentUrl: "Agent URL",
       agentUrlDesc: "The URL agents use to connect. Leave empty to use the current site URL.",
-      agentUrlPlaceholder: "e.g. https://example.com",
     },
     script: {
       title: "Display Page Custom Code",

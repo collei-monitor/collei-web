@@ -104,51 +104,10 @@ export default function SettingsPage() {
                 configKey="agent_url"
                 label={t("settings.general.agentUrl")}
                 description={t("settings.general.agentUrlDesc")}
-                placeholder={t("settings.general.agentUrlPlaceholder")}
+                placeholder={window.location.origin}
                 currentValue={configs?.["agent_url"]}
                 onSave={handleSave}
                 saving={setConfig.isPending && setConfig.variables?.key === "agent_url"}
-              />
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* ── 安装脚本定制 ── */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Code className="h-4 w-4" />
-            {t("settings.script.title")}
-          </CardTitle>
-          <CardDescription>{t("settings.script.desc")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {isLoading ? (
-            <>
-              <ConfigSkeleton />
-              <ConfigSkeleton />
-            </>
-          ) : (
-            <>
-              <TextareaConfigField
-                configKey="custom_headers"
-                label={t("settings.script.customHeaders")}
-                description={t("settings.script.customHeadersDesc")}
-                placeholder={t("settings.script.customHeadersPlaceholder")}
-                currentValue={configs?.["custom_headers"]}
-                onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "custom_headers"}
-              />
-              <Separator />
-              <TextareaConfigField
-                configKey="custom_body"
-                label={t("settings.script.customBody")}
-                description={t("settings.script.customBodyDesc")}
-                placeholder={t("settings.script.customBodyPlaceholder")}
-                currentValue={configs?.["custom_body"]}
-                onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "custom_body"}
               />
             </>
           )}

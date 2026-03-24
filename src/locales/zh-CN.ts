@@ -1240,7 +1240,6 @@ export default {
       regTokenPlaceholder: "输入注册令牌",
       agentUrl: "Agent 连接地址",
       agentUrlDesc: "Agent 安装时使用的连接地址，留空则使用当前站点地址",
-      agentUrlPlaceholder: "如 https://example.com",
     },
     script: {
       title: "展示页自定义代码",
