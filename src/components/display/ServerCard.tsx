@@ -115,12 +115,12 @@ export function ServerCard({ server }: ServerCardProps) {
   return (
     <Card
       className={cn(
-        "transition-all duration-200 hover:shadow-md cursor-pointer min-h-80 flex flex-col",
+        "transition-all duration-200 hover:shadow-md cursor-pointer min-h-0 sm:min-h-72 flex flex-col sm:py-6 py-4.5",
         !isOnline && "opacity-60",
       )}
       onClick={() => navigate(`/server/${server.uuid}`)}
     >
-      <CardContent className="space-y-3 flex flex-col flex-1">
+      <CardContent className="sm:space-y-3 space-y-1.5 flex flex-col flex-1 sm:px-6 px-4">
         {/* 顶部：旗帜 + 名称 + 状态 */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
@@ -157,7 +157,7 @@ export function ServerCard({ server }: ServerCardProps) {
         </div>
 
         {/* OS 信息 + 运行时间 */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between">
           {server.os ? (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
               <OsIcon os={server.os} className="h-3.5 w-3.5 shrink-0" />
@@ -176,22 +176,43 @@ export function ServerCard({ server }: ServerCardProps) {
 
         {/* 资源用量 */}
         {isOnline && load ? (
-          <div className="space-y-2.5">
-            <UsageRow
-              label="CPU"
-              percent={cpuPercent}
-              detail={`${cpuPercent.toFixed(1)}%`}
-            />
-            <UsageRow
-              label={t("display.server.ram")}
-              percent={ramPercent}
-              detail={`${formatBytes(load.ram)} / ${formatBytes(load.ram_total)}`}
-            />
-            <UsageRow
-              label={t("display.server.disk")}
-              percent={diskPercent}
-              detail={`${formatBytes(load.disk)} / ${formatBytes(load.disk_total)}`}
-            />
+          <div className="space-y-2">
+            {/* 移动端：三列同行 */}
+            <div className="flex gap-2 sm:hidden">
+              <MiniUsageCol
+                label="CPU"
+                percent={cpuPercent}
+                detail={`${cpuPercent.toFixed(1)}%`}
+              />
+              <MiniUsageCol
+                label={t("display.server.ram")}
+                percent={ramPercent}
+                detail={formatBytes(load.ram)}
+              />
+              <MiniUsageCol
+                label={t("display.server.disk")}
+                percent={diskPercent}
+                detail={formatBytes(load.disk)}
+              />
+            </div>
+            {/* 桌面端：堆叠 */}
+            <div className="hidden sm:flex sm:flex-col sm:gap-2.5">
+              <UsageRow
+                label="CPU"
+                percent={cpuPercent}
+                detail={`${cpuPercent.toFixed(1)}%`}
+              />
+              <UsageRow
+                label={t("display.server.ram")}
+                percent={ramPercent}
+                detail={`${formatBytes(load.ram)} / ${formatBytes(load.ram_total)}`}
+              />
+              <UsageRow
+                label={t("display.server.disk")}
+                percent={diskPercent}
+                detail={`${formatBytes(load.disk)} / ${formatBytes(load.disk_total)}`}
+              />
+            </div>
             {/* 流量进度条 */}
             {server.billing && server.billing.traffic_threshold > 0 && (
               <BillingTrafficRow billing={server.billing} t={t} />
@@ -246,7 +267,7 @@ export function ServerCard({ server }: ServerCardProps) {
 
         {/* 标签 + 计费信息 */}
         {(server.tags.length > 0 || server.billing) && (
-          <div className="pt-1 border-t flex items-center gap-1.5 flex-wrap">
+          <div className="pt-1 sm:border-t flex items-center gap-1.5 flex-wrap">
             {server.billing && (
               <BillingSection billing={server.billing} t={t} />
             )}
@@ -270,6 +291,32 @@ export function ServerCard({ server }: ServerCardProps) {
         )}
       </CardContent>
     </Card>
+  );
+}
+
+// ── 使用量行（移动端紧凑列）────────────────────────────────────────────────────
+
+function MiniUsageCol({
+  label,
+  percent,
+  detail,
+}: {
+  label: string;
+  percent: number;
+  detail: string;
+}) {
+  return (
+    <div className="flex-1 min-w-0 space-y-1">
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-muted-foreground truncate">{label}</span>
+        <span className="font-mono tabular-nums ml-1 shrink-0">{detail}</span>
+      </div>
+      <Progress
+        value={percent}
+        className="h-1.5"
+        indicatorClassName={getUsageColor(percent)}
+      />
+    </div>
   );
 }
 
