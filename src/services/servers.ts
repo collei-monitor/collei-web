@@ -44,7 +44,7 @@ export const groupKeys = {
 const serverApi = {
   /** 创建服务器（被动注册模式） */
   async create(payload: CreateServerPayload): Promise<CreateServerResponse> {
-    const { status, data } = await api.post("/servers", payload);
+    const { status, data } = await api.post("/clients/servers", payload);
     if (status !== 201 && status !== 200) throw new Error(data?.detail || "Failed to create server");
     return data as CreateServerResponse;
   },

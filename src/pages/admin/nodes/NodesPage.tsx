@@ -54,6 +54,7 @@ export default function NodesPage() {
   const [detailTarget, setDetailTarget] = useState<Server | null>(null);
   const [installTarget, setInstallTarget] = useState<Server | null>(null);
   const [showAddInstall, setShowAddInstall] = useState(false);
+  const [installDialogKey, setInstallDialogKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleColumns, setVisibleColumns] = useState({
     ip: true,
@@ -160,7 +161,7 @@ export default function NodesPage() {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" className="gap-1.5" onClick={() => setShowAddInstall(true)}>
+          <Button size="sm" className="gap-1.5" onClick={() => { setShowAddInstall(true); setInstallDialogKey(k => k + 1); }}>
             <Plus className="h-4 w-4" />
             {t("admin.nodes.add")}
           </Button>
@@ -237,7 +238,7 @@ export default function NodesPage() {
                         onDetail={setDetailTarget}
                         onBilling={setBillingTarget}
                         onTrafficRule={setTrafficRuleTarget}
-                        onInstall={setInstallTarget}
+                        onInstall={(s) => { setInstallTarget(s); setInstallDialogKey(k => k + 1); }}
                         visibleColumns={visibleColumns}
                       />
                     ))}
@@ -285,7 +286,7 @@ export default function NodesPage() {
         onOpenChange={(v) => !v && setDetailTarget(null)}
       />
       <InstallCommandDialog
-        key={`install-${installTarget?.uuid ?? "add"}`}
+        key={`install-${installTarget?.uuid ?? "add"}-${installDialogKey}`}
         open={!!installTarget || showAddInstall}
         onOpenChange={(v) => {
           if (!v) {

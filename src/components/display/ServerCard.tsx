@@ -126,7 +126,7 @@ export function ServerCard({ server }: ServerCardProps) {
           <div className="flex items-center gap-2 min-w-0">
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="shrink-0 cursor-default">
+                <span className="shrink-0 cursor-default flex items-center">
                   <FlagIcon region={server.region} size="md" />
                 </span>
               </TooltipTrigger>

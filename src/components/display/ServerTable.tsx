@@ -27,6 +27,7 @@ import {
 } from "@/lib/display-utils";
 import { ServerStatus } from "@/types/server";
 import type { DisplayServer } from "@/types/server";
+import { Badge } from "@/components/ui/badge";
 
 interface ServerTableProps {
   servers: DisplayServer[];
@@ -40,10 +41,10 @@ export function ServerTable({ servers }: ServerTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-10"></TableHead>
             <TableHead>{t("display.table.name")}</TableHead>
-            <TableHead>
-              {t("display.table.os")}
+            <TableHead>{t("display.table.os")}</TableHead>{" "}
+            <TableHead className="text-center w-20">
+              {t("display.table.status")}
             </TableHead>
             <TableHead className="text-center">CPU</TableHead>
             <TableHead className="text-center">
@@ -58,9 +59,6 @@ export function ServerTable({ servers }: ServerTableProps) {
             <TableHead className="text-center">
               {t("display.table.networkDownload")}
             </TableHead>
-            {/* <TableHead className="text-center w-20">
-              {t("display.table.status")}
-            </TableHead> */}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -85,30 +83,31 @@ function ServerRow({ server }: { server: DisplayServer }) {
 
   return (
     <TableRow
-      className={cn("cursor-pointer hover:bg-muted/50", !isOnline && "opacity-60")}
-      onClick={() => navigate(`/server/${server.uuid}`)}
+      className={cn(
+        "cursor-pointer hover:bg-muted/50",
+        !isOnline && "opacity-60",
+      )}
     >
-      {/* 旗帜 */}
-      <TableCell className="text-center pr-0">
+      {/* <TableCell className="text-center pr-0">
+     
+      </TableCell> */}
+
+      {/* 旗帜+名称 */}
+      <TableCell className="font-medium align-middle flex items-center ">
         <Tooltip>
           <TooltipTrigger asChild>
-            <FlagIcon region={server.region} size="md" />
+            <FlagIcon region={server.region} size="md" className="mr-1" />
           </TooltipTrigger>
           <TooltipContent>
             {server.region ?? t("display.server.unknownRegion")}
           </TooltipContent>
         </Tooltip>
-      </TableCell>
-
-      {/* 名称 */}
-      <TableCell className="font-medium align-middle flex items-center">
-        <span
-          className={cn(
-            "mr-1.5 inline-block h-2 w-2 rounded-full",
-            isOnline ? "bg-emerald-400" : "bg-muted-foreground",
-          )}
-        />
-        {server.name}
+        <a
+          className="hover:underline"
+          onClick={() => navigate(`/server/${server.uuid}`)}
+        >
+          {server.name}
+        </a>
       </TableCell>
 
       {/* OS */}
@@ -116,9 +115,19 @@ function ServerRow({ server }: { server: DisplayServer }) {
         {server.os && (
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <OsIcon os={server.os} className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate max-w-35">{server.os}</span>
+            {/* <span className="truncate max-w-35">{server.os}</span> */}
           </div>
         )}
+      </TableCell>
+
+      {/* 状态 */}
+      <TableCell className="text-center">
+        <Badge
+          variant="secondary"
+          className={cn("shrink-0", isOnline ? "bg-green-100" : "bg-gray-100")}
+        >
+          {isOnline ? t("display.server.online") : t("display.server.offline")}
+        </Badge>
       </TableCell>
 
       {/* CPU */}
@@ -181,21 +190,6 @@ function ServerRow({ server }: { server: DisplayServer }) {
           <span className="text-xs text-muted-foreground">-</span>
         )}
       </TableCell>
-      {/* 状态 */}
-      {/* <TableCell className="text-center">
-        <Badge
-          variant="secondary"
-          className={cn("shrink-0", isOnline ? "bg-green-100" : "bg-gray-100")}
-        >
-          <span
-            className={cn(
-              "mr-1.5 inline-block h-1.5 w-1.5 rounded-full",
-              isOnline ? "bg-emerald-400" : "bg-muted-foreground",
-            )}
-          />
-          {isOnline ? t("display.server.online") : t("display.server.offline")}
-        </Badge>
-      </TableCell> */}
     </TableRow>
   );
 }

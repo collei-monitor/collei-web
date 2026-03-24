@@ -69,9 +69,18 @@ export default function DisplayPage() {
   const onlineCount = servers.filter((s) => s.status === 1).length;
   const offlineCount = servers.length - onlineCount;
   const totalNetIn = servers.reduce((sum, s) => sum + (s.load?.net_in ?? 0), 0);
-  const totalNetOut = servers.reduce((sum, s) => sum + (s.load?.net_out ?? 0), 0);
-  const totalFlowIn = servers.reduce((sum, s) => sum + (s.total_flow_in ?? 0), 0);
-  const totalFlowOut = servers.reduce((sum, s) => sum + (s.total_flow_out ?? 0), 0);
+  const totalNetOut = servers.reduce(
+    (sum, s) => sum + (s.load?.net_out ?? 0),
+    0,
+  );
+  const totalFlowIn = servers.reduce(
+    (sum, s) => sum + (s.total_flow_in ?? 0),
+    0,
+  );
+  const totalFlowOut = servers.reduce(
+    (sum, s) => sum + (s.total_flow_out ?? 0),
+    0,
+  );
 
   const formatBuildTime = (isoTime: string) => {
     try {
@@ -167,27 +176,31 @@ export default function DisplayPage() {
                 </Card>
 
                 <Card className="h-24">
-                  <CardContent className="p-3 h-full flex flex-col justify-center pl-6">
+                  <CardContent className="p-3 px-4 h-full flex flex-col justify-center">
                     <div className="flex items-center gap-1.5">
                       <Activity className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className="text-xs text-muted-foreground">
                         {t("display.summary.network")}
                       </span>
                     </div>
-                    <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5">
-                      <div className="flex items-center gap-1 text-xs font-medium">
+
+                    <div className="mt-1 grid grid-cols-2 gap-x-2 gap-y-0.5">
+                      <div className="flex items-center gap-1 text-xs font-medium whitespace-nowrap">
                         <ArrowUp className="h-3 w-3 text-orange-500 shrink-0" />
                         <span>{formatSpeed(totalNetOut)}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground whitespace-nowrap">
                         <ArrowUp className="h-3 w-3 text-orange-300 shrink-0" />
                         <span>{formatBytes(totalFlowOut)}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-xs font-medium">
+
+                      <div className="flex items-center gap-1 text-xs font-medium whitespace-nowrap">
                         <ArrowDown className="h-3 w-3 text-sky-500 shrink-0" />
                         <span>{formatSpeed(totalNetIn)}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground whitespace-nowrap">
                         <ArrowDown className="h-3 w-3 text-sky-300 shrink-0" />
                         <span>{formatBytes(totalFlowIn)}</span>
                       </div>

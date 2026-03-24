@@ -211,9 +211,9 @@ export function InstallCommandDialog({
     createServer.mutate(
       { name: name.trim(), remark: remark.trim() || undefined },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           toast.success(t("admin.nodes.install.createSuccess"), { id: toastId });
-          setCreatedToken(data.token);
+          onOpenChange(false);
         },
         onError: () => {
           toast.error(t("admin.nodes.install.createFailed"), { id: toastId });
