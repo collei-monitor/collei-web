@@ -40,7 +40,7 @@ export const api = {
     }).finally(() => clearTimeout(timeoutId));
 
     // 处理 401 未授权：广播事件，由 AuthInitializer 统一处理跳转
-    if (response.status === 401) {
+    if (response.status === 401 && !endpoint.endsWith("/auth/logout")) {
       window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
 
