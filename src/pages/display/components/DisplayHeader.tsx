@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Server, Settings } from "lucide-react";
+import { Server, Settings, Loader2 } from "lucide-react";
 import { LanguageSwitch } from "@/components/common/LanguageSwitch";
 import { ModeToggle } from "@/components/common/ModeToggle";
 import { useAuthStore } from "@/store/auth";
@@ -31,7 +31,11 @@ export function DisplayHeader() {
           <div className="flex items-center gap-2">
             <ModeToggle />
             <LanguageSwitch />
-            {status === "authenticated" ? (
+            {status === "idle" || status === "loading" ? (
+              <Button size="icon" variant="outline" disabled>
+                <Loader2 className="h-4 w-4 animate-spin" />
+              </Button>
+            ) : status === "authenticated" ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button asChild size="icon" variant="outline">
