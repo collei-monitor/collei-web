@@ -5,6 +5,7 @@ import { Server, Settings } from "lucide-react";
 import { LanguageSwitch } from "@/components/common/LanguageSwitch";
 import { ModeToggle } from "@/components/common/ModeToggle";
 import { useAuthStore } from "@/store/auth";
+import { usePublicConfig } from "@/services/public-config";
 import {
   Tooltip,
   TooltipContent,
@@ -15,6 +16,7 @@ import {
 export function DisplayHeader() {
   const { t } = useTranslation();
   const status = useAuthStore((s) => s.status);
+  const { data: publicConfig } = usePublicConfig();
 
   return (
     <TooltipProvider>
@@ -23,7 +25,7 @@ export function DisplayHeader() {
           <div className="flex items-center gap-2">
             <Server className="h-5 w-5 text-primary" />
             <span className="text-lg font-semibold">
-              {t("common.appTitle")}
+              {publicConfig?.app_name || t("common.appTitle")}
             </span>
           </div>
           <div className="flex items-center gap-2">

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Settings, Database, Clock, Activity, Code } from "lucide-react";
+import { Settings, Database, Clock, Activity, Code, Palette } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -20,6 +20,8 @@ import { TextConfigField } from "./components/TextConfigField";
 import { TextareaConfigField } from "./components/TextareaConfigField";
 import { MonitoringSection } from "./components/MonitoringSection";
 import { IpDbSection } from "./components/IpDbSection";
+import { FaviconUploadSection } from "./components/FaviconUploadSection";
+import { ThemeManageSection } from "./components/ThemeManageSection";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
@@ -109,6 +111,8 @@ export default function SettingsPage() {
                 onSave={handleSave}
                 saving={setConfig.isPending && setConfig.variables?.key === "agent_url"}
               />
+              <Separator />
+              <FaviconUploadSection />
             </>
           )}
         </CardContent>
@@ -152,6 +156,20 @@ export default function SettingsPage() {
               />
             </>
           )}
+        </CardContent>
+      </Card>
+
+      {/* ── 展示主题管理 ── */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Palette className="h-4 w-4" />
+            {t("settings.themes.title")}
+          </CardTitle>
+          <CardDescription>{t("settings.themes.desc")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ThemeManageSection />
         </CardContent>
       </Card>
 

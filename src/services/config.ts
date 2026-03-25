@@ -207,3 +207,146 @@ export function useTestIpDb() {
     mutationFn: (payload: IpDbTestRequest) => configApi.testIpDb(payload),
   });
 }
+
+// ── Theme & Favicon Types ─────────────────────────────────────────────────────
+
+export interface ThemeInfo {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  author: string;
+  created_at: string;
+  file_count: number;
+  total_size: number;
+  is_active: boolean;
+  is_builtin: boolean;
+}
+
+// ── Theme & Favicon Query Keys ────────────────────────────────────────────────
+
+export const themeKeys = {
+  all: ["themes"] as const,
+  list: () => [...themeKeys.all, "list"] as const,
+};
+
+// ── Theme & Favicon Raw API ───────────────────────────────────────────────────
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+
+export const themeApi = {
+  async list(): Promise<ThemeInfo[]> {
+    const { status, data } = await api.get("/config/themes");
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch themes");
+    return data as ThemeInfo[];
+  },
+
+  async upload(file: File): Promise<ThemeInfo> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(`${API_BASE_URL}/config/themes`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw Object.assign(new Error(data?.detail || "Upload failed"), { status: res.status });
+    return data as ThemeInfo;
+  },
+
+  async activate(themeId: string): Promise<void> {
+    const { status, data } = await api.put("/config/themes/active", { theme_id: themeId });
+    if (status !== 200) throw new Error(data?.detail || "Failed to activate theme");
+  },
+
+  async remove(themeId: string): Promise<void> {
+    const { status, data } = await api.delete(`/config/themes/${themeId}`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to delete theme");
+  },
+
+  async uploadFavicon(file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const token = localStorage.getItem("access_token");
+    const res = await fetch(`${API_BASE_URL}/config/favicon`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw Object.assign(new Error(data?.detail || "Upload failed"), { status: res.status });
+    return data as { url: string };
+  },
+
+  async deleteFavicon(): Promise<void> {
+    const { status, data } = await api.delete("/config/favicon");
+    if (status !== 200) throw new Error(data?.detail || "Failed to delete favicon");
+  },
+};
+
+// ── Theme & Favicon Hooks ─────────────────────────────────────────────────────
+
+/** 列出所有主题 */
+export function useThemeList() {
+  return useQuery({
+    queryKey: themeKeys.list(),
+    queryFn: themeApi.list,
+    staleTime: 30_000,
+  });
+}
+
+/** 上传主题 */
+export function useUploadTheme() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => themeApi.upload(file),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: themeKeys.list() });
+    },
+  });
+}
+
+/** 激活主题 */
+export function useActivateTheme() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (themeId: string) => themeApi.activate(themeId),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: themeKeys.list() });
+    },
+  });
+}
+
+/** 删除主题 */
+export function useDeleteTheme() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (themeId: string) => themeApi.remove(themeId),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: themeKeys.list() });
+    },
+  });
+}
+
+/** 上传 Favicon */
+export function useUploadFavicon() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => themeApi.uploadFavicon(file),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["publicConfig"] });
+    },
+  });
+}
+
+/** 删除 Favicon */
+export function useDeleteFavicon() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => themeApi.deleteFavicon(),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["publicConfig"] });
+    },
+  });
+}

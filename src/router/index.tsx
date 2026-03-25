@@ -20,11 +20,12 @@ import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
 import { WebSocketProvider } from "@/providers/WebSocketProvider";
+import { CustomCodeInjector } from "@/components/CustomCodeInjector";
 
 const router = createBrowserRouter([
   {
     // 公开展示路由共享同一个 WebSocket 连接，页面切换时不重连
-    element: <WebSocketProvider><Outlet /></WebSocketProvider>,
+    element: <WebSocketProvider><CustomCodeInjector /><Outlet /></WebSocketProvider>,
     children: [
       {
         path: "/",

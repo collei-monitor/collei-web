@@ -5,6 +5,8 @@ import { usePublicConfig } from "@/services/public-config";
  * 为公开展示页注入自定义代码：
  * - custom_headers → <head>（原生 DOM 注入，确保 script 可执行）
  * - custom_body   → <body> 末尾（原生 DOM 注入）
+ * - app_name      → document.title
+ * - favicon_url   → <link rel="icon">
  */
 export function CustomCodeInjector() {
   const { data } = usePublicConfig();
@@ -13,6 +15,27 @@ export function CustomCodeInjector() {
 
   const customHeaders = data?.custom_headers ?? "";
   const customBody = data?.custom_body ?? "";
+  const appName = data?.app_name ?? "";
+  const faviconUrl = data?.favicon_url ?? "";
+
+  // ── 动态标题 ───────────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (data) {
+      document.title = appName || "Collei";
+    }
+  }, [data, appName]);
+
+  // ── 动态 Favicon ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    const link = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    if (!link) return;
+
+    if (faviconUrl) {
+      link.href = faviconUrl;
+    } else {
+      link.href = "/api/v1/public/favicon";
+    }
+  }, [faviconUrl]);
 
   // ── Head 注入 ──────────────────────────────────────────────────────────────
   useEffect(() => {

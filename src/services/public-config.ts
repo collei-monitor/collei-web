@@ -9,6 +9,8 @@ import api from "@/lib/api";
 export interface PublicConfig {
   custom_headers: string;
   custom_body: string;
+  app_name: string;
+  favicon_url: string;
 }
 
 export const publicConfigKeys = {
