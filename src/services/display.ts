@@ -51,8 +51,12 @@ export function useWebSocketState(): WebSocketState {
   const nodesReceivedRef = useRef(false);
   const statusReceivedRef = useRef(false);
   const wsToken = useAuthStore((s) => s.user?.ws_token);
+  const authStatus = useAuthStore((s) => s.status);
 
   useEffect(() => {
+    // 等待认证状态确定后再连接，避免 token 变化导致重复连接
+    if (authStatus === "idle" || authStatus === "loading") return;
+
     let disposed = false;
 
     // 超时兜底：WS 迟迟未同时返回 nodes+status 时，仍放行页面展示
@@ -137,7 +141,7 @@ export function useWebSocketState(): WebSocketState {
       clearInterval(pingTimer.current);
       wsRef.current?.close();
     };
-  }, [wsToken]);
+  }, [wsToken, authStatus]);
 
   return { connected, wsNodes, groups, snapshots, wsReady };
 }

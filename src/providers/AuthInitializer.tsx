@@ -16,9 +16,13 @@ export function AuthInitializer({ children }: { children: React.ReactNode }) {
     void fetchMe();
   }, [fetchMe]);
 
-  // 监听 api.ts 在收到 401 时派发的自定义事件，mid-session 过期时登出
+  // 监听 api.ts 在收到 401 时派发的自定义事件，仅在已认证状态下触发登出（mid-session 过期）
   useEffect(() => {
-    const handler = () => logout();
+    const handler = () => {
+      if (useAuthStore.getState().status === "authenticated") {
+        logout();
+      }
+    };
     window.addEventListener("auth:unauthorized", handler);
     return () => window.removeEventListener("auth:unauthorized", handler);
   }, [logout]);
