@@ -49,7 +49,7 @@ type TotpValues = z.infer<typeof totpSchema>;
 export default function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const setToken = useAuthStore((s) => s.setToken);
+  const onLoginSuccess = useAuthStore((s) => s.onLoginSuccess);
   const [phase, setPhase] = useState<"login" | "2fa">("login");
   const [loginChallenge, setLoginChallenge] = useState("");
   const [error, setError] = useState("");
@@ -90,7 +90,7 @@ export default function LoginPage() {
         setLoginChallenge(data.login_challenge);
         setPhase("2fa");
       } else {
-        await setToken(data.access_token);
+        await onLoginSuccess();
         navigate("/admin");
       }
     } catch {
@@ -106,7 +106,7 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
     try {
-      const { status, data } = await api.post("/auth/login/2fa", {
+      const { status } = await api.post("/auth/login/2fa", {
         login_challenge: loginChallenge,
         totp_code: values.totp_code,
       });
@@ -125,7 +125,7 @@ export default function LoginPage() {
         return;
       }
 
-      await setToken(data.access_token);
+      await onLoginSuccess();
       navigate("/admin");
     } catch {
       setError(t("login.errors.networkError"));

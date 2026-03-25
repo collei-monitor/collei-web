@@ -30,12 +30,6 @@ export const api = {
       ...(fetchOptions.headers as Record<string, string>),
     };
 
-    // 添加 Token（如果存在）
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
@@ -45,9 +39,8 @@ export const api = {
       signal: fetchOptions.signal ?? controller.signal,
     }).finally(() => clearTimeout(timeoutId));
 
-    // 处理 401 未授权：清除 token 并广播事件，由 AuthInitializer 统一处理跳转
+    // 处理 401 未授权：广播事件，由 AuthInitializer 统一处理跳转
     if (response.status === 401) {
-      localStorage.removeItem("access_token");
       window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
 

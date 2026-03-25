@@ -34,12 +34,12 @@ export type AuthStatus =
 interface AuthState {
   user: AuthUser | null;
   status: AuthStatus;
-  /** 应用启动时调用，验证本地 token 并拉取用户信息 */
+  /** 应用启动时调用，通过 Cookie 验证身份并拉取用户信息 */
   fetchMe: () => Promise<void>;
-  /** 登录成功后：保存 token 并立即拉取用户信息 */
-  setToken: (token: string) => Promise<void>;
-  /** 登出：清除 token 与用户状态 */
-  logout: () => void;
+  /** 登录成功后：立即拉取用户信息（Cookie 由浏览器自动管理） */
+  onLoginSuccess: () => Promise<void>;
+  /** 登出：调用后端清除 Cookie 并重置状态 */
+  logout: () => Promise<void>;
 }
 
 // ── Store ─────────────────────────────────────────────────────────────────────
@@ -49,19 +49,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   status: "idle",
 
   fetchMe: async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      set({ status: "unauthenticated", user: null });
-      return;
-    }
-
     set({ status: "loading" });
     try {
       const { status, data } = await api.get("/auth/me");
       if (status === 200) {
         set({ user: data as AuthUser, status: "authenticated" });
       } else {
-        localStorage.removeItem("access_token");
         set({ user: null, status: "unauthenticated" });
       }
     } catch {
@@ -69,13 +62,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
   },
 
-  setToken: async (token: string) => {
-    localStorage.setItem("access_token", token);
+  onLoginSuccess: async () => {
     await get().fetchMe();
   },
 
-  logout: () => {
-    localStorage.removeItem("access_token");
+  logout: async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch {
+      // 即使请求失败也继续清除前端状态
+    }
     set({ user: null, status: "logout" });
   },
 }));

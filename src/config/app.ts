@@ -32,7 +32,6 @@ export const config = {
 
   // 存储配置
   storage: {
-    tokenKey: "access_token",
     localeKey: "locale",
   },
 

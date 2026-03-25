@@ -244,10 +244,8 @@ export const themeApi = {
   async upload(file: File): Promise<ThemeInfo> {
     const formData = new FormData();
     formData.append("file", file);
-    const token = localStorage.getItem("access_token");
     const res = await fetch(`${API_BASE_URL}/config/themes`, {
       method: "POST",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: formData,
     });
     const data = await res.json().catch(() => ({}));
@@ -268,10 +266,8 @@ export const themeApi = {
   async uploadFavicon(file: File): Promise<{ url: string }> {
     const formData = new FormData();
     formData.append("file", file);
-    const token = localStorage.getItem("access_token");
     const res = await fetch(`${API_BASE_URL}/config/favicon`, {
       method: "POST",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: formData,
     });
     const data = await res.json().catch(() => ({}));

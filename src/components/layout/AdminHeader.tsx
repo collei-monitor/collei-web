@@ -16,8 +16,8 @@ import { useAuthStore } from "@/store/auth";
 export function AdminHeader() {
   const { t } = useTranslation();
 
-  function handleLogout() {
-    useAuthStore.getState().logout();
+  async function handleLogout() {
+    await useAuthStore.getState().logout();
   }
 
   return (
