@@ -43,6 +43,7 @@ import {
 interface NavSubItem {
   title: string;
   url: string;
+  exact?: boolean;
 }
 
 interface NavItem {
@@ -63,9 +64,14 @@ function SidebarNavItem({ item }: { item: NavItem }) {
   const location = useLocation();
   const { state, isMobile } = useSidebar();
 
+  const isChildActive = (child: NavSubItem) =>
+    child.exact
+      ? location.pathname === child.url
+      : location.pathname.startsWith(child.url);
+
   if (item.children && item.children.length > 0) {
     const isAnyChildActive = item.children.some((child) =>
-      location.pathname.startsWith(child.url),
+      isChildActive(child),
     );
 
     // Desktop collapsed: hover popup submenu
@@ -89,7 +95,7 @@ function SidebarNavItem({ item }: { item: NavItem }) {
                 {item.title}
               </div>
               {item.children.map((child) => {
-                const childMatch = location.pathname.startsWith(child.url);
+                const childMatch = isChildActive(child);
                 return (
                   <NavLink
                     key={child.url}
@@ -127,7 +133,7 @@ function SidebarNavItem({ item }: { item: NavItem }) {
           <CollapsibleContent>
             <SidebarMenuSub>
               {item.children.map((child) => {
-                const childMatch = location.pathname.startsWith(child.url);
+                const childMatch = isChildActive(child);
                 return (
                   <SidebarMenuSubItem key={child.url}>
                     <SidebarMenuSubButton asChild isActive={childMatch}>
@@ -262,6 +268,17 @@ export function AdminSidebar() {
           url: "/admin/settings",
           icon: Settings,
           end: false,
+          children: [
+            {
+              title: t("admin.sidebar.settingsGeneral"),
+              url: "/admin/settings",
+              exact: true,
+            },
+            {
+              title: t("admin.sidebar.settingsOIDC"),
+              url: "/admin/settings/oidc",
+            },
+          ],
         },
       ],
     },

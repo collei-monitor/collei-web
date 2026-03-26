@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,14 @@ import { Separator } from "@/components/ui/separator";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 
+interface SSOProvider {
+  name: string;
+  provider_type: string;
+  display_order: number;
+}
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api/v1";
+
 // ── Zod schemas ──────────────────────────────────────────────────────────────
 
 const loginSchema = z.object({
@@ -54,6 +62,7 @@ export default function LoginPage() {
   const [loginChallenge, setLoginChallenge] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [ssoProviders, setSsoProviders] = useState<SSOProvider[]>([]);
 
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -64,6 +73,12 @@ export default function LoginPage() {
     resolver: zodResolver(totpSchema),
     defaultValues: { totp_code: "" },
   });
+
+  useEffect(() => {
+    api.get("/auth/sso/providers").then(({ data }) => {
+      if (Array.isArray(data)) setSsoProviders(data);
+    }).catch(() => {});
+  }, []);
 
   // ── Phase 1: username + password ───────────────────────────────────────────
 
@@ -226,6 +241,36 @@ export default function LoginPage() {
                     </Button>
                   </form>
                 </Form>
+
+                {ssoProviders.length > 0 && (
+                  <div className="mt-4">
+                    <div className="relative my-4">
+                      <div className="absolute inset-0 flex items-center">
+                        <Separator />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-card px-2 text-muted-foreground">
+                          {t("login.sso.or")}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {ssoProviders.map((p) => (
+                        <Button
+                          key={p.name}
+                          type="button"
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => {
+                            window.location.href = `${API_BASE}/auth/sso/${encodeURIComponent(p.name)}/login`;
+                          }}
+                        >
+                          {t("login.sso.loginWith", { provider: p.name })}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

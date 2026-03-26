@@ -11,6 +11,7 @@ import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
 import AlertEnginePage from "@/pages/admin/alerts/AlertEnginePage";
 import UsersPage from "@/pages/admin/UsersPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
+import OIDCProvidersPage from "@/pages/admin/settings/OIDCProvidersPage";
 import LogsPage from "@/pages/admin/LogsPage";
 import NetworkPage from "@/pages/admin/services/network/NetworkPage";
 import RemotePage from "@/pages/admin/services/remote/RemotePage";
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
           { path: "users", element: <UsersPage /> },
           { path: "logs", element: <LogsPage /> },
           { path: "settings", element: <SettingsPage /> },
+          { path: "settings/oidc", element: <OIDCProvidersPage /> },
           { path: "services/network", element: <NetworkPage /> },
           { path: "services/remote", element: <RemotePage /> },
           { path: "dns/domains", element: <DomainsPage /> },
