@@ -3,10 +3,8 @@ import DisplayPage from "@/pages/display/DisplayPage";
 import ServerDetailPage from "@/pages/display/ServerDetailPage";
 import LoginPage from "@/pages/LoginPage";
 import AdminLayout from "@/pages/admin/AdminLayout";
-import DashboardPage from "@/pages/admin/DashboardPage";
 import NodesPage from "@/pages/admin/nodes/NodesPage";
 import GroupsPage from "@/pages/admin/groups/GroupsPage";
-import MetricsPage from "@/pages/admin/MetricsPage";
 import AlertRulesPage from "@/pages/admin/alerts/AlertRulesPage";
 import NotificationChannelsPage from "@/pages/admin/alerts/NotificationChannelsPage";
 import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
@@ -53,10 +51,9 @@ const router = createBrowserRouter([
       {
         element: <AdminLayout />,
         children: [
-          { index: true, element: <DashboardPage /> },
+          { index: true, element: <NodesPage /> },
           { path: "nodes", element: <NodesPage /> },
           { path: "groups", element: <GroupsPage /> },
-          { path: "metrics", element: <MetricsPage /> },
           { path: "alerts/rules", element: <AlertRulesPage /> },
           { path: "alerts/channels", element: <NotificationChannelsPage /> },
           { path: "alerts/events", element: <EventCenterPage /> },

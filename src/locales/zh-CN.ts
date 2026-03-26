@@ -237,23 +237,6 @@ export default {
     },
   },
   admin: {
-    dashboard: {
-      title: "仪表板",
-      subtitle: "查看系统整体运行状态",
-      stats: {
-        onlineNodes: "在线节点",
-        onlineNodesDesc: "监控中的服务器数量",
-        avgCpu: "平均 CPU",
-        avgCpuDesc: "所有节点 CPU 使用率均值",
-        alerts: "未处理告警",
-        alertsDesc: "待确认的告警事件",
-        users: "用户数量",
-        usersDesc: "系统内注册用户总数",
-        pending: "待处理",
-      },
-      chart: "实时监控图表",
-      noData: "数据图表（待实现）",
-    },
     nodes: {
       title: "节点管理",
       subtitle: "管理所有已注册的服务器节点",
@@ -495,12 +478,9 @@ export default {
       },
     },
     sidebar: {
-      overview: "概览",
-      dashboard: "仪表板",
       monitoring: "监控管理",
       nodes: "节点管理",
       groups: "分组管理",
-      metrics: "性能指标",
       alerts: "告警管理",
       alertRules: "告警规则",
       notificationChannels: "通知渠道",

@@ -45,7 +45,7 @@ export function RequireGuest() {
   }
 
   if (status === "authenticated") {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/admin/nodes" replace />;
   }
 
   return <Outlet />;

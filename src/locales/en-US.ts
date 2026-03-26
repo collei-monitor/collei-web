@@ -242,23 +242,6 @@ export default {
     },
   },
   admin: {
-    dashboard: {
-      title: "Dashboard",
-      subtitle: "View system health and status",
-      stats: {
-        onlineNodes: "Online Nodes",
-        onlineNodesDesc: "Number of monitored servers",
-        avgCpu: "Average CPU",
-        avgCpuDesc: "Average CPU usage across all nodes",
-        alerts: "Unhandled Alerts",
-        alertsDesc: "Pending alert events",
-        users: "User Count",
-        usersDesc: "Total registered users",
-        pending: "Pending",
-      },
-      chart: "Real-time Monitoring Charts",
-      noData: "Charts (to be implemented)",
-    },
     nodes: {
       title: "Node Management",
       subtitle: "Manage all registered server nodes",
@@ -500,12 +483,9 @@ export default {
       },
     },
     sidebar: {
-      overview: "Overview",
-      dashboard: "Dashboard",
       monitoring: "Monitoring",
       nodes: "Nodes",
       groups: "Groups",
-      metrics: "Metrics",
       alerts: "Alerts",
       alertRules: "Alert Rules",
       notificationChannels: "Notification Channels",

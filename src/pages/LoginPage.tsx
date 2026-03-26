@@ -91,7 +91,7 @@ export default function LoginPage() {
         setPhase("2fa");
       } else {
         await onLoginSuccess();
-        navigate("/admin");
+        navigate("/admin/nodes");
       }
     } catch {
       setError(t("login.errors.networkError"));
@@ -126,7 +126,7 @@ export default function LoginPage() {
       }
 
       await onLoginSuccess();
-      navigate("/admin");
+      navigate("/admin/nodes");
     } catch {
       setError(t("login.errors.networkError"));
     } finally {

@@ -29,11 +29,9 @@ import {
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard,
   Bell,
   Users,
   Settings,
-  Activity,
   Layers,
   ChevronRight,
   Server,
@@ -168,17 +166,6 @@ export function AdminSidebar() {
 
   const navGroups: NavGroup[] = [
     {
-      labelKey: "admin.sidebar.overview",
-      items: [
-        {
-          title: t("admin.sidebar.dashboard"),
-          url: "/admin",
-          icon: LayoutDashboard,
-          end: true,
-        },
-      ],
-    },
-    {
       labelKey: "admin.sidebar.monitoring",
       items: [
         {
@@ -191,12 +178,6 @@ export function AdminSidebar() {
           title: t("admin.sidebar.groups"),
           url: "/admin/groups",
           icon: Layers,
-          end: false,
-        },
-        {
-          title: t("admin.sidebar.metrics"),
-          url: "/admin/metrics",
-          icon: Activity,
           end: false,
         },
         {
