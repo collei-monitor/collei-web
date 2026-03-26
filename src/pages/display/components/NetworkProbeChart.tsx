@@ -6,8 +6,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Area,
-  AreaChart,
   CartesianGrid,
   Legend,
   Line,
@@ -59,10 +57,9 @@ const PALETTE = [
 
 // ── 时间范围定义 ──────────────────────────────────────────────────────────────
 
-type TimeRange = "realtime" | "1h" | "6h" | "12h" | "24h" | "custom";
+type TimeRange = "1h" | "6h" | "12h" | "24h" | "custom";
 
 const RANGE_SECONDS: Record<Exclude<TimeRange, "custom">, number> = {
-  realtime: 0,
   "1h": 1,
   "6h": 6,
   "12h": 12,
@@ -87,7 +84,7 @@ interface TooltipPayloadItem {
 
 function formatTime(timestamp: number, range: TimeRange): string {
   const date = new Date(timestamp * 1000);
-  if (range === "realtime" || range === "1h") {
+  if (range === "1h") {
     return date.toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
@@ -196,6 +193,45 @@ function buildChartData(probes: NetworkProbeRecord[], metric: MetricKey) {
   return rows.sort((a, b) => (a.time as number) - (b.time as number));
 }
 
+// ── Peak cut — 基于 IQR 四分位距法削除峰值 ───────────────────────────────────
+
+function quantile(sorted: number[], q: number): number {
+  const pos = (sorted.length - 1) * q;
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  if (lo === hi) return sorted[lo];
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+
+function applyPeakCut(
+  data: Record<string, number | null>[],
+  targets: string[],
+) {
+  const caps = new Map<string, number>();
+  for (const name of targets) {
+    const values = data
+      .map((row) => row[name])
+      .filter((v): v is number => v != null)
+      .sort((a, b) => a - b);
+    if (values.length < 4) continue;
+    const q1 = quantile(values, 0.25);
+    const q3 = quantile(values, 0.75);
+    const iqr = q3 - q1;
+    caps.set(name, q3 + 1.5 * iqr);
+  }
+
+  return data.map((row) => {
+    const next = { ...row };
+    for (const name of targets) {
+      const cap = caps.get(name);
+      if (cap != null && next[name] != null && (next[name] as number) > cap) {
+        next[name] = cap;
+      }
+    }
+    return next;
+  });
+}
+
 // ── 时间选择辅助 ──────────────────────────────────────────────────────────────
 
 function toTimeString(date: Date) {
@@ -217,9 +253,9 @@ interface NetworkProbeChartProps {
 
 export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
   const { t } = useTranslation();
-  const [range, setRange] = useState<TimeRange>("realtime");
+  const [range, setRange] = useState<TimeRange>("1h");
   const [metric, setMetric] = useState<MetricKey>("median_latency");
-  const [areaMode, setAreaMode] = useState(false);
+  const [peakCut, setPeakCut] = useState(false);
 
   // 自定义日期时间范围
   const [customStartDate, setCustomStartDate] = useState<Date | undefined>(
@@ -254,9 +290,6 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
         end_time: Math.floor(end.getTime() / 1000),
       };
     }
-    if (range === "realtime") {
-      return {};
-    }
     if (range !== "custom") {
       return { range: `${RANGE_SECONDS[range]}` };
     }
@@ -264,10 +297,10 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
   }, [range, customStartDate, customStartTime, customEndDate, customEndTime]);
 
   const { data: probes, isLoading } = useServerNetworkProbes(uuid, params, {
-    refetchInterval: range === "realtime" ? 60_000 : false,
+    refetchInterval: false,
   });
 
-  const chartData = useMemo(
+  const rawChartData = useMemo(
     () => (probes ? buildChartData(probes, metric) : []),
     [probes, metric],
   );
@@ -275,6 +308,11 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
   const targetNames = useMemo(
     () => (probes ?? []).map((p) => p.target.name),
     [probes],
+  );
+
+  const chartData = useMemo(
+    () => (peakCut ? applyPeakCut(rawChartData, targetNames) : rawChartData),
+    [rawChartData, targetNames, peakCut],
   );
 
   return (
@@ -285,9 +323,6 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
           {/* 时间范围 */}
           <Tabs value={range} onValueChange={handleRangeChange}>
             <TabsList>
-              <TabsTrigger value="realtime">
-                {t("detail.network.range.realtime")}
-              </TabsTrigger>
               <TabsTrigger value="1h">
                 {t("detail.network.range.1h")}
               </TabsTrigger>
@@ -412,84 +447,6 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
             </div>
           ) : (
             <>
-              {areaMode ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart
-                    data={chartData}
-                    margin={{ top: 4, right: 8, bottom: 0, left: 0 }}
-                  >
-                    <defs>
-                      {targetNames.map((name, i) => (
-                        <linearGradient
-                          key={name}
-                          id={`probe-gradient-${i}`}
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor={PALETTE[i % PALETTE.length]}
-                            stopOpacity={0.3}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor={PALETTE[i % PALETTE.length]}
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                      ))}
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      className="stroke-muted"
-                    />
-                    <XAxis
-                      dataKey="time"
-                      tickFormatter={(v) => formatTime(v, range)}
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      minTickGap={40}
-                    />
-                    <YAxis
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      width={50}
-                      tickFormatter={(v: number) => `${v} ms`}
-                    />
-                    <Tooltip
-                      content={<ChartTooltip range={range} t={t} />}
-                      cursor={{
-                        stroke: "hsl(var(--muted-foreground))",
-                        strokeWidth: 1,
-                        strokeDasharray: "3 3",
-                        opacity: 0.5,
-                      }}
-                    />
-                    {targetNames.map((name, i) => (
-                      <Area
-                        key={name}
-                        type="natural"
-                        dataKey={name}
-                        name={name}
-                        stroke={PALETTE[i % PALETTE.length]}
-                        strokeWidth={1.5}
-                        fill={`url(#probe-gradient-${i})`}
-                        dot={false}
-                        isAnimationActive={false}
-                      />
-                    ))}
-                    <Legend
-                      verticalAlign="bottom"
-                      height={28}
-                      wrapperStyle={{ fontSize: 11, paddingTop: 4 }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              ) : (
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart
                     data={chartData}
@@ -543,16 +500,15 @@ export function NetworkProbeChart({ uuid }: NetworkProbeChartProps) {
                     />
                   </LineChart>
                 </ResponsiveContainer>
-              )}
-              {/* 面积图切换 */}
+              {/* Peak cut 削峰切换 */}
               <div className="flex items-center gap-2 mt-2">
                 <Switch
-                  id="area-mode"
-                  checked={areaMode}
-                  onCheckedChange={setAreaMode}
+                  id="peak-cut"
+                  checked={peakCut}
+                  onCheckedChange={setPeakCut}
                 />
                 <Label
-                  htmlFor="area-mode"
+                  htmlFor="peak-cut"
                   className="text-xs text-muted-foreground cursor-pointer"
                 >
                   {t("detail.network.areaMode")}

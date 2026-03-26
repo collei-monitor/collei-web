@@ -158,7 +158,7 @@ export default {
         latency: "Latency",
         packetLoss: "Packet Loss",
       },
-      areaMode: "Area chart",
+      areaMode: "Peak cut",
       customRange: {
         startDate: "Start date",
         endDate: "End date",

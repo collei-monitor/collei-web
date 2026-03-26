@@ -156,7 +156,7 @@ export default {
         latency: "延迟",
         packetLoss: "丢包率",
       },
-      areaMode: "面积图",
+      areaMode: "Peak cut",
       customRange: {
         startDate: "开始日期",
         endDate: "结束日期",
