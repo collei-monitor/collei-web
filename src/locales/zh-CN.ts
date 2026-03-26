@@ -274,6 +274,7 @@ export default {
         ip: "IP 地址",
         groups: "分组",
         status: "状态",
+        version: "版本",
       },
       status: {
         online: "在线",

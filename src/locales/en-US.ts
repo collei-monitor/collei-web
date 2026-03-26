@@ -279,6 +279,7 @@ export default {
         ip: "IP Address",
         groups: "Groups",
         status: "Status",
+        version: "Version",
       },
       status: {
         online: "Online",

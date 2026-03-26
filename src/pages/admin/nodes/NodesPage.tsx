@@ -56,11 +56,25 @@ export default function NodesPage() {
   const [showAddInstall, setShowAddInstall] = useState(false);
   const [installDialogKey, setInstallDialogKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [visibleColumns, setVisibleColumns] = useState({
-    ip: true,
-    groups: true,
-    status: true,
+  type VisibleColumns = { ip: boolean; groups: boolean; status: boolean; version: boolean };
+  const defaultColumns: VisibleColumns = { ip: true, groups: true, status: true, version: false };
+  const [visibleColumns, setVisibleColumns] = useState<VisibleColumns>(() => {
+    try {
+      const stored = localStorage.getItem("nodes-visible-columns");
+      if (stored) {
+        return { ...defaultColumns, ...JSON.parse(stored) };
+      }
+    } catch { /* ignore */ }
+    return defaultColumns;
   });
+
+  const updateVisibleColumns = (key: keyof VisibleColumns, value: boolean) => {
+    setVisibleColumns((prev: VisibleColumns) => {
+      const next = { ...prev, [key]: value };
+      try { localStorage.setItem("nodes-visible-columns", JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  };
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
@@ -137,27 +151,27 @@ export default function NodesPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuCheckboxItem
                 checked={visibleColumns.ip}
-                onCheckedChange={(v) =>
-                  setVisibleColumns((prev) => ({ ...prev, ip: v }))
-                }
+                onCheckedChange={(v) => updateVisibleColumns("ip", v)}
               >
                 {t("admin.nodes.table.ip")}
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={visibleColumns.groups}
-                onCheckedChange={(v) =>
-                  setVisibleColumns((prev) => ({ ...prev, groups: v }))
-                }
+                onCheckedChange={(v) => updateVisibleColumns("groups", v)}
               >
                 {t("admin.nodes.table.groups")}
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={visibleColumns.status}
-                onCheckedChange={(v) =>
-                  setVisibleColumns((prev) => ({ ...prev, status: v }))
-                }
+                onCheckedChange={(v) => updateVisibleColumns("status", v)}
               >
                 {t("admin.nodes.table.status")}
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={visibleColumns.version}
+                onCheckedChange={(v) => updateVisibleColumns("version", v)}
+              >
+                {t("admin.nodes.table.version")}
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -199,6 +213,9 @@ export default function NodesPage() {
                 {visibleColumns.status && (
                   <TableHead>{t("admin.nodes.table.status")}</TableHead>
                 )}
+                {visibleColumns.version && (
+                  <TableHead>{t("admin.nodes.table.version")}</TableHead>
+                )}
                 <TableHead className="w-24" />
               </TableRow>
             </TableHeader>
@@ -214,7 +231,8 @@ export default function NodesPage() {
                         4 +
                         (visibleColumns.ip ? 1 : 0) +
                         (visibleColumns.groups ? 1 : 0) +
-                        (visibleColumns.status ? 1 : 0)
+                        (visibleColumns.status ? 1 : 0) +
+                        (visibleColumns.version ? 1 : 0)
                       }
                       className="h-32 text-center text-muted-foreground"
                     >

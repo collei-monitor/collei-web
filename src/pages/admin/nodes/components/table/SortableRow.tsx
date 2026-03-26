@@ -54,7 +54,7 @@ export function SortableRow({
   onBilling: (s: Server) => void;
   onTrafficRule: (s: Server) => void;
   onInstall: (s: Server) => void;
-  visibleColumns: { ip: boolean; groups: boolean; status: boolean };
+  visibleColumns: { ip: boolean; groups: boolean; status: boolean; version: boolean };
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -224,6 +224,15 @@ export function SortableRow({
       {visibleColumns.status && (
         <TableCell>
           <StatusBadge server={server} />
+        </TableCell>
+      )}
+
+      {/* 版本 */}
+      {visibleColumns.version && (
+        <TableCell>
+          <span className="text-xs font-mono text-muted-foreground">
+            {server.version ?? "—"}
+          </span>
         </TableCell>
       )}
 
