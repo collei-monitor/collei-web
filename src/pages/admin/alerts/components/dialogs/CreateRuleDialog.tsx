@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getMetricDefaults } from "../metric-defaults";
 
 const METRICS: AlertMetric[] = [
   "offline", "cpu", "ram", "swap", "disk", "load",
@@ -31,9 +32,6 @@ const METRICS: AlertMetric[] = [
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];
-
-/** Metrics that hide condition/threshold inputs */
-const FIXED_METRICS = new Set<string>(["offline", "login"]);
 
 interface Props {
   open: boolean;
@@ -56,20 +54,58 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
     traffic_notify_step: "",
   });
 
+  const md = getMetricDefaults(form.metric);
+
+  /** 切换指标时自动填充默认值 */
+  const handleMetricChange = (v: string) => {
+    const d = getMetricDefaults(v);
+    setForm((p) => ({
+      ...p,
+      metric: v,
+      condition: d.condition ?? (d.hideCondition ? "" : p.condition),
+      threshold:
+        d.threshold != null
+          ? String(d.threshold)
+          : d.defaultThreshold != null
+            ? String(d.defaultThreshold)
+            : "",
+      duration:
+        d.duration != null
+          ? String(d.duration)
+          : d.defaultDuration != null
+            ? String(d.defaultDuration)
+            : "",
+      notify_recovery:
+        d.hideNotifyRecovery
+          ? false
+          : d.defaultNotifyRecovery != null
+            ? d.defaultNotifyRecovery === 1
+            : p.notify_recovery,
+      traffic_notify_step: d.hideTrafficStep ? "" : p.traffic_notify_step,
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const isFixed = FIXED_METRICS.has(form.metric);
+
+    const finalCondition = md.condition ?? form.condition;
+    const finalThreshold = md.threshold ?? Number(form.threshold);
+    const finalDuration = md.duration ?? (form.duration ? Number(form.duration) : undefined);
+    const finalNotifyRecovery = md.hideNotifyRecovery
+      ? (md.defaultNotifyRecovery ?? 0)
+      : form.notify_recovery ? 1 : 0;
+
     const payload: CreateRulePayload = {
       name: form.name,
       metric: form.metric,
-      condition: isFixed ? "==" : form.condition,
-      threshold: isFixed ? 1 : Number(form.threshold),
-      duration: form.duration ? Number(form.duration) : undefined,
+      condition: finalCondition,
+      threshold: finalThreshold,
+      duration: finalDuration,
       enabled: form.enabled ? 1 : 0,
-      notify_recovery: form.notify_recovery ? 1 : 0,
+      notify_recovery: finalNotifyRecovery,
       custom_message: form.custom_message.trim() || null,
     };
-    if (form.metric === "traffic_percent" && form.traffic_notify_step) {
+    if (!md.hideTrafficStep && form.traffic_notify_step) {
       payload.traffic_notify_step = Number(form.traffic_notify_step);
     }
     const toastId = toast.loading(t("admin.alerts.rules.toast.creating"));
@@ -93,10 +129,17 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
     onOpenChange(v);
   };
 
-  const isFixed = FIXED_METRICS.has(form.metric);
-  const isTrafficPercent = form.metric === "traffic_percent";
+  const showCondition = !md.hideCondition;
+  const showThreshold = !md.hideThreshold;
+  const showDuration = !md.hideDuration;
+  const showNotifyRecovery = !md.hideNotifyRecovery;
+  const showTrafficStep = !md.hideTrafficStep;
+
   const canSubmit =
-    form.name.trim() && form.metric && (isFixed || (form.condition && form.threshold !== ""));
+    form.name.trim() &&
+    form.metric &&
+    (md.condition != null || form.condition) &&
+    (md.threshold != null || form.threshold !== "");
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -106,6 +149,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
           <DialogDescription>{t("admin.alerts.rules.create.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* 规则名称 */}
           <div className="space-y-2">
             <Label>{t("admin.alerts.rules.create.name")}</Label>
             <Input
@@ -116,12 +160,14 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
               maxLength={128}
             />
           </div>
+
+          {/* 指标 + 条件 */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className={showCondition ? "space-y-2" : "col-span-2 space-y-2"}>
               <Label>{t("admin.alerts.rules.create.metric")}</Label>
               <Select
                 value={form.metric}
-                onValueChange={(v) => setForm((p) => ({ ...p, metric: v }))}
+                onValueChange={handleMetricChange}
               >
                 <SelectTrigger>
                   <SelectValue placeholder={t("admin.alerts.rules.create.metricPlaceholder")} />
@@ -135,7 +181,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            {!isFixed && (
+            {showCondition && (
               <div className="space-y-2">
                 <Label>{t("admin.alerts.rules.create.condition")}</Label>
                 <Select
@@ -156,32 +202,51 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
               </div>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {!isFixed && (
-              <div className="space-y-2">
-                <Label>{t("admin.alerts.rules.create.threshold")}</Label>
-                <Input
-                  type="number"
-                  step="any"
-                  value={form.threshold}
-                  onChange={(e) => setForm((p) => ({ ...p, threshold: e.target.value }))}
-                  placeholder={t("admin.alerts.rules.create.thresholdPlaceholder")}
-                  required
-                />
-              </div>
-            )}
-            <div className={isFixed ? "col-span-2 space-y-2" : "space-y-2"}>
-              <Label>{t("admin.alerts.rules.create.duration")}</Label>
-              <Input
-                type="number"
-                min={0}
-                value={form.duration}
-                onChange={(e) => setForm((p) => ({ ...p, duration: e.target.value }))}
-                placeholder={t("admin.alerts.rules.create.durationPlaceholder")}
-              />
+
+          {/* 阈值 + 持续时间 */}
+          {(showThreshold || showDuration) && (
+            <div className="grid grid-cols-2 gap-4">
+              {showThreshold && (
+                <div className={showDuration ? "space-y-2" : "col-span-2 space-y-2"}>
+                  <Label>
+                    {t("admin.alerts.rules.create.threshold")}
+                    {md.thresholdUnit && (
+                      <span className="text-muted-foreground font-normal ml-1">
+                        ({t(`admin.alerts.rules.${md.thresholdUnit}`)})
+                      </span>
+                    )}
+                  </Label>
+                  <Input
+                    type="number"
+                    step="any"
+                    value={form.threshold}
+                    onChange={(e) => setForm((p) => ({ ...p, threshold: e.target.value }))}
+                    placeholder={
+                      md.thresholdHint
+                        ? t(`admin.alerts.rules.${md.thresholdHint}`)
+                        : t("admin.alerts.rules.create.thresholdPlaceholder")
+                    }
+                    required
+                  />
+                </div>
+              )}
+              {showDuration && (
+                <div className={showThreshold ? "space-y-2" : "col-span-2 space-y-2"}>
+                  <Label>{t("admin.alerts.rules.create.duration")}</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={form.duration}
+                    onChange={(e) => setForm((p) => ({ ...p, duration: e.target.value }))}
+                    placeholder={t("admin.alerts.rules.create.durationPlaceholder")}
+                  />
+                </div>
+              )}
             </div>
-          </div>
-          {isTrafficPercent && (
+          )}
+
+          {/* 流量梯度通知步长 */}
+          {showTrafficStep && (
             <div className="space-y-2">
               <Label>{t("admin.alerts.rules.create.trafficNotifyStep")}</Label>
               <Input
@@ -194,6 +259,8 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
               />
             </div>
           )}
+
+          {/* 自定义消息模板 */}
           <div className="space-y-2">
             <Label>{t("admin.alerts.rules.create.customMessage")}</Label>
             <Textarea
@@ -206,6 +273,8 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
               {t("admin.alerts.rules.create.customMessageHint")}
             </p>
           </div>
+
+          {/* 启用 */}
           <div className="flex items-center gap-2">
             <Checkbox
               id="create-rule-enabled"
@@ -214,14 +283,19 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
             />
             <Label htmlFor="create-rule-enabled">{t("admin.alerts.rules.create.enabled")}</Label>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="create-rule-notify-recovery"
-              checked={form.notify_recovery}
-              onCheckedChange={(v) => setForm((p) => ({ ...p, notify_recovery: v === true }))}
-            />
-            <Label htmlFor="create-rule-notify-recovery">{t("admin.alerts.rules.create.notifyRecovery")}</Label>
-          </div>
+
+          {/* 恢复通知 */}
+          {showNotifyRecovery && (
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="create-rule-notify-recovery"
+                checked={form.notify_recovery}
+                onCheckedChange={(v) => setForm((p) => ({ ...p, notify_recovery: v === true }))}
+              />
+              <Label htmlFor="create-rule-notify-recovery">{t("admin.alerts.rules.create.notifyRecovery")}</Label>
+            </div>
+          )}
+
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
               {t("admin.alerts.rules.create.cancel")}

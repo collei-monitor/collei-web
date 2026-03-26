@@ -638,6 +638,23 @@ export default {
           traffic_percent: "流量百分比",
         },
         durationUnit: "{{value}} 秒",
+        thresholdUnits: {
+          days: "天",
+          percent: "%",
+          ratio: "比率 0~1",
+          bytesPerSec: "bytes/s",
+        },
+        thresholdHints: {
+          expiry: "提前多少天提醒",
+          trafficPercent: "流量使用百分比",
+          ratio: "0~1，如 0.9 表示 90%",
+          load: "系统负载绝对值，通常参考 CPU 核心数",
+          netIn: "入站流量速率",
+          netOut: "出站流量速率",
+          tcp: "TCP 连接数",
+          udp: "UDP 连接数",
+          process: "进程数",
+        },
         create: {
           title: "新建告警规则",
           description: "创建一条新的告警规则",

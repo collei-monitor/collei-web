@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getMetricDefaults } from "../metric-defaults";
 
 const METRICS: AlertMetric[] = [
   "offline", "cpu", "ram", "swap", "disk", "load",
@@ -31,9 +32,6 @@ const METRICS: AlertMetric[] = [
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];
-
-/** Metrics that hide condition/threshold inputs */
-const FIXED_METRICS = new Set<string>(["offline", "login"]);
 
 interface Props {
   rule: AlertRuleRead | null;
@@ -76,28 +74,62 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
     }
   }
 
+  const md = getMetricDefaults(metric);
+
+  /** 切换指标时自动填充默认值 */
+  const handleMetricChange = (v: string) => {
+    const d = getMetricDefaults(v);
+    setMetric(v);
+    setCondition(d.condition ?? (d.hideCondition ? "" : condition));
+    setThreshold(
+      d.threshold != null
+        ? String(d.threshold)
+        : d.defaultThreshold != null
+          ? String(d.defaultThreshold)
+          : threshold,
+    );
+    setDuration(
+      d.duration != null
+        ? String(d.duration)
+        : d.defaultDuration != null
+          ? String(d.defaultDuration)
+          : duration,
+    );
+    if (d.hideNotifyRecovery) {
+      setNotifyRecovery(false);
+    } else if (d.defaultNotifyRecovery != null) {
+      setNotifyRecovery(d.defaultNotifyRecovery === 1);
+    }
+    if (d.hideTrafficStep) {
+      setTrafficNotifyStep("");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!rule) return;
 
-    const isFixed = FIXED_METRICS.has(metric);
+    const finalCondition = md.condition ?? condition;
+    const finalThreshold = md.threshold ?? Number(threshold);
+    const finalDuration = md.duration ?? Number(duration);
+    const finalNotifyRecovery = md.hideNotifyRecovery
+      ? (md.defaultNotifyRecovery ?? 0)
+      : notifyRecovery ? 1 : 0;
+
     const payload: UpdateRulePayload = {};
     if (name !== rule.name) payload.name = name;
     if (metric !== rule.metric) payload.metric = metric;
-    const newCondition = isFixed ? "==" : condition;
-    if (newCondition !== rule.condition) payload.condition = newCondition;
-    const newThreshold = isFixed ? 1 : Number(threshold);
-    if (newThreshold !== rule.threshold) payload.threshold = newThreshold;
-    if (Number(duration) !== rule.duration) payload.duration = Number(duration);
+    if (finalCondition !== rule.condition) payload.condition = finalCondition;
+    if (finalThreshold !== rule.threshold) payload.threshold = finalThreshold;
+    if (finalDuration !== rule.duration) payload.duration = finalDuration;
     const newEnabled = enabled ? 1 : 0;
     if (newEnabled !== rule.enabled) payload.enabled = newEnabled;
-    const newNotifyRecovery = notifyRecovery ? 1 : 0;
-    if (newNotifyRecovery !== rule.notify_recovery) payload.notify_recovery = newNotifyRecovery;
+    if (finalNotifyRecovery !== rule.notify_recovery) payload.notify_recovery = finalNotifyRecovery;
 
     const newCustomMessage = customMessage.trim() || null;
     if (newCustomMessage !== (rule.custom_message ?? null)) payload.custom_message = newCustomMessage;
 
-    const newTrafficStep = trafficNotifyStep ? Number(trafficNotifyStep) : null;
+    const newTrafficStep = (!md.hideTrafficStep && trafficNotifyStep) ? Number(trafficNotifyStep) : null;
     if (newTrafficStep !== (rule.traffic_notify_step ?? null)) payload.traffic_notify_step = newTrafficStep;
 
     if (Object.keys(payload).length === 0) {
@@ -120,8 +152,11 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
     );
   };
 
-  const isFixed = FIXED_METRICS.has(metric);
-  const isTrafficPercent = metric === "traffic_percent";
+  const showCondition = !md.hideCondition;
+  const showThreshold = !md.hideThreshold;
+  const showDuration = !md.hideDuration;
+  const showNotifyRecovery = !md.hideNotifyRecovery;
+  const showTrafficStep = !md.hideTrafficStep;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -131,6 +166,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
           <DialogDescription>{t("admin.alerts.rules.edit.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* 规则名称 */}
           <div className="space-y-2">
             <Label>{t("admin.alerts.rules.edit.name")}</Label>
             <Input
@@ -140,10 +176,12 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               maxLength={128}
             />
           </div>
+
+          {/* 指标 + 条件 */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className={showCondition ? "space-y-2" : "col-span-2 space-y-2"}>
               <Label>{t("admin.alerts.rules.edit.metric")}</Label>
-              <Select value={metric} onValueChange={setMetric}>
+              <Select value={metric} onValueChange={handleMetricChange}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -156,7 +194,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            {!isFixed && (
+            {showCondition && (
               <div className="space-y-2">
                 <Label>{t("admin.alerts.rules.edit.condition")}</Label>
                 <Select value={condition} onValueChange={setCondition}>
@@ -174,30 +212,50 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               </div>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {!isFixed && (
-              <div className="space-y-2">
-                <Label>{t("admin.alerts.rules.edit.threshold")}</Label>
-                <Input
-                  type="number"
-                  step="any"
-                  value={threshold}
-                  onChange={(e) => setThreshold(e.target.value)}
-                  required
-                />
-              </div>
-            )}
-            <div className={isFixed ? "col-span-2 space-y-2" : "space-y-2"}>
-              <Label>{t("admin.alerts.rules.edit.duration")}</Label>
-              <Input
-                type="number"
-                min={0}
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-              />
+
+          {/* 阈值 + 持续时间 */}
+          {(showThreshold || showDuration) && (
+            <div className="grid grid-cols-2 gap-4">
+              {showThreshold && (
+                <div className={showDuration ? "space-y-2" : "col-span-2 space-y-2"}>
+                  <Label>
+                    {t("admin.alerts.rules.edit.threshold")}
+                    {md.thresholdUnit && (
+                      <span className="text-muted-foreground font-normal ml-1">
+                        ({t(`admin.alerts.rules.${md.thresholdUnit}`)})
+                      </span>
+                    )}
+                  </Label>
+                  <Input
+                    type="number"
+                    step="any"
+                    value={threshold}
+                    onChange={(e) => setThreshold(e.target.value)}
+                    placeholder={
+                      md.thresholdHint
+                        ? t(`admin.alerts.rules.${md.thresholdHint}`)
+                        : undefined
+                    }
+                    required
+                  />
+                </div>
+              )}
+              {showDuration && (
+                <div className={showThreshold ? "space-y-2" : "col-span-2 space-y-2"}>
+                  <Label>{t("admin.alerts.rules.edit.duration")}</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
-          </div>
-          {isTrafficPercent && (
+          )}
+
+          {/* 流量梯度通知步长 */}
+          {showTrafficStep && (
             <div className="space-y-2">
               <Label>{t("admin.alerts.rules.edit.trafficNotifyStep")}</Label>
               <Input
@@ -210,6 +268,8 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               />
             </div>
           )}
+
+          {/* 自定义消息模板 */}
           <div className="space-y-2">
             <Label>{t("admin.alerts.rules.edit.customMessage")}</Label>
             <Textarea
@@ -222,6 +282,8 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               {t("admin.alerts.rules.create.customMessageHint")}
             </p>
           </div>
+
+          {/* 启用 */}
           <div className="flex items-center gap-2">
             <Checkbox
               id="edit-rule-enabled"
@@ -230,14 +292,19 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
             />
             <Label htmlFor="edit-rule-enabled">{t("admin.alerts.rules.edit.enabled")}</Label>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="edit-rule-notify-recovery"
-              checked={notifyRecovery}
-              onCheckedChange={(v) => setNotifyRecovery(v === true)}
-            />
-            <Label htmlFor="edit-rule-notify-recovery">{t("admin.alerts.rules.edit.notifyRecovery")}</Label>
-          </div>
+
+          {/* 恢复通知 */}
+          {showNotifyRecovery && (
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="edit-rule-notify-recovery"
+                checked={notifyRecovery}
+                onCheckedChange={(v) => setNotifyRecovery(v === true)}
+              />
+              <Label htmlFor="edit-rule-notify-recovery">{t("admin.alerts.rules.edit.notifyRecovery")}</Label>
+            </div>
+          )}
+
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("admin.alerts.rules.edit.cancel")}

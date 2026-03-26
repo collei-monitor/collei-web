@@ -643,6 +643,23 @@ export default {
           traffic_percent: "Traffic Percentage",
         },
         durationUnit: "{{value}}s",
+        thresholdUnits: {
+          days: "days",
+          percent: "%",
+          ratio: "ratio 0~1",
+          bytesPerSec: "bytes/s",
+        },
+        thresholdHints: {
+          expiry: "Days before expiry to remind",
+          trafficPercent: "Traffic usage percentage",
+          ratio: "0~1, e.g. 0.9 means 90%",
+          load: "System load (absolute), usually reference CPU cores",
+          netIn: "Inbound traffic rate",
+          netOut: "Outbound traffic rate",
+          tcp: "TCP connections",
+          udp: "UDP connections",
+          process: "Process count",
+        },
         create: {
           title: "New Alert Rule",
           description: "Create a new alert rule",
