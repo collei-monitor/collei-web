@@ -263,8 +263,9 @@ export function useSyncDnsDomain() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => domainApi.sync(id),
-    onSuccess: () => {
+    onSuccess: (_data, id) => {
       qc.invalidateQueries({ queryKey: dnsKeys.domains() });
+      qc.invalidateQueries({ queryKey: dnsKeys.records(id) });
     },
   });
 }
