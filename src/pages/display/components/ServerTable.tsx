@@ -42,7 +42,7 @@ export function ServerTable({ servers }: ServerTableProps) {
         <TableHeader>
           <TableRow>
             <TableHead>{t("display.table.name")}</TableHead>
-            <TableHead>{t("display.table.os")}</TableHead>{" "}
+            <TableHead>{t("display.table.os")}</TableHead>
             <TableHead className="text-center w-20">
               {t("display.table.status")}
             </TableHead>

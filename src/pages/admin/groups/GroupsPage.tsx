@@ -90,7 +90,7 @@ export default function GroupsPage() {
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t("admin.groups.refresh")}</TooltipContent>
-          </Tooltip>{" "}
+          </Tooltip>
           <Button
             size="sm"
             className="gap-1.5"

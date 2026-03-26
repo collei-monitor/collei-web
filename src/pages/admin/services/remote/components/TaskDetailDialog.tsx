@@ -40,7 +40,7 @@ function formatTimestamp(ts: number | null): string {
 }
 
 function statusVariant(
-  status: string
+  status: string,
 ): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
     case "success":
@@ -74,13 +74,10 @@ export function TaskDetailDialog({
   const { data: task, isLoading } = useTaskDetail(open ? taskId : null);
   const { data: servers = [] } = useServers();
   const [selectedExecId, setSelectedExecId] = useState<string | null>(null);
-  const { data: execDetail, isLoading: execLoading } = useExecutionDetail(
-    selectedExecId
-  );
+  const { data: execDetail, isLoading: execLoading } =
+    useExecutionDetail(selectedExecId);
 
-  const serverNameMap = new Map(
-    servers.map((s) => [s.uuid, s.name])
-  );
+  const serverNameMap = new Map(servers.map((s) => [s.uuid, s.name]));
 
   const handleClose = (v: boolean) => {
     if (!v) setSelectedExecId(null);
@@ -91,9 +88,7 @@ export function TaskDetailDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
-            {t("admin.services.remote.detail.title")}
-          </DialogTitle>
+          <DialogTitle>{t("admin.services.remote.detail.title")}</DialogTitle>
         </DialogHeader>
 
         {isLoading ? (
@@ -136,9 +131,7 @@ export function TaskDetailDialog({
                       {t("admin.services.remote.detail.status")}:
                     </span>{" "}
                     <Badge variant={statusVariant(execDetail.status)}>
-                      {t(
-                        `admin.services.remote.status.${execDetail.status}`
-                      )}
+                      {t(`admin.services.remote.status.${execDetail.status}`)}
                     </Badge>
                   </div>
                   <div>
@@ -262,9 +255,7 @@ export function TaskDetailDialog({
                           </TableCell>
                           <TableCell>
                             <Badge variant={statusVariant(exec.status)}>
-                              {t(
-                                `admin.services.remote.status.${exec.status}`
-                              )}
+                              {t(`admin.services.remote.status.${exec.status}`)}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-sm">
@@ -279,7 +270,7 @@ export function TaskDetailDialog({
                               size="icon"
                               onClick={() => setSelectedExecId(exec.id)}
                               title={t(
-                                "admin.services.remote.detail.viewOutput"
+                                "admin.services.remote.detail.viewOutput",
                               )}
                             >
                               <FileTerminal className="h-4 w-4" />
