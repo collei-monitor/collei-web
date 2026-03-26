@@ -16,6 +16,10 @@ import SettingsPage from "@/pages/admin/settings/SettingsPage";
 import LogsPage from "@/pages/admin/LogsPage";
 import NetworkPage from "@/pages/admin/services/network/NetworkPage";
 import RemotePage from "@/pages/admin/services/remote/RemotePage";
+import DomainsPage from "@/pages/admin/dns/DomainsPage";
+import DomainDetailPage from "@/pages/admin/dns/DomainDetailPage";
+import CredentialsPage from "@/pages/admin/dns/CredentialsPage";
+import DdnsTasksPage from "@/pages/admin/dns/DdnsTasksPage";
 import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
@@ -62,6 +66,10 @@ const router = createBrowserRouter([
           { path: "settings", element: <SettingsPage /> },
           { path: "services/network", element: <NetworkPage /> },
           { path: "services/remote", element: <RemotePage /> },
+          { path: "dns/domains", element: <DomainsPage /> },
+          { path: "dns/domains/:id", element: <DomainDetailPage /> },
+          { path: "dns/credentials", element: <CredentialsPage /> },
+          { path: "dns/ddns", element: <DdnsTasksPage /> },
         ],
       },
       // 独立全屏页面（不套 AdminLayout）

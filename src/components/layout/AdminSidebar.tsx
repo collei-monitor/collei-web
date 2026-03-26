@@ -38,6 +38,7 @@ import {
   ChevronRight,
   Server,
   Network,
+  Globe,
   ScrollText,
 } from "lucide-react";
 
@@ -235,6 +236,26 @@ export function AdminSidebar() {
             {
               title: t("admin.sidebar.remoteExec"),
               url: "/admin/services/remote",
+            },
+          ],
+        },
+        {
+          title: t("admin.sidebar.dns"),
+          url: "/admin/dns",
+          icon: Globe,
+          end: false,
+          children: [
+            {
+              title: t("admin.sidebar.dnsDomains"),
+              url: "/admin/dns/domains",
+            },
+            {
+              title: t("admin.sidebar.dnsCredentials"),
+              url: "/admin/dns/credentials",
+            },
+            {
+              title: t("admin.sidebar.dnsDdns"),
+              url: "/admin/dns/ddns",
             },
           ],
         },
