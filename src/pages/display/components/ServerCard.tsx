@@ -121,7 +121,6 @@ export function ServerCard({ server }: ServerCardProps) {
         "transition-all duration-200 hover:shadow-md cursor-pointer min-h-0 sm:min-h-72 flex flex-col sm:py-6 py-4.5",
         !isOnline && "opacity-60",
       )}
-      onClick={() => navigate(`/server/${server.uuid}`)}
     >
       <CardContent className="sm:space-y-3 space-y-1.5 flex flex-col flex-1 sm:px-6 px-4">
         {/* 顶部：旗帜 + 名称 + 状态 */}
@@ -137,7 +136,12 @@ export function ServerCard({ server }: ServerCardProps) {
                 {server.region ?? t("display.server.unknownRegion")}
               </TooltipContent>
             </Tooltip>
-            <span className="font-semibold truncate">{server.name}</span>
+            <span
+              className="font-semibold truncate hover:underline"
+              onClick={() => navigate(`/server/${server.uuid}`)}
+            >
+              {server.name}
+            </span>
           </div>
           <Badge
             variant="secondary"
@@ -413,24 +417,27 @@ function BillingSection({
           {costLabel}
         </Badge>
       )}
-      {billing.expiry_date != null && billing.expiry_date != null && billing.expiry_date > 0 && remainingDays != null && (
-        <Badge
-          className={cn(
-            "text-[10px] px-1.5 py-0",
-            remainingDays <= 3 &&
-              "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-            remainingDays > 3 &&
-              remainingDays <= 7 &&
-              "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-            remainingDays > 7 &&
-              "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-          )}
-        >
-          {remainingDays > 0
-            ? `${remainingDays}${t("display.billing.daysLeft")}`
-            : t("display.billing.expired")}
-        </Badge>
-      )}
+      {billing.expiry_date != null &&
+        billing.expiry_date != null &&
+        billing.expiry_date > 0 &&
+        remainingDays != null && (
+          <Badge
+            className={cn(
+              "text-[10px] px-1.5 py-0",
+              remainingDays <= 3 &&
+                "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+              remainingDays > 3 &&
+                remainingDays <= 7 &&
+                "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+              remainingDays > 7 &&
+                "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+            )}
+          >
+            {remainingDays > 0
+              ? `${remainingDays}${t("display.billing.daysLeft")}`
+              : t("display.billing.expired")}
+          </Badge>
+        )}
     </>
   );
 }

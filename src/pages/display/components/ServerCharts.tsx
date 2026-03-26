@@ -5,8 +5,11 @@
 
 import { useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MetricChart, type ChartSeries } from "@/pages/display/components/MetricChart";
-import { formatSpeed, calcPercent } from "@/lib/display-utils";
+import {
+  MetricChart,
+  type ChartSeries,
+} from "@/pages/display/components/MetricChart";
+import { formatSpeed, calcPercent, formatBytes } from "@/lib/display-utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ServerNodeRecord } from "@/types/server";
 import type { LoadTimeRange } from "@/services/server-detail";
@@ -38,7 +41,12 @@ const PCT_DOMAIN: [number, number] = [0, 100];
 
 // ── 组件 ──────────────────────────────────────────────────────────────────────
 
-export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoading }: ServerChartsProps) {
+export function ServerCharts({
+  history,
+  timeRange = "realtime",
+  xDomain,
+  isLoading,
+}: ServerChartsProps) {
   const { t } = useTranslation();
 
   const isRealtime = timeRange === "realtime";
@@ -46,7 +54,33 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
 
   // 稳定的格式化函数引用，避免每次 render 创建新函数导致 MetricChart 重渲染
   const pctYFormatter = useCallback((v: number) => `${v}%`, []);
-  const pctTooltipFormatter = useCallback((v: number) => `${v.toFixed(1)}%`, []);
+  const pctTooltipFormatter = useCallback(
+    (v: number) => `${v.toFixed(1)}%`,
+    [],
+  );
+  const memTooltipFormatter = useCallback(
+    (v: number, name: string, payload?: Record<string, unknown>) => {
+      if (!payload) return `${v.toFixed(1)}%`;
+      if (name === "Swap") {
+        const used = Number(payload._swap ?? 0);
+        const total = Number(payload._swap_total ?? 0);
+        return `${formatBytes(used)} / ${formatBytes(total)}`;
+      }
+      const used = Number(payload._ram ?? 0);
+      const total = Number(payload._ram_total ?? 0);
+      return `${formatBytes(used)} / ${formatBytes(total)}`;
+    },
+    [],
+  );
+  const diskTooltipFormatter = useCallback(
+    (v: number, _name: string, payload?: Record<string, unknown>) => {
+      if (!payload) return `${v.toFixed(1)}%`;
+      const used = Number(payload._disk ?? 0);
+      const total = Number(payload._disk_total ?? 0);
+      return `${formatBytes(used)} / ${formatBytes(total)}`;
+    },
+    [],
+  );
   const speedFormatter = useCallback((v: number) => formatSpeed(v), []);
   const intFormatter = useCallback((v: number) => String(Math.round(v)), []);
 
@@ -59,44 +93,74 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
     () => [{ dataKey: "cpu", label: "CPU", color: COLORS.cpu }],
     [],
   );
-  const cpuLatest = isRealtime && lastRecord != null
-    ? `${lastRecord.cpu.toFixed(1)}%` : undefined;
+  const cpuLatest =
+    isRealtime && lastRecord != null
+      ? `${lastRecord.cpu.toFixed(1)}%`
+      : undefined;
 
-  // 内存数据（百分比）
+  // 内存数据（百分比 + 原始字节用于 tooltip）
   const memData = useMemo(
     () =>
       history.map((r) => ({
         time: r.time,
         ram: calcPercent(r.ram, r.ram_total),
         swap: calcPercent(r.swap, r.swap_total),
+        _ram: r.ram,
+        _ram_total: r.ram_total,
+        _swap: r.swap,
+        _swap_total: r.swap_total,
       })),
     [history],
   );
   const memSeries: ChartSeries[] = useMemo(
     () => [
-      { dataKey: "ram", label: t("detail.chart.ram"), color: COLORS.ram },
+      { dataKey: "ram", label: "RAM", color: COLORS.ram },
       { dataKey: "swap", label: "Swap", color: COLORS.swap },
     ],
-    [t],
+    [],
   );
-  const memLatest = isRealtime && lastRecord != null
-    ? `${calcPercent(lastRecord.ram, lastRecord.ram_total).toFixed(1)}%` : undefined;
+  const memLatest =
+    isRealtime && lastRecord != null ? (
+      <>
+        <div>
+          RAM {formatBytes(lastRecord.ram)} /{" "}
+          {formatBytes(lastRecord.ram_total)} (
+          {calcPercent(lastRecord.ram, lastRecord.ram_total).toFixed(1)}%)
+        </div>
+        <div>
+          Swap {formatBytes(lastRecord.swap)} /{" "}
+          {formatBytes(lastRecord.swap_total)} (
+          {calcPercent(lastRecord.swap, lastRecord.swap_total).toFixed(1)}%)
+        </div>
+      </>
+    ) : undefined;
 
-  // 磁盘数据（百分比）
+  // 磁盘数据（百分比 + 原始字节用于 tooltip）
   const diskData = useMemo(
     () =>
       history.map((r) => ({
         time: r.time,
         disk: calcPercent(r.disk, r.disk_total),
+        _disk: r.disk,
+        _disk_total: r.disk_total,
       })),
     [history],
   );
   const diskSeries: ChartSeries[] = useMemo(
-    () => [{ dataKey: "disk", label: t("detail.chart.disk"), color: COLORS.disk }],
-    [t],
+    () => [
+      { dataKey: "disk", label: "Disk", color: COLORS.disk },
+    ],
+    [],
   );
-  const diskLatest = isRealtime && lastRecord != null
-    ? `${calcPercent(lastRecord.disk, lastRecord.disk_total).toFixed(1)}%` : undefined;
+  const diskLatest =
+    isRealtime && lastRecord != null ? (
+      <>
+        <div>
+          {formatBytes(lastRecord.disk)} / {formatBytes(lastRecord.disk_total)}{" "}
+          ({calcPercent(lastRecord.disk, lastRecord.disk_total).toFixed(1)}%)
+        </div>
+      </>
+    ) : undefined;
 
   // 网络速度
   const netData = useMemo(
@@ -110,13 +174,26 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
   );
   const netSeries: ChartSeries[] = useMemo(
     () => [
-      { dataKey: "net_in", label: t("detail.chart.netIn"), color: COLORS.netIn },
-      { dataKey: "net_out", label: t("detail.chart.netOut"), color: COLORS.netOut },
+      {
+        dataKey: "net_in",
+        label: t("detail.chart.netIn"),
+        color: COLORS.netIn,
+      },
+      {
+        dataKey: "net_out",
+        label: t("detail.chart.netOut"),
+        color: COLORS.netOut,
+      },
     ],
     [t],
   );
-  const netLatest = isRealtime && lastRecord != null
-    ? `↓${formatSpeed(lastRecord.net_in)} ↑${formatSpeed(lastRecord.net_out)}` : undefined;
+  const netLatest =
+    isRealtime && lastRecord != null ? (
+      <>
+        <div>↓ {formatSpeed(lastRecord.net_in)}</div>
+        <div>↑ {formatSpeed(lastRecord.net_out)}</div>
+      </>
+    ) : undefined;
 
   // 连接数
   const connData = useMemo(
@@ -135,8 +212,10 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
     ],
     [],
   );
-  const connLatest = isRealtime && lastRecord != null
-    ? `${lastRecord.tcp ?? 0} / ${lastRecord.udp ?? 0}` : undefined;
+  const connLatest =
+    isRealtime && lastRecord != null
+      ? `TCP ${lastRecord.tcp ?? 0} / UDP ${lastRecord.udp ?? 0}`
+      : undefined;
 
   // 进程数
   const procData = useMemo(
@@ -144,11 +223,17 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
     [history],
   );
   const procSeries: ChartSeries[] = useMemo(
-    () => [{ dataKey: "process", label: t("detail.chart.process"), color: COLORS.process }],
+    () => [
+      {
+        dataKey: "process",
+        label: t("detail.chart.process"),
+        color: COLORS.process,
+      },
+    ],
     [t],
   );
-  const procLatest = isRealtime && lastRecord != null
-    ? `${lastRecord.process ?? 0}` : undefined;
+  const procLatest =
+    isRealtime && lastRecord != null ? `${lastRecord.process ?? 0}` : undefined;
 
   if (isLoading) {
     return (
@@ -181,7 +266,7 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         data={memData}
         series={memSeries}
         yFormatter={pctYFormatter}
-        tooltipFormatter={pctTooltipFormatter}
+        tooltipFormatter={memTooltipFormatter}
         yDomain={PCT_DOMAIN}
         timeRange={timeRange}
         xDomain={xDomain}
@@ -194,7 +279,7 @@ export function ServerCharts({ history, timeRange = "realtime", xDomain, isLoadi
         data={diskData}
         series={diskSeries}
         yFormatter={pctYFormatter}
-        tooltipFormatter={pctTooltipFormatter}
+        tooltipFormatter={diskTooltipFormatter}
         yDomain={PCT_DOMAIN}
         timeRange={timeRange}
         xDomain={xDomain}

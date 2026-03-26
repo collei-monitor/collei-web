@@ -109,6 +109,7 @@ export default {
       virtualization: "虚拟化",
       totalUpload: "总上传",
       totalDownload: "总下载",
+      lastOnline: "最后上报",
     },
     chart: {
       title: "历史监控数据",

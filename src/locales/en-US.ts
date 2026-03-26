@@ -111,6 +111,7 @@ export default {
       virtualization: "Virtualization",
       totalUpload: "Total Upload",
       totalDownload: "Total Download",
+      lastOnline: "Last Online",
     },
     chart: {
       title: "Historical Metrics",

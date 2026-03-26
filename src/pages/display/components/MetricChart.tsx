@@ -3,7 +3,7 @@
  * 基于 recharts，支持多 series 展示
  */
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -28,13 +28,13 @@ interface MetricChartProps {
   data: Record<string, unknown>[];
   series: ChartSeries[];
   yFormatter?: (value: number) => string;
-  tooltipFormatter?: (value: number, name: string) => string;
+  tooltipFormatter?: (value: number, name: string, payload?: Record<string, unknown>) => string;
   yDomain?: [number | "auto", number | "auto"];
   timeRange?: string;
   /** 固定 X 轴时间范围 [startTimestamp, endTimestamp]，确保即使数据不足也显示完整区间 */
   xDomain?: [number, number];
   /** 实时模式下在卡片右上角显示的最新数据值 */
-  latestValue?: string;
+  latestValue?: string | React.ReactNode;
 }
 
 export interface TooltipPayloadItem {
@@ -49,7 +49,7 @@ interface CustomTooltipProps {
   active?: boolean;
   payload?: TooltipPayloadItem[];
   label?: string | number;
-  tooltipFormatter?: (value: number, name: string) => string;
+  tooltipFormatter?: (value: number, name: string, payload?: Record<string, unknown>) => string;
   timeRange?: string;
 }
 
@@ -110,7 +110,7 @@ const CustomTooltip = ({
               </div>
               <span className="font-medium font-mono">
                 {tooltipFormatter
-                  ? tooltipFormatter(Number(entry.value), String(entry.name))
+                  ? tooltipFormatter(Number(entry.value), String(entry.name), entry.payload)
                   : entry.value}
               </span>
             </div>
@@ -135,20 +135,53 @@ export const MetricChart = memo(function MetricChart({
   xDomain,
   latestValue,
 }: MetricChartProps) {
+  // 使用原生 SVG <text> 渲染 Y 轴刻度，避免 recharts Text 组件在空格处自动换行
+  const yAxisTick = useMemo(() => {
+    function Tick({
+      x = 0,
+      y = 0,
+      payload,
+    }: {
+      x?: number | string;
+      y?: number | string;
+      payload?: { value: number };
+    }) {
+      const label =
+        payload != null
+          ? yFormatter
+            ? yFormatter(payload.value)
+            : String(payload.value)
+          : "";
+      return (
+        <text
+          x={Number(x)}
+          y={Number(y)}
+          dy={4}
+          textAnchor="start"
+          fontSize={10}
+          className="fill-muted-foreground"
+        >
+          {label}
+        </text>
+      );
+    }
+    return Tick;
+  }, [yFormatter]);
+
   return (
     <Card>
       <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {latestValue && (
-          <span className="text-sm font-mono font-semibold text-foreground">
+          <div className="text-xs font-mono font-semibold text-foreground text-right leading-tight">
             {latestValue}
-          </span>
+          </div>
         )}
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
           <div className="flex h-48 items-center justify-center text-xs text-muted-foreground">
-            等待数据…
+            Loading
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={233}>
@@ -184,15 +217,19 @@ export const MetricChart = memo(function MetricChart({
                 allowDataOverflow={!!xDomain}
               />
               <YAxis
-                fontSize={10}
                 tickLine={false}
                 axisLine={false}
-                width={50}
-                tickFormatter={yFormatter}
+                mirror
+                tick={yAxisTick}
                 domain={yDomain}
               />
               <Tooltip
-                content={<CustomTooltip tooltipFormatter={tooltipFormatter} timeRange={timeRange} />}
+                content={
+                  <CustomTooltip
+                    tooltipFormatter={tooltipFormatter}
+                    timeRange={timeRange}
+                  />
+                }
                 cursor={{
                   stroke: "hsl(var(--muted-foreground))",
                   strokeWidth: 1,
