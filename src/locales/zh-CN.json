@@ -1628,7 +1628,8 @@
       "saveSuccess": "文件 \"{{name}}\" 已保存",
       "saveFailed": "保存失败",
       "createFileSuccess": "文件 \"{{name}}\" 已创建",
-      "fileNameRequired": "请输入文件名"
+      "fileNameRequired": "请输入文件名",
+      "binaryFile": "\"{{name}}\" 是二进制文件，无法在线编辑，请使用下载功能"
     }
   }
 }

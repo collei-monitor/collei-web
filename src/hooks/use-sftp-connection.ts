@@ -262,10 +262,17 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
   }, [sendRequest]);
 
   const cat = useCallback(async (path: string, encoding = "utf-8") => {
-    const res = await sendRequest<{ path: string; content: string; encoding: string; size: number }>("cat", {
+    const res = await sendRequest<{ type?: string; path: string; content: string; encoding: string; size: number }>("cat", {
       path,
       encoding,
     });
+    if (res.type === "binary") {
+      const err = new Error("BINARY_FILE");
+      (err as any).isBinary = true;
+      (err as any).filePath = res.path;
+      (err as any).fileSize = res.size;
+      throw err;
+    }
     return res;
   }, [sendRequest]);
 

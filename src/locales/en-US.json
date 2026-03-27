@@ -1625,7 +1625,8 @@
       "saveSuccess": "File \"{{name}}\" saved",
       "saveFailed": "Save failed",
       "createFileSuccess": "File \"{{name}}\" created",
-      "fileNameRequired": "Please enter a file name"
+      "fileNameRequired": "Please enter a file name",
+      "binaryFile": "\"{{name}}\" is a binary file and cannot be edited online. Please use download instead."
     }
   }
 }

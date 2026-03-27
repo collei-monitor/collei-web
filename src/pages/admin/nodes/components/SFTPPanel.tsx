@@ -364,10 +364,17 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
       try {
         const result = await cat(filePath);
         setEditorContent(result.content);
-      } catch (err) {
-        toast.error(
-          err instanceof Error ? err.message : t("sftp.toast.readFailed"),
-        );
+      } catch (err: any) {
+        if (err?.isBinary) {
+          setEditorOpen(false);
+          toast.warning(
+            t("sftp.toast.binaryFile", { name: entry.name }),
+          );
+        } else {
+          toast.error(
+            err instanceof Error ? err.message : t("sftp.toast.readFailed"),
+          );
+        }
       } finally {
         setEditorLoading(false);
       }

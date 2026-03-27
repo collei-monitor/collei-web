@@ -47,6 +47,7 @@ export type SFTPDownMessage =
   | { type: "ls"; request_id: string; path: string; entries: SFTPFileEntry[] }
   | { type: "stat"; request_id: string; entry: SFTPFileEntry }
   | { type: "cat"; request_id: string; path: string; content: string; encoding: string; size: number }
+  | { type: "binary"; request_id: string; path: string; size: number }
   | { type: "download_start"; request_id: string; name: string; size: number }
   | { type: "download_end"; request_id: string }
   | { type: "upload_progress"; request_id: string; received: number; total: number }
