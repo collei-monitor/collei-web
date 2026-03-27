@@ -1551,6 +1551,9 @@ export default {
         displayOrder: "显示排序",
         scope: "自定义 Scope",
         scopePlaceholder: "逗号分隔，留空使用默认值",
+        addition: "附加配置",
+        additionPlaceholder: "JSON 格式的附加配置参数（选填）",
+        secretStatus: "当前密钥状态",
         enabled: "启用",
       },
       dialog: {

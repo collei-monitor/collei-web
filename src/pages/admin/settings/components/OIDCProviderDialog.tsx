@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpsertOIDC } from "@/services/oidc";
@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -53,32 +55,42 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
   const [enabled, setEnabled] = useState(true);
   const [displayOrder, setDisplayOrder] = useState(0);
   const [scope, setScope] = useState("");
+  const [addition, setAddition] = useState("");
 
-  const fillFromEditing = (provider: OIDCProviderRead) => {
-    setName(provider.name);
-    setProviderType(provider.provider_type);
-    setClientId(provider.client_id);
-    setClientSecret("");
-    setEnabled(provider.enabled === 1);
-    setDisplayOrder(provider.display_order);
-    setScope(provider.scope ?? "");
-  };
-
-  const resetForm = () => {
-    setName("");
-    setProviderType("");
-    setClientId("");
-    setClientSecret("");
-    setEnabled(true);
-    setDisplayOrder(0);
-    setScope("");
-  };
+  // 当 open/editing 变化时同步表单状态（父组件通过 open prop 控制时 onOpenChange 不会触发）
+  useEffect(() => {
+    if (!open) return;
+    if (editing) {
+      setName(editing.name);
+      setProviderType(editing.provider_type);
+      setClientId(editing.client_id);
+      setClientSecret("");
+      setEnabled(editing.enabled === 1);
+      setDisplayOrder(editing.display_order);
+      setScope(editing.scope ?? "");
+      setAddition(editing.addition ?? "");
+    } else {
+      setName("");
+      setProviderType("");
+      setClientId("");
+      setClientSecret("");
+      setEnabled(true);
+      setDisplayOrder(0);
+      setScope("");
+      setAddition("");
+    }
+  }, [open, editing]);
 
   const handleOpenChange = (v: boolean) => {
-    if (v && editing) {
-      fillFromEditing(editing);
-    } else if (!v) {
-      resetForm();
+    if (!v) {
+      setName("");
+      setProviderType("");
+      setClientId("");
+      setClientSecret("");
+      setEnabled(true);
+      setDisplayOrder(0);
+      setScope("");
+      setAddition("");
     }
     onOpenChange(v);
   };
@@ -97,6 +109,7 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
       enabled: enabled ? 1 : 0,
       display_order: displayOrder,
       scope: scope.trim() || null,
+      addition: addition.trim() || null,
     };
 
     const toastId = toast.loading(
@@ -109,7 +122,14 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
           editing ? t(`${tp}.toast.updateSuccess`) : t(`${tp}.toast.createSuccess`),
           { id: toastId },
         );
-        resetForm();
+        setName("");
+        setProviderType("");
+        setClientId("");
+        setClientSecret("");
+        setEnabled(true);
+        setDisplayOrder(0);
+        setScope("");
+        setAddition("");
         onOpenChange(false);
       },
       onError: (err) => {
@@ -181,6 +201,14 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
           {/* Client Secret */}
           <div className="space-y-2">
             <Label htmlFor="oidc-client-secret">{t(`${tp}.form.clientSecret`)}</Label>
+            {isEdit && (
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs text-muted-foreground">{t(`${tp}.form.secretStatus`)}</span>
+                <Badge variant={editing!.has_secret ? "default" : "destructive"} className="text-xs">
+                  {editing!.has_secret ? t(`${tp}.table.secretSet`) : t(`${tp}.table.secretMissing`)}
+                </Badge>
+              </div>
+            )}
             <Input
               id="oidc-client-secret"
               type="password"
@@ -213,6 +241,19 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
               value={scope}
               onChange={(e) => setScope(e.target.value)}
               placeholder={t(`${tp}.form.scopePlaceholder`)}
+            />
+          </div>
+
+          {/* 附加配置 */}
+          <div className="space-y-2">
+            <Label htmlFor="oidc-addition">{t(`${tp}.form.addition`)}</Label>
+            <Textarea
+              id="oidc-addition"
+              value={addition}
+              onChange={(e) => setAddition(e.target.value)}
+              placeholder={t(`${tp}.form.additionPlaceholder`)}
+              rows={3}
+              className="font-mono text-xs resize-none"
             />
           </div>
 

@@ -118,7 +118,7 @@ export default function OIDCProvidersPage() {
                         {p.provider_type.charAt(0).toUpperCase() + p.provider_type.slice(1)}
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-mono text-xs max-w-[200px] truncate">
+                    <TableCell className="font-mono text-xs max-w-50 truncate">
                       {p.client_id}
                     </TableCell>
                     <TableCell>

@@ -1548,6 +1548,9 @@ export default {
         displayOrder: "Display Order",
         scope: "Custom Scope",
         scopePlaceholder: "Comma-separated, leave empty for defaults",
+        addition: "Additional Config",
+        additionPlaceholder: "Additional parameters in JSON format (optional)",
+        secretStatus: "Current Secret",
         enabled: "Enabled",
       },
       dialog: {
