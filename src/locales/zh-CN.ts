@@ -470,6 +470,8 @@ export default {
         enableSsh: "启用 Web SSH 隧道",
         setupCa: "配置 SSH CA 免密登录",
         force: "强制重新注册",
+        proxyDownload: "通过面板中转下载（需先配置下载地址）",
+        proxyHint: "此命令通过面板代理下载安装脚本和 Agent 二进制文件",
         showAdvanced: "显示高级参数 ▸",
         hideAdvanced: "隐藏高级参数 ▾",
         installDir: "安装目录",

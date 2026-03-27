@@ -1,6 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Settings, Database, Clock, Activity, Code, Palette } from "lucide-react";
+import {
+  Settings,
+  Database,
+  Clock,
+  Activity,
+  Code,
+  Palette,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -30,15 +37,18 @@ export default function SettingsPage() {
   const batchSetConfig = useBatchSetConfig();
 
   const handleSave = (key: string, value: string) => {
-    setConfig.mutate({ key, value }, {
-      onSuccess: () => toast.success(t("settings.toast.saveSuccess")),
-      onError: (err) => {
-        const status = (err as { status?: number })?.status;
-        if (status === 409) toast.error(t("settings.toast.saveConflict"));
-        else if (status === 422) toast.error(t("settings.toast.saveInvalid"));
-        else toast.error(t("settings.toast.saveFailed"));
+    setConfig.mutate(
+      { key, value },
+      {
+        onSuccess: () => toast.success(t("settings.toast.saveSuccess")),
+        onError: (err) => {
+          const status = (err as { status?: number })?.status;
+          if (status === 409) toast.error(t("settings.toast.saveConflict"));
+          else if (status === 422) toast.error(t("settings.toast.saveInvalid"));
+          else toast.error(t("settings.toast.saveFailed"));
+        },
       },
-    });
+    );
   };
 
   const handleBatchSave = (items: ConfigBatchItem[]) => {
@@ -47,7 +57,10 @@ export default function SettingsPage() {
       onError: (err) => {
         const e = err as { status?: number; message?: string };
         if (e.status === 409) toast.error(t("settings.toast.saveConflict"));
-        else if (e.status === 422) toast.error(t("settings.toast.saveInvalid"), { description: e.message });
+        else if (e.status === 422)
+          toast.error(t("settings.toast.saveInvalid"), {
+            description: e.message,
+          });
         else toast.error(t("settings.toast.saveFailed"));
       },
     });
@@ -88,7 +101,9 @@ export default function SettingsPage() {
                 placeholder="Collei Monitor"
                 currentValue={configs?.["app_name"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "app_name"}
+                saving={
+                  setConfig.isPending && setConfig.variables?.key === "app_name"
+                }
               />
               <Separator />
               <TextConfigField
@@ -99,7 +114,10 @@ export default function SettingsPage() {
                 currentValue={configs?.["global_registration_token"]}
                 generateRandom
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "global_registration_token"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "global_registration_token"
+                }
               />
               <Separator />
               <TextConfigField
@@ -109,27 +127,25 @@ export default function SettingsPage() {
                 placeholder={window.location.origin}
                 currentValue={configs?.["agent_url"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "agent_url"}
-              />
-              <Separator />
-              <TextConfigField
-                configKey="agent_download_url"
-                label={t("settings.general.agentDownloadUrl")}
-                description={t("settings.general.agentDownloadUrlDesc")}
-                placeholder={t("settings.general.agentDownloadUrlPlaceholder")}
-                currentValue={configs?.["agent_download_url"]}
-                onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "agent_download_url"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "agent_url"
+                }
               />
               <Separator />
               <TextConfigField
                 configKey="agent_install_script_url"
                 label={t("settings.general.agentInstallScriptUrl")}
                 description={t("settings.general.agentInstallScriptUrlDesc")}
-                placeholder={t("settings.general.agentInstallScriptUrlPlaceholder")}
+                placeholder={t(
+                  "settings.general.agentInstallScriptUrlPlaceholder",
+                )}
                 currentValue={configs?.["agent_install_script_url"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "agent_install_script_url"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "agent_install_script_url"
+                }
               />
               <Separator />
               <FaviconUploadSection />
@@ -162,7 +178,10 @@ export default function SettingsPage() {
                 placeholder={t("settings.script.customHeadersPlaceholder")}
                 currentValue={configs?.["custom_headers"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "custom_headers"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "custom_headers"
+                }
               />
               <Separator />
               <TextareaConfigField
@@ -172,7 +191,10 @@ export default function SettingsPage() {
                 placeholder={t("settings.script.customBodyPlaceholder")}
                 currentValue={configs?.["custom_body"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "custom_body"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "custom_body"
+                }
               />
             </>
           )}
@@ -243,7 +265,10 @@ export default function SettingsPage() {
                 placeholder="24"
                 currentValue={configs?.["network_status_retain_hours"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "network_status_retain_hours"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "network_status_retain_hours"
+                }
               />
               <Separator />
               <TextConfigField
@@ -253,7 +278,10 @@ export default function SettingsPage() {
                 placeholder="72"
                 currentValue={configs?.["load_hour_retain_hours"]}
                 onSave={handleSave}
-                saving={setConfig.isPending && setConfig.variables?.key === "load_hour_retain_hours"}
+                saving={
+                  setConfig.isPending &&
+                  setConfig.variables?.key === "load_hour_retain_hours"
+                }
               />
             </>
           )}
@@ -281,8 +309,13 @@ export default function SettingsPage() {
               disputedEnabled={configs?.["disputed_territory"] === "1"}
               onSave={handleSave}
               onToggleDisputed={handleToggleDisputed}
-              saving={setConfig.isPending && setConfig.variables?.key === "ip_db"}
-              disputedSaving={setConfig.isPending && setConfig.variables?.key === "disputed_territory"}
+              saving={
+                setConfig.isPending && setConfig.variables?.key === "ip_db"
+              }
+              disputedSaving={
+                setConfig.isPending &&
+                setConfig.variables?.key === "disputed_territory"
+              }
             />
           )}
         </CardContent>

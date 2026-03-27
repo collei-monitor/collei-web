@@ -475,6 +475,8 @@ export default {
         enableSsh: "Enable Web SSH tunnel",
         setupCa: "Configure SSH CA passwordless login",
         force: "Force re-register",
+        proxyDownload: "Download via panel proxy (requires configuration)",
+        proxyHint: "This command downloads the install script and agent binary through the panel proxy",
         showAdvanced: "Show advanced options ▸",
         hideAdvanced: "Hide advanced options ▾",
         installDir: "Install Directory",
