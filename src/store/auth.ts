@@ -15,6 +15,12 @@ export interface AuthUser {
   agent_url?: string | null;
 }
 
+export interface SSOProvider {
+  name: string;
+  provider_type: string;
+  display_order: number;
+}
+
 /**
  * idle       — 初始状态，fetchMe 尚未执行
  * loading    — 正在请求 GET /me
@@ -34,6 +40,7 @@ export type AuthStatus =
 interface AuthState {
   user: AuthUser | null;
   status: AuthStatus;
+  ssoProviders: SSOProvider[];
   /** 应用启动时调用，通过 Cookie 验证身份并拉取用户信息 */
   fetchMe: () => Promise<void>;
   /** 登录成功后：立即拉取用户信息（Cookie 由浏览器自动管理） */
@@ -47,6 +54,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()((set, get) => ({
   user: null,
   status: "idle",
+  ssoProviders: [],
 
   fetchMe: async () => {
     set({ status: "loading" });
@@ -55,7 +63,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       if (status === 200) {
         set({ user: data as AuthUser, status: "authenticated" });
       } else {
-        set({ user: null, status: "unauthenticated" });
+        const providers = Array.isArray(data?.providers) ? data.providers as SSOProvider[] : [];
+        set({ user: null, status: "unauthenticated", ssoProviders: providers });
       }
     } catch {
       set({ user: null, status: "unauthenticated" });

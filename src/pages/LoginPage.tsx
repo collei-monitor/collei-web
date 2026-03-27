@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -27,12 +27,6 @@ import { Separator } from "@/components/ui/separator";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 
-interface SSOProvider {
-  name: string;
-  provider_type: string;
-  display_order: number;
-}
-
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api/v1";
 
 // ── Zod schemas ──────────────────────────────────────────────────────────────
@@ -58,11 +52,11 @@ export default function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const onLoginSuccess = useAuthStore((s) => s.onLoginSuccess);
+  const ssoProviders = useAuthStore((s) => s.ssoProviders);
   const [phase, setPhase] = useState<"login" | "2fa">("login");
   const [loginChallenge, setLoginChallenge] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [ssoProviders, setSsoProviders] = useState<SSOProvider[]>([]);
 
   const loginForm = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -74,11 +68,7 @@ export default function LoginPage() {
     defaultValues: { totp_code: "" },
   });
 
-  useEffect(() => {
-    api.get("/auth/sso/providers").then(({ data }) => {
-      if (Array.isArray(data)) setSsoProviders(data);
-    }).catch(() => {});
-  }, []);
+
 
   // ── Phase 1: username + password ───────────────────────────────────────────
 
