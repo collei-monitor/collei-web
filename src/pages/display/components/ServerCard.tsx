@@ -168,7 +168,7 @@ export function ServerCard({ server }: ServerCardProps) {
           {server.os ? (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
               <OsIcon os={server.os} className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{server.os}</span>
+              <span className="truncate">{server.os.replace(/\s*\(.*?\)/g, "").trim()}</span>
             </div>
           ) : (
             <span />
@@ -183,7 +183,7 @@ export function ServerCard({ server }: ServerCardProps) {
 
         {/* 资源用量 */}
         {isOnline && load ? (
-          <div className="space-y-2">
+          <div className="space-y-2 flex-1">
             {/* 移动端：三列同行 */}
             <div className="flex gap-2 sm:hidden">
               <MiniUsageCol
