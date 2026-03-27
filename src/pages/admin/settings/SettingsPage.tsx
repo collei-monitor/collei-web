@@ -112,6 +112,26 @@ export default function SettingsPage() {
                 saving={setConfig.isPending && setConfig.variables?.key === "agent_url"}
               />
               <Separator />
+              <TextConfigField
+                configKey="agent_download_url"
+                label={t("settings.general.agentDownloadUrl")}
+                description={t("settings.general.agentDownloadUrlDesc")}
+                placeholder={t("settings.general.agentDownloadUrlPlaceholder")}
+                currentValue={configs?.["agent_download_url"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "agent_download_url"}
+              />
+              <Separator />
+              <TextConfigField
+                configKey="agent_install_script_url"
+                label={t("settings.general.agentInstallScriptUrl")}
+                description={t("settings.general.agentInstallScriptUrlDesc")}
+                placeholder={t("settings.general.agentInstallScriptUrlPlaceholder")}
+                currentValue={configs?.["agent_install_script_url"]}
+                onSave={handleSave}
+                saving={setConfig.isPending && setConfig.variables?.key === "agent_install_script_url"}
+              />
+              <Separator />
               <FaviconUploadSection />
             </>
           )}

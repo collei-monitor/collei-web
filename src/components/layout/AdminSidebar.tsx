@@ -252,10 +252,21 @@ export function AdminSidebar() {
       labelKey: "admin.sidebar.system",
       items: [
         {
-          title: t("admin.sidebar.users"),
+          title: t("admin.sidebar.account"),
           url: "/admin/users",
           icon: Users,
           end: false,
+          children: [
+            {
+              title: t("admin.sidebar.users"),
+              url: "/admin/users",
+              exact: true,
+            },
+            {
+              title: t("admin.sidebar.settingsOIDC"),
+              url: "/admin/settings/oidc",
+            },
+          ],
         },
         {
           title: t("admin.sidebar.logs"),
@@ -267,18 +278,7 @@ export function AdminSidebar() {
           title: t("admin.sidebar.settings"),
           url: "/admin/settings",
           icon: Settings,
-          end: false,
-          children: [
-            {
-              title: t("admin.sidebar.settingsGeneral"),
-              url: "/admin/settings",
-              exact: true,
-            },
-            {
-              title: t("admin.sidebar.settingsOIDC"),
-              url: "/admin/settings/oidc",
-            },
-          ],
+          end: true,
         },
       ],
     },
