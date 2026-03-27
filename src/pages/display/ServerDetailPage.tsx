@@ -8,6 +8,7 @@ import { ServerInfoCard } from "@/pages/display/components/ServerInfoCard";
 import { ServerCharts } from "@/pages/display/components/ServerCharts";
 import { NetworkProbeChart } from "@/pages/display/components/NetworkProbeChart";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,6 +33,17 @@ const RANGE_OPTIONS: LoadTimeRange[] = [
   "custom",
 ];
 
+function toTimeString(date: Date) {
+  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+}
+
+function combineDateAndTime(date: Date, time: string): Date {
+  const [h, m] = time.split(":").map(Number);
+  const result = new Date(date);
+  result.setHours(h, m, 0, 0);
+  return result;
+}
+
 const RANGE_SECONDS: Record<string, number> = {
   "1h": 3600,
   "4h": 14400,
@@ -47,15 +59,18 @@ export default function ServerDetailPage() {
   // ── 时间范围状态 ─────────────────────────
   const [selectedRange, setSelectedRange] = useState<LoadTimeRange>("realtime");
   const [customStart, setCustomStart] = useState<Date | undefined>(undefined);
+  const [customStartTime, setCustomStartTime] = useState("00:00");
   const [customEnd, setCustomEnd] = useState<Date | undefined>(undefined);
+  const [customEndTime, setCustomEndTime] = useState("23:59");
+  const [rangeNow, setRangeNow] = useState(() => Math.floor(Date.now() / 1000));
 
   const rangeParams: LoadTimeRangeParams = {
     range: selectedRange,
     ...(selectedRange === "custom" &&
       customStart &&
       customEnd && {
-        startTime: Math.floor(customStart.getTime() / 1000),
-        endTime: Math.floor(customEnd.getTime() / 1000),
+        startTime: Math.floor(combineDateAndTime(customStart, customStartTime).getTime() / 1000),
+        endTime: Math.floor(combineDateAndTime(customEnd, customEndTime).getTime() / 1000),
       }),
   };
 
@@ -63,7 +78,17 @@ export default function ServerDetailPage() {
     useServerDetailWithRange(uuid ?? "", rangeParams);
 
   const handleRangeChange = (range: string) => {
-    setSelectedRange(range as LoadTimeRange);
+    const newRange = range as LoadTimeRange;
+    setSelectedRange(newRange);
+    setRangeNow(Math.floor(Date.now() / 1000));
+    if (newRange === "custom" && !customStart) {
+      const now = new Date();
+      const yesterday = new Date(now.getTime() - 86400_000);
+      setCustomStart(yesterday);
+      setCustomStartTime(toTimeString(yesterday));
+      setCustomEnd(now);
+      setCustomEndTime(toTimeString(now));
+    }
   };
 
   // 计算 X 轴时间范围（确保始终显示选定范围的完整区间）
@@ -72,17 +97,16 @@ export default function ServerDetailPage() {
     if (selectedRange === "custom") {
       if (customStart && customEnd) {
         return [
-          Math.floor(customStart.getTime() / 1000),
-          Math.floor(customEnd.getTime() / 1000),
+          Math.floor(combineDateAndTime(customStart, customStartTime).getTime() / 1000),
+          Math.floor(combineDateAndTime(customEnd, customEndTime).getTime() / 1000),
         ];
       }
       return undefined;
     }
     const seconds = RANGE_SECONDS[selectedRange];
     if (!seconds) return undefined;
-    const now = Math.floor(Date.now() / 1000);
-    return [now - seconds, now];
-  }, [selectedRange, customStart, customEnd]);
+    return [rangeNow - seconds, rangeNow];
+  }, [selectedRange, customStart, customStartTime, customEnd, customEndTime, rangeNow]);
 
   return (
     <TooltipProvider>
@@ -160,57 +184,68 @@ export default function ServerDetailPage() {
 
                     {/* 自定义日期选择器 */}
                     {selectedRange === "custom" && (
-                      <div className="flex flex-wrap items-end gap-3">
-                        <div className="space-y-1">
-                          <span className="text-xs text-muted-foreground">
-                            {t("detail.chart.customRange.startDate")}
-                          </span>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className="w-40 justify-start text-left font-normal h-8 text-xs"
-                              >
-                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                                {customStart
-                                  ? format(customStart, "yyyy-MM-dd")
-                                  : "—"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <Calendar
-                                mode="single"
-                                selected={customStart}
-                                onSelect={setCustomStart}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-xs text-muted-foreground">
-                            {t("detail.chart.customRange.endDate")}
-                          </span>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className="w-40 justify-start text-left font-normal h-8 text-xs"
-                              >
-                                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                                {customEnd
-                                  ? format(customEnd, "yyyy-MM-dd")
-                                  : "—"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <Calendar
-                                mode="single"
-                                selected={customEnd}
-                                onSelect={setCustomEnd}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {/* 开始日期 */}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5 font-normal"
+                            >
+                              <CalendarIcon className="h-3.5 w-3.5" />
+                              {customStart
+                                ? format(customStart, "yyyy-MM-dd")
+                                : t("detail.chart.customRange.startDate")}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={customStart}
+                              onSelect={setCustomStart}
+                              disabled={(date) => date > new Date()}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <Input
+                          type="time"
+                          className="w-28 h-8 text-sm"
+                          value={customStartTime}
+                          onChange={(e) => setCustomStartTime(e.target.value)}
+                        />
+
+                        <span className="text-muted-foreground text-sm">—</span>
+
+                        {/* 结束日期 */}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5 font-normal"
+                            >
+                              <CalendarIcon className="h-3.5 w-3.5" />
+                              {customEnd
+                                ? format(customEnd, "yyyy-MM-dd")
+                                : t("detail.chart.customRange.endDate")}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={customEnd}
+                              onSelect={setCustomEnd}
+                              disabled={(date) => date > new Date()}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <Input
+                          type="time"
+                          className="w-28 h-8 text-sm"
+                          value={customEndTime}
+                          onChange={(e) => setCustomEndTime(e.target.value)}
+                        />
                       </div>
                     )}
 
