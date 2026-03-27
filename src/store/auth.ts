@@ -81,6 +81,15 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     } catch {
       // 即使请求失败也继续清除前端状态
     }
+    // 先置为 logout，防止后续 401 事件触发递归登出
     set({ user: null, status: "logout" });
+    // 重新获取 SSO providers
+    try {
+      const { data } = await api.get("/auth/me");
+      const providers = Array.isArray(data?.providers) ? data.providers as SSOProvider[] : [];
+      set({ ssoProviders: providers });
+    } catch {
+      // ignore
+    }
   },
 }));
