@@ -53,12 +53,9 @@ export async function terminateSFTPSession(
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 
-export function buildSFTPWebSocketURL(
-  sessionId: string,
-  wsToken: string
-): string {
+export function buildSFTPWebSocketURL(sessionId: string): string {
   const base = API_BASE_URL.replace(/^\//, "");
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   const host = window.location.host;
-  return `${protocol}//${host}/${base}/ws/sftp?token=${encodeURIComponent(wsToken)}&session_id=${encodeURIComponent(sessionId)}`;
+  return `${protocol}//${host}/${base}/ws/sftp?session_id=${encodeURIComponent(sessionId)}`;
 }

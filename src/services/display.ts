@@ -50,7 +50,6 @@ export function useWebSocketState(): WebSocketState {
   // 用 ref 追踪两帧是否都已到达，避免 state 闭包问题
   const nodesReceivedRef = useRef(false);
   const statusReceivedRef = useRef(false);
-  const wsToken = useAuthStore((s) => s.user?.ws_token);
   const authStatus = useAuthStore((s) => s.status);
 
   useEffect(() => {
@@ -79,9 +78,7 @@ export function useWebSocketState(): WebSocketState {
       statusReceivedRef.current = false;
 
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const url = wsToken
-        ? `${protocol}//${window.location.host}/api/v1/ws?token=${encodeURIComponent(wsToken)}`
-        : `${protocol}//${window.location.host}/api/v1/ws`;
+      const url = `${protocol}//${window.location.host}/api/v1/ws`;
       const ws = new WebSocket(url);
       wsRef.current = ws;
 
@@ -141,7 +138,7 @@ export function useWebSocketState(): WebSocketState {
       clearInterval(pingTimer.current);
       wsRef.current?.close();
     };
-  }, [wsToken, authStatus]);
+  }, [authStatus]);
 
   return { connected, wsNodes, groups, snapshots, wsReady };
 }

@@ -4,7 +4,6 @@
  */
 
 import { useRef, useCallback, useState, useEffect } from "react";
-import { api } from "@/lib/api";
 import { createSFTPSession, buildSFTPWebSocketURL } from "@/services/sftp";
 import type {
   SFTPConnectionStatus,
@@ -199,18 +198,13 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
     setStatus("creating");
 
     try {
-      // 1. 获取 ws_token
-      const { status: meStatus, data: meData } = await api.get("/auth/me");
-      const wsToken = meStatus === 200 ? (meData as { ws_token?: string }).ws_token : undefined;
-      if (!wsToken) throw new Error("Failed to get WebSocket token");
-
-      // 2. 创建 SFTP 会话
+      // 1. 创建 SFTP 会话
       const { session_id } = await createSFTPSession(optionsRef.current.serverUuid, payload);
       sessionIdRef.current = session_id;
 
-      // 3. WebSocket
+      // 2. WebSocket（Cookie 自动携带，无需 token）
       setStatus("waiting");
-      const wsUrl = buildSFTPWebSocketURL(session_id, wsToken);
+      const wsUrl = buildSFTPWebSocketURL(session_id);
       const ws = new WebSocket(wsUrl);
       ws.binaryType = "arraybuffer";
       wsRef.current = ws;

@@ -53,12 +53,9 @@ export async function terminateSSHSession(
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 
-export function buildSSHWebSocketURL(
-  sessionId: string,
-  wsToken: string
-): string {
+export function buildSSHWebSocketURL(sessionId: string): string {
   const base = API_BASE_URL.replace(/^\//, "");
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   const host = window.location.host;
-  return `${protocol}//${host}/${base}/ws/ssh?token=${encodeURIComponent(wsToken)}&session_id=${encodeURIComponent(sessionId)}`;
+  return `${protocol}//${host}/${base}/ws/ssh?session_id=${encodeURIComponent(sessionId)}`;
 }

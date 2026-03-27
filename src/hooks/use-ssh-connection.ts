@@ -4,7 +4,6 @@
  */
 
 import { useRef, useCallback, useState, useEffect } from "react";
-import { api } from "@/lib/api";
 import { createSSHSession, buildSSHWebSocketURL } from "@/services/ssh";
 import type {
   SSHConnectionStatus,
@@ -32,6 +31,7 @@ export function useSSHConnection(options: UseSSHConnectionOptions) {
 
   const [status, setStatus] = useState<SSHConnectionStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [sessionId, setSessionId] = useState<string>("");
   const wsRef = useRef<WebSocket | null>(null);
   const sessionIdRef = useRef<string>("");
   const pingIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
@@ -61,21 +61,14 @@ export function useSSHConnection(options: UseSSHConnectionOptions) {
     setStatus("creating");
 
     try {
-      // 1. 刷新 ws_token（直接请求，不触发 store 更新避免 re-render 循环）
-      const { status: meStatus, data: meData } = await api.get("/auth/me");
-      const wsToken = meStatus === 200 ? (meData as { ws_token?: string }).ws_token : undefined;
-
-      if (!wsToken) {
-        throw new Error("Failed to get WebSocket token");
-      }
-
-      // 2. 创建 SSH 会话
+      // 1. 创建 SSH 会话
       const { session_id } = await createSSHSession(optionsRef.current.serverUuid, payload);
       sessionIdRef.current = session_id;
+      setSessionId(session_id);
 
-      // 3. 建立 WebSocket 连接
+      // 2. 建立 WebSocket 连接（Cookie 自动携带，无需 token）
       setStatus("waiting");
-      const wsUrl = buildSSHWebSocketURL(session_id, wsToken);
+      const wsUrl = buildSSHWebSocketURL(session_id);
       const ws = new WebSocket(wsUrl);
       ws.binaryType = "arraybuffer";
       wsRef.current = ws;
@@ -182,7 +175,7 @@ export function useSSHConnection(options: UseSSHConnectionOptions) {
   return {
     status,
     errorMessage,
-    sessionId: sessionIdRef.current,
+    sessionId,
     connect,
     sendInput,
     sendAuth,
