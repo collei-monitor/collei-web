@@ -45,7 +45,7 @@ export default function SettingsPage() {
           const status = (err as { status?: number })?.status;
           if (status === 409) toast.error(t("settings.toast.saveConflict"));
           else if (status === 422) toast.error(t("settings.toast.saveInvalid"));
-          else toast.error(t("settings.toast.saveFailed"));
+          else toast.error(t("common.updateFailed"));
         },
       },
     );
@@ -61,7 +61,7 @@ export default function SettingsPage() {
           toast.error(t("settings.toast.saveInvalid"), {
             description: e.message,
           });
-        else toast.error(t("settings.toast.saveFailed"));
+        else toast.error(t("common.updateFailed"));
       },
     });
   };

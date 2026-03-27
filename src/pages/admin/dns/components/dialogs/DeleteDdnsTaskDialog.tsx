@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDeleteDdnsTask } from "@/services/dns";
 import type { DdnsTaskRead } from "@/types/dns";
@@ -38,27 +38,26 @@ export function DeleteDdnsTaskDialog({ task, open, onOpenChange }: Props) {
     });
   };
 
-  const tp = "admin.services.dns.ddns";
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t(`${tp}.delete.title`)}</AlertDialogTitle>
+          <AlertDialogTitle>{t("admin.services.dns.ddns.delete.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t(`${tp}.delete.description`)}
+            {t("admin.services.dns.ddns.delete.description")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteTask.isPending}>
-            {t(`${tp}.delete.cancel`)}
+            {t("common.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteTask.isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {deleteTask.isPending ? t("common.loading") : t(`${tp}.delete.confirm`)}
+            {deleteTask.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

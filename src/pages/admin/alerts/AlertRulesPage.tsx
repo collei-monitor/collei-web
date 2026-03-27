@@ -54,9 +54,9 @@ export default function AlertRulesPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.alerts.rules.toast.refreshing"),
-      success: t("admin.alerts.rules.toast.refreshSuccess"),
-      error: t("admin.alerts.rules.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.listRefreshed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -91,7 +91,7 @@ export default function AlertRulesPage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.alerts.rules.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refreshList")}</TooltipContent>
           </Tooltip>
           <Button onClick={() => setCreateOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
@@ -175,7 +175,7 @@ export default function AlertRulesPage() {
                             <Pencil className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>{t("admin.alerts.rules.table.edit")}</TooltipContent>
+                        <TooltipContent>{t("common.edit")}</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -214,7 +214,7 @@ export default function AlertRulesPage() {
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>{t("admin.alerts.rules.table.delete")}</TooltipContent>
+                        <TooltipContent>{t("common.delete")}</TooltipContent>
                       </Tooltip>
                     </div>
                   </TableCell>

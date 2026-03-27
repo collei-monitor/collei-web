@@ -496,7 +496,7 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
                 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("sftp.actions.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refresh")}</TooltipContent>
           </Tooltip>
 
           <Tooltip>
@@ -639,7 +639,7 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
           <ContextMenuContent>
             <ContextMenuItem onClick={refresh}>
               <RefreshCw className="mr-2 h-4 w-4" />
-              {t("sftp.actions.refresh")}
+              {t("common.refresh")}
             </ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem onClick={openMkdirDialog}>
@@ -696,10 +696,10 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
                 variant="outline"
                 onClick={() => setMkdirOpen(false)}
               >
-                {t("sftp.mkdir.cancel")}
+                {t("common.cancel")}
               </Button>
               <Button type="submit" disabled={!mkdirName.trim()}>
-                {t("sftp.mkdir.confirm")}
+                {t("common.save")}
               </Button>
             </div>
           </form>
@@ -737,7 +737,7 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
                 variant="outline"
                 onClick={() => setRenameOpen(false)}
               >
-                {t("sftp.rename.cancel")}
+                {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
@@ -756,7 +756,7 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("sftp.delete.title")}</AlertDialogTitle>
+            <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
             <AlertDialogDescription>
               {deleteTarget?.type === "dir"
                 ? t("sftp.delete.descriptionDir", { name: deleteTarget?.name })
@@ -766,12 +766,12 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t("sftp.delete.cancel")}</AlertDialogCancel>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {t("sftp.delete.confirm")}
+              {t("common.confirmDelete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

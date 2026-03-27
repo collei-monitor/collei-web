@@ -25,14 +25,14 @@ export function DeleteGroupDialog({ group, open, onOpenChange }: DeleteGroupDial
 
   const handleDelete = () => {
     if (!group) return;
-    const toastId = toast.loading(t("admin.groups.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteGroup.mutate(group.id, {
       onSuccess: () => {
         toast.success(t("admin.groups.toast.deleteSuccess"), { id: toastId });
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.groups.toast.deleteFailed"), { id: toastId });
+        toast.error(err.message || t("common.deleteFailed"), { id: toastId });
       },
     });
   };
@@ -41,19 +41,19 @@ export function DeleteGroupDialog({ group, open, onOpenChange }: DeleteGroupDial
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.groups.delete.title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("admin.groups.delete.description", { name: group?.name ?? "" })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t("admin.groups.delete.cancel")}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteGroup.isPending}
             className="bg-destructive text-white hover:bg-destructive/90"
           >
-            {deleteGroup.isPending ? t("common.loading") : t("admin.groups.delete.confirm")}
+            {deleteGroup.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

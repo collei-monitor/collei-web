@@ -124,7 +124,7 @@ export default function ServerDetailPage() {
               <Tabs defaultValue="status">
                 <TabsList>
                   <TabsTrigger value="status">
-                    {t("detail.tabs.status")}
+                    {t("common.status")}
                   </TabsTrigger>
                   <TabsTrigger value="network">
                     {t("detail.tabs.network")}

@@ -35,14 +35,14 @@ export function DeleteServerDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.nodes.delete.title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("admin.nodes.delete.description", { name: server?.name ?? "" })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>
-            {t("admin.nodes.delete.cancel")}
+            {t("common.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
@@ -51,7 +51,7 @@ export function DeleteServerDialog({
           >
             {deleteServer.isPending
               ? t("common.loading")
-              : t("admin.nodes.delete.confirm")}
+              : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

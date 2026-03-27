@@ -48,7 +48,7 @@ export function AuthDialog({ open, defaultUsername = "root", onSubmit, onCancel 
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="ssh-username">{t("ssh.auth.username")}</Label>
+            <Label htmlFor="ssh-username">{t("common.name")}</Label>
             <Input
               id="ssh-username"
               value={username}
@@ -69,7 +69,7 @@ export function AuthDialog({ open, defaultUsername = "root", onSubmit, onCancel 
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onCancel}>
-              {t("ssh.auth.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={!username || !password}>
               {t("ssh.auth.connect")}

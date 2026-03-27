@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useOIDCProviders } from "@/services/oidc";
@@ -26,7 +26,6 @@ import { DeleteOIDCProviderDialog } from "./components/DeleteOIDCProviderDialog"
 
 export default function OIDCProvidersPage() {
   const { t } = useTranslation();
-  const tp = "admin.oidc";
 
   const {
     data: providers = [],
@@ -41,9 +40,9 @@ export default function OIDCProvidersPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t(`${tp}.toast.refreshing`),
-      success: t(`${tp}.toast.refreshSuccess`),
-      error: t(`${tp}.toast.refreshFailed`),
+      loading: t("common.refreshing"),
+      success: t("admin.oidc.toast.refreshSuccess"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -52,8 +51,8 @@ export default function OIDCProvidersPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t(`${tp}.title`)}</h1>
-            <p className="text-muted-foreground mt-1">{t(`${tp}.subtitle`)}</p>
+            <h1 className="text-2xl font-bold tracking-tight">{t("admin.oidc.title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("admin.oidc.subtitle")}</p>
           </div>
           <div className="flex items-center gap-2">
             <Tooltip>
@@ -62,18 +61,18 @@ export default function OIDCProvidersPage() {
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t(`${tp}.refresh`)}</TooltipContent>
+              <TooltipContent>{t("common.refresh")}</TooltipContent>
             </Tooltip>
             <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4" />
-              {t(`${tp}.add`)}
+              {t("admin.oidc.add")}
             </Button>
           </div>
         </div>
 
         {isError && (
           <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-            {t(`${tp}.fetchError`)}
+            {t("admin.oidc.fetchError")}
           </div>
         )}
 
@@ -81,12 +80,12 @@ export default function OIDCProvidersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t(`${tp}.table.name`)}</TableHead>
-                <TableHead>{t(`${tp}.table.type`)}</TableHead>
-                <TableHead>{t(`${tp}.table.clientId`)}</TableHead>
-                <TableHead>{t(`${tp}.table.secret`)}</TableHead>
-                <TableHead>{t(`${tp}.table.enabled`)}</TableHead>
-                <TableHead>{t(`${tp}.table.order`)}</TableHead>
+                <TableHead>{t("common.name")}</TableHead>
+                <TableHead>{t("common.type")}</TableHead>
+                <TableHead>{t("admin.oidc.table.clientId")}</TableHead>
+                <TableHead>{t("admin.oidc.table.secret")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead>{t("admin.oidc.table.order")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -106,7 +105,7 @@ export default function OIDCProvidersPage() {
               ) : providers.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                    {t(`${tp}.empty`)}
+                    {t("admin.oidc.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -123,12 +122,12 @@ export default function OIDCProvidersPage() {
                     </TableCell>
                     <TableCell>
                       <Badge variant={p.has_secret ? "default" : "destructive"}>
-                        {p.has_secret ? t(`${tp}.table.secretSet`) : t(`${tp}.table.secretMissing`)}
+                        {p.has_secret ? t("admin.oidc.table.secretSet") : t("admin.oidc.table.secretMissing")}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant={p.enabled === 1 ? "default" : "outline"}>
-                        {p.enabled === 1 ? t(`${tp}.table.on`) : t(`${tp}.table.off`)}
+                        {p.enabled === 1 ? t("common.enable") : t("common.disable")}
                       </Badge>
                     </TableCell>
                     <TableCell>{p.display_order}</TableCell>

@@ -107,7 +107,7 @@ function ThemeCard({
             ) : (
               <Check className="mr-1.5 h-3.5 w-3.5" />
             )}
-            {t("settings.themes.activate")}
+            {t("common.enable")}
           </Button>
         )}
         {!theme.is_builtin && (
@@ -119,7 +119,7 @@ function ThemeCard({
                 ) : (
                   <Trash2 className="mr-1.5 h-3.5 w-3.5" />
                 )}
-                {t("settings.action.delete")}
+                {t("common.delete")}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -136,7 +136,7 @@ function ThemeCard({
               <AlertDialogFooter>
                 <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                 <AlertDialogAction onClick={() => onDelete(theme.id)}>
-                  {t("settings.action.delete")}
+                  {t("common.delete")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDeleteDnsRecord } from "@/services/dns";
 import type { RecordRead } from "@/types/dns";
@@ -42,15 +42,14 @@ export function DeleteRecordDialog({ record, domainId, open, onOpenChange }: Pro
     );
   };
 
-  const tp = "admin.services.dns.records";
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t(`${tp}.delete.title`)}</AlertDialogTitle>
+          <AlertDialogTitle>{t("admin.services.dns.records.delete.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t(`${tp}.delete.description`, {
+            {t("admin.services.dns.records.delete.description", {
               name: record?.name ?? "",
               type: record?.type ?? "",
             })}
@@ -58,14 +57,14 @@ export function DeleteRecordDialog({ record, domainId, open, onOpenChange }: Pro
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteRecord.isPending}>
-            {t(`${tp}.delete.cancel`)}
+            {t("common.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteRecord.isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {deleteRecord.isPending ? t("common.loading") : t(`${tp}.delete.confirm`)}
+            {deleteRecord.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

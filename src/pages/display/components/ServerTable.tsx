@@ -41,10 +41,10 @@ export function ServerTable({ servers }: ServerTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t("display.table.name")}</TableHead>
+            <TableHead>{t("common.name")}</TableHead>
             <TableHead>{t("display.table.os")}</TableHead>
             <TableHead className="text-center w-20">
-              {t("display.table.status")}
+              {t("common.status")}
             </TableHead>
             <TableHead className="text-center">CPU</TableHead>
             <TableHead className="text-center">

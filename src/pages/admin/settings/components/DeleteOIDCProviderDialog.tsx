@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDeleteOIDC } from "@/services/oidc";
 import type { OIDCProviderRead } from "@/services/oidc";
@@ -21,18 +21,17 @@ interface Props {
 export function DeleteOIDCProviderDialog({ provider, open, onOpenChange }: Props) {
   const { t } = useTranslation();
   const deleteOIDC = useDeleteOIDC();
-  const tp = "admin.oidc";
 
   const handleDelete = () => {
     if (!provider) return;
-    const toastId = toast.loading(t(`${tp}.toast.deleting`));
+    const toastId = toast.loading(t("common.deleting"));
     deleteOIDC.mutate(provider.name, {
       onSuccess: () => {
-        toast.success(t(`${tp}.toast.deleteSuccess`), { id: toastId });
+        toast.success(t("admin.oidc.toast.deleteSuccess"), { id: toastId });
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t(`${tp}.toast.deleteFailed`), { id: toastId });
+        toast.error(err.message || t("common.deleteFailed"), { id: toastId });
       },
     });
   };
@@ -41,9 +40,9 @@ export function DeleteOIDCProviderDialog({ provider, open, onOpenChange }: Props
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t(`${tp}.delete.title`)}</AlertDialogTitle>
+          <AlertDialogTitle>{t("admin.oidc.delete.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t(`${tp}.delete.description`, { name: provider?.name })}
+            {t("admin.oidc.delete.description", { name: provider?.name })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -78,9 +78,9 @@ export default function NodesPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.nodes.toast.refreshing"),
-      success: t("admin.nodes.toast.refreshSuccess"),
-      error: t("admin.nodes.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.refreshSuccess"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -125,7 +125,7 @@ export default function NodesPage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.nodes.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refresh")}</TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function NodesPage() {
                 checked={visibleColumns.status}
                 onCheckedChange={(v) => updateVisibleColumns("status", v)}
               >
-                {t("admin.nodes.table.status")}
+                {t("common.status")}
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={visibleColumns.version}
@@ -203,7 +203,7 @@ export default function NodesPage() {
                 <TableHead className="w-20">
                   {t("admin.nodes.table.sort")}
                 </TableHead>
-                <TableHead>{t("admin.nodes.table.name")}</TableHead>
+                <TableHead>{t("common.name")}</TableHead>
                 {visibleColumns.ip && (
                   <TableHead>{t("admin.nodes.table.ip")}</TableHead>
                 )}
@@ -211,7 +211,7 @@ export default function NodesPage() {
                   <TableHead>{t("admin.nodes.table.groups")}</TableHead>
                 )}
                 {visibleColumns.status && (
-                  <TableHead>{t("admin.nodes.table.status")}</TableHead>
+                  <TableHead>{t("common.status")}</TableHead>
                 )}
                 {visibleColumns.version && (
                   <TableHead>{t("admin.nodes.table.version")}</TableHead>

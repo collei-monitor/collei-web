@@ -55,8 +55,8 @@ export function CommandPreview({
             <Copy className="h-3.5 w-3.5 mr-1" />
           )}
           {copied
-            ? t("admin.nodes.install.copied")
-            : t("admin.nodes.install.copy")}
+            ? t("common.copied")
+            : t("common.copy")}
         </Button>
       </div>
 

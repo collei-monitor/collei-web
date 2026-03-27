@@ -75,15 +75,15 @@ export default function RemotePage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.services.remote.toast.refreshing"),
+      loading: t("common.refreshing"),
       success: t("admin.services.remote.toast.refreshSuccess"),
-      error: t("admin.services.remote.toast.refreshFailed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
   const handleDelete = () => {
     if (!deleteTargetId) return;
-    const toastId = toast.loading(t("admin.services.remote.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteTask.mutate(deleteTargetId, {
       onSuccess: () => {
         toast.success(t("admin.services.remote.toast.deleteSuccess"), {
@@ -93,7 +93,7 @@ export default function RemotePage() {
       },
       onError: (err) => {
         toast.error(
-          err.message || t("admin.services.remote.toast.deleteFailed"),
+          err.message || t("common.deleteFailed"),
           { id: toastId }
         );
       },
@@ -121,7 +121,7 @@ export default function RemotePage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.services.remote.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refresh")}</TooltipContent>
           </Tooltip>
           <Button onClick={() => setCreateOpen(true)}>
             <Plus className="h-4 w-4 mr-1" />
@@ -144,7 +144,7 @@ export default function RemotePage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-24">
-                {t("admin.services.remote.table.type")}
+                {t("common.type")}
               </TableHead>
               <TableHead>
                 {t("admin.services.remote.table.payload")}
@@ -288,10 +288,10 @@ export default function RemotePage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>
-              {t("admin.services.remote.confirm.cancel")}
+              {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
-              {t("admin.services.remote.confirm.confirm")}
+              {t("common.confirmDelete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

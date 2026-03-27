@@ -94,7 +94,7 @@ export function CreateProviderDialog({ open, onOpenChange }: Props) {
       type: providerType,
       addition: JSON.stringify(config),
     };
-    const toastId = toast.loading(t("admin.alerts.channels.providers.toast.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createProvider.mutate(payload, {
       onSuccess: () => {
         toast.success(t("admin.alerts.channels.providers.toast.createSuccess"), { id: toastId });
@@ -102,7 +102,7 @@ export function CreateProviderDialog({ open, onOpenChange }: Props) {
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.alerts.channels.providers.toast.createFailed"), { id: toastId });
+        toast.error(err.message || t("common.createFailed"), { id: toastId });
       },
     });
   };
@@ -129,7 +129,7 @@ export function CreateProviderDialog({ open, onOpenChange }: Props) {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t("admin.alerts.channels.providers.create.name")}</Label>
+            <Label>{t("common.name")}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -138,7 +138,7 @@ export function CreateProviderDialog({ open, onOpenChange }: Props) {
             />
           </div>
           <div className="space-y-2">
-            <Label>{t("admin.alerts.channels.providers.create.type")}</Label>
+            <Label>{t("common.type")}</Label>
             <Select value={providerType} onValueChange={handleTypeChange}>
               <SelectTrigger>
                 <SelectValue placeholder={t("admin.alerts.channels.providers.create.typePlaceholder")} />
@@ -166,10 +166,10 @@ export function CreateProviderDialog({ open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t("admin.alerts.channels.providers.create.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createProvider.isPending || !canSubmit}>
-              {createProvider.isPending ? t("common.loading") : t("admin.alerts.channels.providers.create.save")}
+              {createProvider.isPending ? t("common.loading") : t("common.create")}
             </Button>
           </DialogFooter>
         </form>

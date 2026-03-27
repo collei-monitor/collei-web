@@ -1,0 +1,1634 @@
+{
+  "theme": {
+    "toggle": "切换主题",
+    "light": "明亮",
+    "dark": "暗黑",
+    "system": "系统"
+  },
+  "common": {
+    "appTitle": "Collei Monitor",
+    "appSubtitle": "自托管服务器监控平台",
+    "login": "登录",
+    "logout": "退出登录",
+    "loginAdmin": "登录",
+    "back": "返回",
+    "backHome": "返回首页",
+    "loading": "加载中…",
+    "error": "错误",
+    "success": "成功",
+    "username": "用户名",
+    "password": "密码",
+    "cancel": "取消",
+    "edit": "编辑",
+    "delete": "删除",
+    "name": "名称",
+    "status": "状态",
+    "save": "保存",
+    "saving": "保存中…",
+    "refreshList": "刷新列表",
+    "confirmDelete": "确认删除",
+    "refreshing": "刷新中…",
+    "listRefreshed": "列表已刷新",
+    "refreshFailed": "刷新失败",
+    "updateFailed": "更新失败，请重试",
+    "deleting": "删除中…",
+    "deleteFailed": "删除失败，请重试",
+    "creating": "创建中…",
+    "createFailed": "创建失败，请重试",
+    "create": "创建",
+    "enable": "启用",
+    "disable": "禁用",
+    "type": "类型",
+    "refresh": "刷新",
+    "refreshSuccess": "刷新成功",
+    "copy": "复制",
+    "copied": "已复制",
+    "updating": "更新中…",
+    "updateSuccess": "更新成功",
+    "noData": "暂无数据"
+  },
+  "time": {
+    "day": "天",
+    "hour": "小时",
+    "min": "分钟",
+    "sec": "秒"
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "description": "抱歉，您访问的页面不存在。请检查 URL 或返回首页。"
+  },
+  "display": {
+    "title": "Collei Monitor",
+    "subtitle": "自托管服务器监控平台，实时掌握基础设施运行状态",
+    "features": {
+      "monitoring": "实时监控",
+      "security": "安全可靠",
+      "selfHosted": "自托管部署"
+    },
+    "placeholder": "监控数据展示区域（待实现）",
+    "error": "获取服务器数据失败，请稍后重试",
+    "empty": "暂无服务器节点",
+    "groups": {
+      "all": "全部"
+    },
+    "stats": {
+      "online": "在线 {{count}}",
+      "total": "共 {{count}}"
+    },
+    "summary": {
+      "total": "总节点",
+      "online": "在线节点",
+      "offline": "离线节点",
+      "network": "网络流量"
+    },
+    "ws": {
+      "connected": "实时",
+      "disconnected": "未连接"
+    },
+    "view": {
+      "card": "卡片视图",
+      "list": "列表视图"
+    },
+    "server": {
+      "online": "在线",
+      "offline": "离线",
+      "ram": "内存",
+      "disk": "硬盘",
+      "unknownRegion": "未知区域",
+      "connecting": "正在获取数据…",
+      "offlineHint": "服务器离线",
+      "offlineFor": "已离线 {{duration}}"
+    },
+    "table": {
+      "os": "系统",
+      "network": "网络",
+      "networkUpload": "上传",
+      "networkDownload": "下载"
+    },
+    "buildTime": "构建于 {{time}}",
+    "billing": {
+      "free": "免费",
+      "month": "月",
+      "quarter": "季",
+      "halfYear": "半年",
+      "year": "年",
+      "monthUnit": "月",
+      "daysLeft": "天",
+      "expired": "已过期",
+      "traffic": "流量"
+    }
+  },
+  "detail": {
+    "notFound": "未找到该服务器",
+    "tabs": {
+      "network": "网络"
+    },
+    "info": {
+      "arch": "架构",
+      "uptime": "运行时间",
+      "upload": "上传速度",
+      "download": "下载速度",
+      "connections": "连接数",
+      "process": "进程数",
+      "virtualization": "虚拟化",
+      "totalUpload": "总上传",
+      "totalDownload": "总下载",
+      "lastOnline": "最后上报"
+    },
+    "chart": {
+      "title": "历史监控数据",
+      "cpu": "CPU 使用率",
+      "memory": "内存使用率",
+      "ram": "物理内存",
+      "disk": "磁盘使用率",
+      "network": "网络速度",
+      "netIn": "下载",
+      "netOut": "上传",
+      "connections": "连接数",
+      "process": "进程数",
+      "range": {
+        "realtime": "实时",
+        "1h": "1 小时",
+        "4h": "4 小时",
+        "1d": "1 天",
+        "3d": "3 天",
+        "custom": "自定义"
+      },
+      "customRange": {
+        "startDate": "开始日期",
+        "endDate": "结束日期",
+        "apply": "应用"
+      }
+    },
+    "network": {
+      "chartTitle": "网络探测延迟",
+      "empty": "暂无网络探测数据",
+      "range": {
+        "realtime": "实时",
+        "1h": "最近1小时",
+        "6h": "最近6小时",
+        "12h": "最近12小时",
+        "24h": "最近24小时",
+        "custom": "自定义"
+      },
+      "metrics": {
+        "medianLatency": "中位延迟",
+        "maxLatency": "最大延迟",
+        "minLatency": "最小延迟"
+      },
+      "card": {
+        "latency": "延迟",
+        "packetLoss": "丢包率"
+      },
+      "areaMode": "Peak cut",
+      "customRange": {
+        "startDate": "开始日期",
+        "endDate": "结束日期"
+      }
+    }
+  },
+  "login": {
+    "title": "登录",
+    "description": "使用管理账户进入后台",
+    "twoFactorTitle": "两步验证",
+    "twoFactorDescription": "打开您的验证器应用，输入当前显示的 6 位动态码",
+    "password": "密码",
+    "totpCode": "验证码",
+    "loginButton": "登录",
+    "verifyButton": "验证",
+    "loggingIn": "登录中…",
+    "verifying": "验证中…",
+    "backToPassword": "返回密码登录",
+    "sso": {
+      "or": "或通过以下方式登录",
+      "loginWith": "使用 {{provider}} 登录"
+    },
+    "errors": {
+      "invalidCredentials": "用户名或密码错误",
+      "tooManyAttempts": "登录请求过于频繁，请 10 分钟后再试",
+      "invalidTotp": "验证码无效或 Challenge 已过期，请重新登录",
+      "tooManyTotpAttempts": "验证请求过于频繁，请稍后再试",
+      "networkError": "网络错误，请检查连接后重试",
+      "generalError": "登录失败，请稍后重试"
+    },
+    "validation": {
+      "usernameRequired": "请输入用户名",
+      "passwordRequired": "请输入密码",
+      "totpInvalid": "验证码为 6 位数字",
+      "totpNumericOnly": "验证码只能包含数字"
+    }
+  },
+  "users": {
+    "title": "用户设置",
+    "account": "账户信息",
+    "twoFactor": "两步验证",
+    "twoFactorEnabled": "已启用",
+    "twoFactorDisabled": "未启用",
+    "enableTwoFactor": "启用两步验证",
+    "disableTwoFactor": "关闭两步验证",
+    "changePassword": {
+      "title": "修改密码",
+      "currentPassword": "当前密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认新密码",
+      "success": "密码修改成功",
+      "errors": {
+        "wrongCurrent": "当前密码错误，请重试",
+        "mismatch": "两次输入的密码不一致",
+        "failed": "修改失败，请重试",
+        "networkError": "网络错误，请重试"
+      }
+    },
+    "setup": {
+      "title": "启用两步验证",
+      "step1Title": "扫描二维码",
+      "step1Desc": "使用 Google Authenticator、Authy 等验证器应用扫描下方二维码，或手动输入密钥。",
+      "secret": "手动输入密钥",
+      "nextStep": "下一步：验证",
+      "step2Title": "输入验证码",
+      "step2Desc": "输入验证器应用中显示的 6 位动态码以完成启用。",
+      "totpCode": "验证码",
+      "confirmEnable": "确认启用",
+      "back": "上一步",
+      "loading": "加载中…",
+      "verifying": "验证中…",
+      "errors": {
+        "setupFailed": "获取密钥失败，请重试",
+        "verifyFailed": "验证码错误，请重试",
+        "networkError": "网络错误，请重试"
+      }
+    },
+    "disable": {
+      "title": "关闭两步验证",
+      "description": "确定要关闭两步验证吗？关闭后登录将不再需要验证码，安全性会降低。",
+      "confirm": "确认关闭",
+      "disabling": "关闭中…",
+      "errors": {
+        "failed": "关闭失败，请重试",
+        "networkError": "网络错误，请重试"
+      }
+    }
+  },
+  "admin": {
+    "nodes": {
+      "title": "节点管理",
+      "subtitle": "管理所有已注册的服务器节点",
+      "resetSort": "重置排序",
+      "resetSortDesc": "按当前列表顺序重新编号排序值",
+      "fetchError": "获取服务器列表失败，请稍后重试",
+      "empty": "暂无服务器节点",
+      "visible": "显示",
+      "hidden": "隐藏",
+      "regionLocked": "区域已锁定",
+      "searchPlaceholder": "搜索名称…",
+      "columns": "自定义列",
+      "add": "添加",
+      "table": {
+        "sort": "排序",
+        "ip": "IP 地址",
+        "groups": "分组",
+        "version": "版本"
+      },
+      "status": {
+        "online": "在线",
+        "offline": "离线",
+        "pending": "待审核"
+      },
+      "actions": {
+        "open": "打开菜单",
+        "approve": "批准",
+        "install": "安装",
+        "terminal": "打开终端",
+        "groups": "管理分组",
+        "show": "显示",
+        "hide": "隐藏"
+      },
+      "edit": {
+        "title": "编辑服务器",
+        "description": "修改服务器的显示名称、区域和排序等信息",
+        "region": "区域",
+        "regionPlaceholder": "选择地区…",
+        "regionSearch": "搜索国家/地区…",
+        "regionEmpty": "未找到匹配的地区",
+        "lockRegion": "锁定",
+        "tags": "标签",
+        "tagPlaceholder": "输入标签名称",
+        "sort": "排序",
+        "visibility": "可见性"
+      },
+      "delete": {
+        "description": "确定要删除服务器 \"{{name}}\" 吗？此操作不可恢复，所有关联数据将被清除。"
+      },
+      "groups": {
+        "title": "管理分组",
+        "description": "选择此服务器所属的分组",
+        "empty": "暂无可用分组"
+      },
+      "detail": {
+        "title": "服务器详情",
+        "basicInfo": "基础信息",
+        "hardwareInfo": "硬件信息",
+        "networkInfo": "网络信息",
+        "runtimeInfo": "运行状态",
+        "groupInfo": "分组信息",
+        "uuid": "UUID",
+        "region": "区域",
+        "os": "操作系统",
+        "arch": "架构",
+        "kernelVersion": "内核版本",
+        "virtualization": "虚拟化",
+        "cpuName": "CPU",
+        "cpuCores": "CPU 核心数",
+        "memTotal": "总内存",
+        "swapTotal": "交换分区",
+        "diskTotal": "总磁盘",
+        "ipv4": "IPv4",
+        "ipv6": "IPv6",
+        "totalFlowIn": "累计入站流量",
+        "totalFlowOut": "累计出站流量",
+        "lastOnline": "最后在线",
+        "bootTime": "启动时间",
+        "version": "Agent 版本",
+        "remark": "备注",
+        "createdAt": "创建时间",
+        "currentRunId": "进程 ID",
+        "statisticsMode": "统计模式",
+        "enabled": "已启用",
+        "disabled": "已禁用",
+        "noGroup": "未分组",
+        "unknown": "未知"
+      },
+      "toast": {
+        "sortResetting": "重新排序中…",
+        "sortResetSuccess": "排序已重置",
+        "sortResetFailed": "重置排序失败",
+        "editSuccess": "服务器信息已更新",
+        "showSuccess": "已设为显示",
+        "hideSuccess": "已设为隐藏",
+        "visibilityFailed": "操作失败，请重试",
+        "approveSuccess": "已批准服务器",
+        "approveFailed": "批准失败，请重试"
+      },
+      "billing": {
+        "title": "计费管理",
+        "description": "配置服务器的计费周期、费用与到期时间",
+        "billingCycle": "计费周期",
+        "billingDay": "出账日",
+        "cost": "周期费用",
+        "costPlaceholder": "0 代表免费",
+        "currency": "货币",
+        "trafficThreshold": "流量阈值",
+        "trafficResetDay": "流量重置日",
+        "accountingMode": "计算模式",
+        "expiryDate": "到期时间",
+        "delete": "删除规则",
+        "hints": {
+          "cycleTitle": "计费周期（月数）",
+          "cycleRenew": "服务器在线时，到期后将按计费周期自动续期。",
+          "resetDayTitle": "流量重置日",
+          "resetDay0": "不重置",
+          "resetDayMinus1": "每月最后一天重置",
+          "resetDay131": "每月指定日期重置",
+          "resetDayFallback": "若未设置，将回退至出账日进行重置。"
+        },
+        "cycles": {
+          "monthly": "月付",
+          "quarterly": "季付",
+          "semiAnnual": "半年付",
+          "annual": "年付"
+        },
+        "modes": {
+          "outOnly": "仅出站",
+          "inOnly": "仅入站",
+          "sum": "双向总和",
+          "max": "取较大值",
+          "min": "取较小值"
+        },
+        "toast": {
+          "saveSuccess": "计费规则已保存",
+          "saveFailed": "保存失败，请重试",
+          "deleteSuccess": "计费规则已删除"
+        }
+      },
+      "trafficRule": {
+        "title": "流量统计规则",
+        "description": "配置流量计算模式、重置日与阈值，需先创建计费规则",
+        "trafficThreshold": "流量阈值",
+        "trafficThresholdHint": "设为 0 表示不限制流量",
+        "trafficResetDay": "流量重置日",
+        "accountingMode": "计算模式",
+        "accountingModeHint": "修改计算模式或重置日将触发周期流量重新计算",
+        "clear": "清除规则",
+        "hints": {
+          "resetDayTitle": "流量重置日",
+          "resetDayNull": "未设置，将回退至出账日",
+          "resetDay0": "不重置",
+          "resetDayMinus1": "每月最后一天重置",
+          "resetDay131": "每月指定日期重置"
+        },
+        "modes": {
+          "outOnly": "仅出站",
+          "inOnly": "仅入站",
+          "sum": "双向总和",
+          "max": "取较大值",
+          "min": "取较小值"
+        },
+        "toast": {
+          "saveSuccess": "流量统计规则已保存",
+          "saveFailed": "保存失败，请重试",
+          "clearing": "清除中…",
+          "clearSuccess": "流量统计规则已清除",
+          "clearFailed": "清除失败，请重试"
+        }
+      },
+      "install": {
+        "title": "安装 Agent",
+        "description": "生成一键安装命令，在目标服务器上执行以部署监控 Agent",
+        "autoRegister": "自动注册模式（使用全局安装密钥）",
+        "name": "服务器名称",
+        "namePlaceholder": "留空则使用系统主机名",
+        "remark": "备注",
+        "remarkPlaceholder": "可选备注信息",
+        "regTokenLabel": "全局安装密钥",
+        "serverTokenLabel": "服务器专属 Token",
+        "interval": "上报间隔（秒）",
+        "enableSsh": "启用 Web SSH 隧道",
+        "setupCa": "配置 SSH CA 免密登录",
+        "force": "强制重新注册",
+        "proxyDownload": "通过面板中转下载（需先配置下载地址）",
+        "proxyHint": "此命令通过面板代理下载安装脚本和 Agent 二进制文件",
+        "showAdvanced": "显示高级参数 ▸",
+        "hideAdvanced": "隐藏高级参数 ▾",
+        "installDir": "安装目录",
+        "installDirPlaceholder": "默认: /usr/local/bin",
+        "configDir": "配置目录",
+        "configDirPlaceholder": "默认: /etc/collei-agent",
+        "version": "指定版本",
+        "command": "安装命令",
+        "hint": "请以 root 用户在目标 Linux 服务器上执行此命令",
+        "caHint": "CA 配置需要 root 权限",
+        "passiveDesc": "手动创建服务器记录，创建后将生成专属安装命令",
+        "createServer": "创建服务器",
+        "createSuccess": "服务器创建成功",
+        "close": "关闭",
+        "comingSoon": "即将推出",
+        "error": {
+          "noRegToken": "未配置全局安装密钥，请在系统设置中配置",
+          "caRequiresSsh": "配置 CA 免密登录需要同时启用 SSH",
+          "intervalPositive": "上报间隔必须为正数",
+          "nameInvalid": "名称中不能包含引号或反斜杠",
+          "nameRequired": "请输入服务器名称"
+        }
+      }
+    },
+    "sidebar": {
+      "monitoring": "监控管理",
+      "nodes": "节点管理",
+      "groups": "分组管理",
+      "alerts": "告警管理",
+      "alertRules": "告警规则",
+      "notificationChannels": "通知渠道",
+      "eventCenter": "事件中心",
+      "alertEngine": "告警引擎",
+      "system": "系统",
+      "account": "账户设置",
+      "users": "用户设置",
+      "logs": "审计日志",
+      "settings": "系统设置",
+      "settingsOIDC": "SSO 提供商",
+      "services": "服务管理",
+      "servicesGroup": "服务管理",
+      "networkMonitor": "网络监控",
+      "remoteExec": "远程执行",
+      "dns": "DNS管理",
+      "dnsDomains": "域名管理",
+      "dnsCredentials": "DNS 凭证",
+      "dnsDdns": "DDNS"
+    },
+    "header": {
+      "admin": "管理后台",
+      "myAccount": "我的账户",
+      "accountSettings": "个人设置"
+    },
+    "groups": {
+      "title": "分组管理",
+      "subtitle": "管理服务器分组，用于归类展示",
+      "resetSort": "重置排序",
+      "fetchError": "获取分组列表失败，请稍后重试",
+      "empty": "暂无分组",
+      "add": "新建分组",
+      "table": {
+        "sort": "排序",
+        "serverCount": "服务器数量"
+      },
+      "actions": {
+        "open": "打开菜单"
+      },
+      "servers": {
+        "search": "搜索服务器",
+        "searchPlaceholder": "输入服务器名称或 UUID",
+        "selected": "已选中的服务器",
+        "selectedCount": "已选中 {{count}} 个服务器",
+        "empty": "暂无可用服务器",
+        "noResults": "未找到匹配的服务器"
+      },
+      "create": {
+        "title": "新建分组",
+        "description": "创建一个新的服务器分组",
+        "name": "分组名称",
+        "namePlaceholder": "输入分组名称（1-64 字符）",
+        "sort": "排序权重",
+        "sortPlaceholder": "留空则不设置"
+      },
+      "edit": {
+        "title": "编辑分组",
+        "description": "修改分组名称、排序权重或关联服务器",
+        "name": "分组名称",
+        "sort": "排序权重"
+      },
+      "delete": {
+        "description": "确定要删除分组 \"{{name}}\" 吗？此操作不可恢复，分组内的服务器不会被删除。"
+      },
+      "toast": {
+        "sortResetting": "重新排序中…",
+        "sortResetSuccess": "排序已重置",
+        "sortResetFailed": "重置排序失败",
+        "createSuccess": "分组已创建",
+        "editSuccess": "分组已更新",
+        "noChanges": "没有更改",
+        "deleteSuccess": "分组已删除"
+      }
+    },
+    "alerts": {
+      "rules": {
+        "title": "告警规则",
+        "subtitle": "管理告警触发条件，当指标超出阈值时自动触发告警",
+        "add": "新建规则",
+        "fetchError": "获取告警规则列表失败，请稍后重试",
+        "empty": "暂无告警规则",
+        "enabled": "已启用",
+        "disabled": "已禁用",
+        "table": {
+          "name": "规则名称",
+          "metric": "监控指标",
+          "condition": "触发条件",
+          "threshold": "阈值",
+          "duration": "持续时间",
+          "enabled": "启用状态",
+          "off": "禁用",
+          "mappings": "目标绑定",
+          "channels": "绑定渠道",
+          "on": "启用"
+        },
+        "metrics": {
+          "cpu": "CPU 使用率",
+          "ram": "内存使用率",
+          "swap": "Swap 使用率",
+          "disk": "磁盘使用率",
+          "load": "系统负载",
+          "net_in": "入站流量",
+          "traffic_in": "入站流量",
+          "net_out": "出站流量",
+          "traffic_out": "出站流量",
+          "tcp": "TCP 连接数",
+          "udp": "UDP 连接数",
+          "process": "进程数",
+          "offline": "离线检测",
+          "expiry": "到期提醒",
+          "login": "登录通知",
+          "traffic_percent": "流量百分比"
+        },
+        "durationUnit": "{{value}} 秒",
+        "thresholdUnits": {
+          "days": "天",
+          "percent": "%",
+          "ratio": "比率 0~1",
+          "bytesPerSec": "bytes/s"
+        },
+        "thresholdHints": {
+          "expiry": "提前多少天提醒",
+          "trafficPercent": "流量使用百分比",
+          "ratio": "0~1，如 0.9 表示 90%",
+          "load": "系统负载绝对值，通常参考 CPU 核心数",
+          "netIn": "入站流量速率",
+          "netOut": "出站流量速率",
+          "tcp": "TCP 连接数",
+          "udp": "UDP 连接数",
+          "process": "进程数"
+        },
+        "create": {
+          "title": "新建告警规则",
+          "description": "创建一条新的告警规则",
+          "name": "规则名称",
+          "namePlaceholder": "输入规则名称（1-128 字符）",
+          "metric": "监控指标",
+          "metricPlaceholder": "选择监控指标",
+          "condition": "触发条件",
+          "conditionPlaceholder": "选择条件",
+          "threshold": "阈值",
+          "thresholdPlaceholder": "输入阈值",
+          "duration": "持续时间（秒）",
+          "durationPlaceholder": "默认 60 秒",
+          "enabled": "立即启用",
+          "notifyRecovery": "启用恢复通知",
+          "customMessage": "自定义消息模板",
+          "customMessagePlaceholder": "留空则使用默认模板。变量: {server_name}, {metric}, {value}, {threshold}, {rule_name}, {condition}, {event}",
+          "customMessageHint": "支持模板变量。登录指标还支持: {username}, {ip}, {user_agent}, {login_method}",
+          "trafficNotifyStep": "流量梯度通知步长 (%)",
+          "trafficNotifyStepPlaceholder": "如 10 表示每超过 10% 通知一次"
+        },
+        "edit": {
+          "title": "编辑告警规则",
+          "description": "修改告警规则的触发条件和参数",
+          "name": "规则名称",
+          "metric": "监控指标",
+          "condition": "触发条件",
+          "threshold": "阈值",
+          "duration": "持续时间（秒）",
+          "notifyRecovery": "启用恢复通知",
+          "customMessage": "自定义消息模板",
+          "trafficNotifyStep": "流量梯度通知步长 (%)"
+        },
+        "delete": {
+          "description": "确定要删除告警规则 \"{{name}}\" 吗？此操作将级联删除关联的所有映射和告警历史。"
+        },
+        "targets": {
+          "title": "管理目标绑定",
+          "description": "配置规则作用的监控目标，支持生效与排除模式",
+          "targetType": "目标类型",
+          "mode": "模式",
+          "include": "生效",
+          "exclude": "排除",
+          "add": "添加目标",
+          "empty": "暂无目标绑定",
+          "server": "服务器",
+          "group": "分组",
+          "global": "全局",
+          "globalAll": "全部服务器",
+          "selectTargets": "选择目标",
+          "searchPlaceholder": "搜索名称…",
+          "selectedCount": "已选择 {{count}} 项",
+          "noResults": "无匹配结果",
+          "whitelist": "生效目标",
+          "blacklist": "排除目标",
+          "emptyWhitelist": "暂无生效目标",
+          "emptyBlacklist": "暂无排除目标",
+          "batchSelected": "已选择 {{count}} 项",
+          "batchDelete": "删除选中 ({{count}})",
+          "cancel": "关闭"
+        },
+        "channelBinding": {
+          "title": "绑定通知渠道",
+          "description": "选择规则触发时要通知的渠道",
+          "empty": "暂无可用渠道，请先创建通知渠道"
+        },
+        "toast": {
+          "createSuccess": "告警规则已创建",
+          "editSuccess": "告警规则已更新",
+          "noChanges": "没有更改",
+          "deleteSuccess": "告警规则已删除",
+          "toggleSuccess": "状态已更新",
+          "toggleFailed": "状态更新失败",
+          "mappingBatchAdded": "已添加 {{count}} 条映射",
+          "mappingBatchSkipped": "{{count}} 条重复映射已跳过",
+          "mappingAddFailed": "添加映射失败",
+          "mappingDeleted": "映射已删除",
+          "mappingDeleteFailed": "删除映射失败",
+          "targetAdded": "已添加 {{count}} 个目标绑定",
+          "targetAddFailed": "添加目标绑定失败",
+          "targetDeleted": "目标绑定已删除",
+          "targetBatchDeleted": "已移除 {{count}} 个目标绑定",
+          "targetDeleteFailed": "删除目标绑定失败",
+          "channelsSaved": "通知渠道绑定已保存",
+          "channelsSaveFailed": "保存通知渠道绑定失败"
+        }
+      },
+      "channels": {
+        "title": "通知渠道",
+        "subtitle": "管理通知渠道与消息提供商，配置告警消息的发送方式",
+        "fetchError": "获取数据失败，请稍后重试",
+        "providers": {
+          "title": "消息提供商",
+          "add": "新建提供商",
+          "empty": "暂无提供商",
+          "table": {
+            "name": "提供商名称",
+            "config": "配置"
+          },
+          "types": {
+            "webhook": "Webhook",
+            "telegram": "Telegram",
+            "email": "邮件 (SMTP)"
+          },
+          "fields": {
+            "webhook": {
+              "title": "Webhook 配置",
+              "url": "Webhook URL",
+              "method": "请求方法"
+            },
+            "telegram": {
+              "title": "Telegram 配置",
+              "botToken": "Bot Token"
+            },
+            "email": {
+              "title": "SMTP 邮件配置",
+              "smtpHost": "SMTP 服务器",
+              "smtpPort": "端口",
+              "smtpPassword": "密码",
+              "fromAddress": "发件地址"
+            }
+          },
+          "create": {
+            "title": "新建提供商",
+            "description": "创建一个新的消息发送提供商",
+            "namePlaceholder": "输入名称（1-64 字符）",
+            "typePlaceholder": "选择提供商类型",
+            "addition": "配置 JSON",
+            "additionPlaceholder": "可选，如 {\"bot_token\": \"xxx\"}"
+          },
+          "edit": {
+            "title": "编辑提供商",
+            "description": "修改提供商的配置信息",
+            "addition": "配置 JSON"
+          },
+          "delete": {
+            "description": "确定要删除提供商 \"{{name}}\" 吗？此操作将级联删除关联的所有通知渠道。"
+          },
+          "toast": {
+            "createSuccess": "提供商已创建",
+            "editSuccess": "提供商已更新",
+            "noChanges": "没有更改",
+            "deleteSuccess": "提供商已删除"
+          }
+        },
+        "channels": {
+          "title": "通知渠道",
+          "add": "新建渠道",
+          "empty": "暂无渠道",
+          "test": "发送测试通知",
+          "table": {
+            "name": "渠道名称",
+            "provider": "提供商",
+            "target": "接收目标"
+          },
+          "create": {
+            "title": "新建通知渠道",
+            "description": "创建一个新的通知渠道",
+            "name": "渠道名称",
+            "namePlaceholder": "输入渠道名称（1-128 字符）",
+            "provider": "关联提供商",
+            "providerPlaceholder": "选择提供商",
+            "target": "接收目标",
+            "targetPlaceholder": "chat_id / Webhook URL / 邮箱"
+          },
+          "edit": {
+            "title": "编辑渠道",
+            "description": "修改通知渠道的配置",
+            "name": "渠道名称",
+            "provider": "关联提供商",
+            "providerPlaceholder": "选择提供商",
+            "target": "接收目标"
+          },
+          "delete": {
+            "description": "确定要删除通知渠道 \"{{name}}\" 吗？"
+          },
+          "toast": {
+            "createSuccess": "渠道已创建",
+            "editSuccess": "渠道已更新",
+            "noChanges": "没有更改",
+            "deleteSuccess": "渠道已删除",
+            "testing": "发送测试通知中…",
+            "testSuccess": "测试通知已发送",
+            "testFailed": "测试通知发送失败"
+          }
+        }
+      },
+      "events": {
+        "title": "事件中心",
+        "subtitle": "查看告警触发与恢复的历史记录",
+        "fetchError": "获取告警历史失败，请稍后重试",
+        "empty": "暂无告警记录",
+        "filterServer": "按服务器筛选",
+        "filterServerPlaceholder": "输入服务器 UUID",
+        "filterRule": "按规则筛选",
+        "filterRulePlaceholder": "输入规则 ID",
+        "limit": "数量限制",
+        "filter": "筛选",
+        "reset": "重置",
+        "table": {
+          "id": "ID",
+          "serverUuid": "服务器 UUID",
+          "ruleId": "规则 ID",
+          "value": "指标值",
+          "createdAt": "触发时间",
+          "updatedAt": "更新时间"
+        },
+        "status": {
+          "firing": "告警中",
+          "resolved": "已恢复"
+        }
+      },
+      "engine": {
+        "title": "告警引擎",
+        "subtitle": "查看告警引擎的运行状态和状态机实时信息",
+        "reload": "重载配置",
+        "fetchError": "获取引擎状态失败，请稍后重试",
+        "status": {
+          "title": "引擎状态",
+          "running": "运行中",
+          "stopped": "已停止",
+          "rulesCount": "启用规则",
+          "mappingsCount": "映射总数",
+          "channelsCount": "渠道数",
+          "statesCount": "状态条目",
+          "firingCount": "告警中",
+          "pendingCount": "等待中"
+        },
+        "states": {
+          "title": "状态机条目",
+          "empty": "暂无状态条目",
+          "filterAll": "全部",
+          "filterFiring": "告警中",
+          "filterPending": "等待中",
+          "filterOk": "正常",
+          "table": {
+            "server": "服务器",
+            "rule": "规则",
+            "metric": "指标",
+            "value": "当前值",
+            "pendingSince": "等待开始",
+            "lastNotified": "上次通知"
+          },
+          "status": {
+            "ok": "正常",
+            "pending": "等待中",
+            "firing": "告警中"
+          }
+        },
+        "toast": {
+          "refreshSuccess": "已刷新",
+          "reloading": "正在重载配置…",
+          "reloadSuccess": "配置已重载",
+          "reloadFailed": "重载失败，请重试"
+        }
+      }
+    },
+    "services": {
+      "network": {
+        "title": "网络监控",
+        "subtitle": "管理探测目标，通过分布式节点监测网络延迟与丢包率",
+        "add": "新建目标",
+        "fetchError": "获取监控目标列表失败，请稍后重试",
+        "empty": "暂无监控目标",
+        "noResults": "未找到匹配的目标",
+        "searchPlaceholder": "搜索名称/主机…",
+        "enabled": "已启用",
+        "disabled": "已禁用",
+        "table": {
+          "name": "目标名称",
+          "host": "主机",
+          "protocol": "协议",
+          "port": "端口",
+          "interval": "间隔"
+        },
+        "protocols": {
+          "icmp": "ICMP",
+          "tcp": "TCP",
+          "http": "HTTP"
+        },
+        "actions": {
+          "dispatch": "下发配置",
+          "viewStatus": "查看结果"
+        },
+        "create": {
+          "title": "新建监控目标",
+          "description": "添加一个新的网络探测目标",
+          "name": "目标名称",
+          "namePlaceholder": "如：Cloudflare DNS",
+          "host": "主机",
+          "hostPlaceholder": "IP 地址或域名，如 1.1.1.1",
+          "protocol": "协议",
+          "protocolPlaceholder": "选择协议",
+          "port": "端口",
+          "portPlaceholder": "tcp/http 时必填",
+          "interval": "探测间隔（秒）",
+          "intervalPlaceholder": "默认 60"
+        },
+        "edit": {
+          "title": "编辑监控目标",
+          "description": "修改探测目标的配置",
+          "name": "目标名称",
+          "host": "主机",
+          "protocol": "协议",
+          "port": "端口",
+          "portPlaceholder": "tcp/http 时必填",
+          "interval": "探测间隔（秒）"
+        },
+        "delete": {
+          "description": "确定要删除监控目标 \"{{name}}\" 吗？此操作将级联删除所有关联的探测记录。"
+        },
+        "dispatch": {
+          "title": "下发配置",
+          "description": "配置哪些节点执行该目标的探测任务",
+          "current": "当前配置",
+          "empty": "暂无下发配置，所有节点均不执行",
+          "add": "添加规则",
+          "addRule": "添加规则",
+          "nodeType": "节点类型",
+          "nodeId": "节点",
+          "nodeIdPlaceholder": "选择服务器",
+          "allNodes": "所有节点",
+          "selectedCount": "已选 {{count}} 台",
+          "noServers": "暂无可用服务器",
+          "isExclude": "模式",
+          "include": "生效",
+          "exclude": "排除",
+          "types": {
+            "global": "全局",
+            "server": "指定服务器"
+          },
+          "save": "保存配置",
+          "toast": {
+            "saveSuccess": "下发配置已更新",
+            "saveFailed": "保存失败，请重试"
+          }
+        },
+        "status": {
+          "title": "探测结果",
+          "empty": "暂无探测数据",
+          "serverName": "探测节点",
+          "time": "探测时间",
+          "medianLatency": "中位延迟",
+          "maxLatency": "最大延迟",
+          "minLatency": "最小延迟",
+          "packetLoss": "丢包率"
+        },
+        "toast": {
+          "createSuccess": "监控目标已创建",
+          "editSuccess": "监控目标已更新",
+          "deleteSuccess": "监控目标已删除"
+        }
+      },
+      "remote": {
+        "title": "远程执行",
+        "subtitle": "向已批准的 Agent 节点下发命令并查看执行结果",
+        "empty": "暂无任务记录",
+        "fetchError": "获取任务列表失败，请稍后重试",
+        "newTask": "新建任务",
+        "deleteTask": "删除任务",
+        "viewDetail": "查看详情",
+        "table": {
+          "id": "任务 ID",
+          "payload": "命令内容",
+          "timeout": "超时(秒)",
+          "createdAt": "创建时间",
+          "actions": "操作"
+        },
+        "taskType": {
+          "shell": "Shell 命令",
+          "command": "系统命令",
+          "script": "脚本",
+          "upgrade_agent": "升级 Agent"
+        },
+        "status": {
+          "pending": "等待中",
+          "sent": "已下发",
+          "running": "执行中",
+          "success": "成功",
+          "failed": "失败",
+          "timeout": "超时"
+        },
+        "create": {
+          "title": "新建远程任务",
+          "description": "选择目标服务器并配置要执行的命令",
+          "type": "任务类型",
+          "typePlaceholder": "选择任务类型",
+          "command": "命令",
+          "commandPlaceholder": "输入要执行的命令，如 apt update -y",
+          "script": "脚本内容",
+          "scriptPlaceholder": "输入脚本内容",
+          "scriptArgs": "脚本参数",
+          "scriptArgsPlaceholder": "可选，以空格分隔",
+          "upgradeVersion": "目标版本",
+          "upgradeVersionPlaceholder": "如 1.2.0",
+          "upgradeUrl": "下载地址",
+          "upgradeUrlPlaceholder": "Agent 包下载 URL",
+          "timeout": "超时时间(秒)",
+          "timeoutPlaceholder": "默认 300",
+          "servers": "目标服务器",
+          "serversPlaceholder": "搜索并选择服务器",
+          "selectedCount": "已选 {{count}} 台服务器",
+          "selectAll": "全选",
+          "deselectAll": "取消全选",
+          "noApprovedServers": "没有已批准的在线服务器",
+          "submit": "下发任务"
+        },
+        "detail": {
+          "title": "任务详情",
+          "taskInfo": "任务信息",
+          "executions": "执行记录",
+          "executionDetail": "执行详情",
+          "server": "服务器",
+          "exitCode": "退出码",
+          "dispatchedAt": "下发时间",
+          "completedAt": "完成时间",
+          "output": "终端输出",
+          "noOutput": "暂无输出",
+          "viewOutput": "查看输出",
+          "backToExecutions": "返回执行列表"
+        },
+        "confirm": {
+          "deleteTitle": "确认删除任务",
+          "deleteDescription": "此操作将删除该任务及其所有执行记录和日志，且无法恢复。确定继续？"
+        },
+        "toast": {
+          "creating": "正在创建任务…",
+          "createSuccess": "任务已创建",
+          "createFailed": "创建任务失败",
+          "deleting": "正在删除任务…",
+          "deleteSuccess": "任务已删除",
+          "deleteFailed": "删除任务失败",
+          "refreshSuccess": "已刷新"
+        }
+      },
+      "dns": {
+        "title": "DNS 管理",
+        "subtitle": "管理 DNS 凭证、托管域名、解析记录与 DDNS 任务",
+        "fetchError": "获取 DNS 数据失败，请稍后重试",
+        "credentials": {
+          "title": "DNS 凭证",
+          "add": "添加凭证",
+          "empty": "暂无凭证",
+          "table": {
+            "provider": "厂商"
+          },
+          "validBadge": "有效",
+          "invalidBadge": "无效",
+          "create": {
+            "title": "添加 DNS 凭证",
+            "description": "创建一个新的 DNS 厂商凭证",
+            "name": "凭证名称",
+            "namePlaceholder": "如：我的 Cloudflare",
+            "provider": "DNS 厂商",
+            "providerPlaceholder": "选择 DNS 厂商",
+            "providerOther": "其他厂商",
+            "providerOtherPlaceholder": "输入厂商标识，如 cloudflare",
+            "credentials": "认证参数",
+            "credentialsJson": "认证参数 (JSON)",
+            "credentialsJsonPlaceholder": "{\"auth_token\": \"xxx\"}"
+          },
+          "edit": {
+            "title": "编辑 DNS 凭证",
+            "description": "修改凭证名称或更新认证参数（凭证内容不会回显）",
+            "name": "凭证名称",
+            "updateCredentials": "更新认证参数",
+            "updateCredentialsHint": "留空则不修改已有凭证"
+          },
+          "delete": {
+            "title": "删除凭证",
+            "description": "确定要删除凭证 \"{{name}}\" 吗？关联域名将解除绑定。"
+          },
+          "providers": {
+            "cloudflare": "Cloudflare",
+            "aliyun": "阿里云",
+            "dnspod": "DNSPod / 腾讯云",
+            "route53": "AWS Route53",
+            "other": "其他"
+          },
+          "fields": {
+            "cloudflare": {
+              "title": "Cloudflare 认证",
+              "authToken": "API Token",
+              "authTokenPlaceholder": "Cloudflare API Token"
+            },
+            "aliyun": {
+              "title": "阿里云认证",
+              "authKeyId": "Access Key ID",
+              "authKeyIdPlaceholder": "LTAI5t...",
+              "authSecret": "Access Key Secret",
+              "authSecretPlaceholder": "Access Key Secret"
+            },
+            "dnspod": {
+              "title": "DNSPod 认证",
+              "authToken": "API Token",
+              "authTokenPlaceholder": "id,token 格式"
+            },
+            "route53": {
+              "title": "AWS Route53 认证",
+              "authAccessKey": "Access Key",
+              "authAccessKeyPlaceholder": "AKIA...",
+              "authAccessSecret": "Secret Key",
+              "authAccessSecretPlaceholder": "Secret Access Key"
+            }
+          },
+          "toast": {
+            "creating": "创建凭证中…",
+            "createSuccess": "凭证已创建",
+            "createFailed": "创建凭证失败",
+            "editSaving": "保存凭证中…",
+            "editSuccess": "凭证已更新",
+            "editFailed": "更新凭证失败",
+            "noChanges": "未检测到修改",
+            "deleting": "删除凭证中…",
+            "deleteSuccess": "凭证已删除",
+            "deleteFailed": "删除凭证失败",
+            "refreshSuccess": "已刷新"
+          }
+        },
+        "domains": {
+          "title": "托管域名",
+          "add": "添加域名",
+          "empty": "暂无域名",
+          "table": {
+            "domain": "域名",
+            "credential": "绑定凭证",
+            "syncStatus": "同步状态",
+            "lastSync": "上次同步"
+          },
+          "syncPending": "待同步",
+          "syncSynced": "已同步",
+          "neverSynced": "从未同步",
+          "noCredential": "未绑定",
+          "create": {
+            "title": "添加域名",
+            "description": "添加一个新的托管域名",
+            "credential": "绑定凭证",
+            "credentialPlaceholder": "选择凭证",
+            "domainName": "域名",
+            "domainNamePlaceholder": "example.com",
+            "zoneId": "Zone ID（可选）",
+            "zoneIdPlaceholder": "Cloudflare Scoped Token 等需要"
+          },
+          "edit": {
+            "title": "编辑域名",
+            "description": "更换绑定凭证或修改 Zone ID",
+            "credential": "绑定凭证",
+            "credentialPlaceholder": "选择凭证",
+            "zoneId": "Zone ID",
+            "zoneIdPlaceholder": "可选"
+          },
+          "delete": {
+            "title": "删除域名",
+            "description": "确定要删除域名 \"{{name}}\" 吗？此操作将级联删除所有解析记录和 DDNS 任务。"
+          },
+          "toast": {
+            "creating": "添加域名中…",
+            "createSuccess": "域名已添加",
+            "createFailed": "添加域名失败",
+            "editSuccess": "域名已更新",
+            "editFailed": "更新域名失败",
+            "noChanges": "未检测到修改",
+            "deleting": "删除域名中…",
+            "deleteSuccess": "域名已删除",
+            "deleteFailed": "删除域名失败",
+            "syncing": "同步中…",
+            "syncSuccess": "同步完成",
+            "syncFailed": "同步失败"
+          }
+        },
+        "records": {
+          "title": "解析记录",
+          "add": "添加记录",
+          "sync": "同步记录",
+          "syncHint": "从 DNS 厂商拉取全量记录到本地",
+          "empty": "暂无解析记录，请先同步",
+          "table": {
+            "name": "主机记录",
+            "content": "记录值",
+            "ttl": "TTL",
+            "priority": "优先级",
+            "proxied": "代理"
+          },
+          "proxiedOn": "开",
+          "proxiedOff": "关",
+          "create": {
+            "title": "添加解析记录",
+            "description": "添加一条新的 DNS 解析记录",
+            "name": "主机记录",
+            "namePlaceholder": "如 @ 或 www",
+            "type": "记录类型",
+            "typePlaceholder": "选择类型",
+            "content": "记录值",
+            "contentPlaceholder": "如 1.2.3.4",
+            "ttl": "TTL（秒）",
+            "ttlPlaceholder": "默认 600",
+            "priority": "优先级",
+            "priorityPlaceholder": "MX/SRV 优先级",
+            "proxied": "Cloudflare 代理"
+          },
+          "edit": {
+            "title": "编辑解析记录",
+            "description": "修改 DNS 解析记录",
+            "content": "记录值",
+            "ttl": "TTL（秒）",
+            "priority": "优先级",
+            "proxied": "Cloudflare 代理"
+          },
+          "delete": {
+            "title": "删除解析记录",
+            "description": "确定要删除记录 \"{{name}}\" ({{type}}) 吗？此操作将同步到 DNS 厂商。"
+          },
+          "toast": {
+            "creating": "创建记录中…",
+            "createSuccess": "记录已创建",
+            "createFailed": "创建记录失败",
+            "editSaving": "保存记录中…",
+            "editSuccess": "记录已更新",
+            "editFailed": "更新记录失败",
+            "noChanges": "未检测到修改",
+            "deleting": "删除记录中…",
+            "deleteSuccess": "记录已删除",
+            "deleteFailed": "删除记录失败",
+            "syncing": "同步记录中…",
+            "syncSuccess": "同步完成",
+            "syncFailed": "同步失败"
+          }
+        },
+        "ddns": {
+          "title": "DDNS 任务",
+          "add": "创建任务",
+          "empty": "暂无 DDNS 任务",
+          "table": {
+            "record": "绑定记录",
+            "server": "绑定节点",
+            "ipVersion": "IP 版本",
+            "lastIp": "最后 IP",
+            "lastUpdated": "最后更新",
+            "lastError": "最近错误",
+            "errorCount": "错误次数"
+          },
+          "activeBadge": "运行中",
+          "inactiveBadge": "已停用",
+          "noIp": "暂无",
+          "noError": "无",
+          "create": {
+            "title": "创建 DDNS 任务",
+            "description": "将解析记录绑定到监控节点，自动同步 IP 变更",
+            "record": "解析记录",
+            "recordPlaceholder": "选择解析记录",
+            "server": "监控节点",
+            "serverPlaceholder": "选择服务器",
+            "serverSearch": "搜索服务器...",
+            "serverEmpty": "未找到匹配的服务器",
+            "ipVersion": "IP 版本"
+          },
+          "edit": {
+            "title": "编辑 DDNS 任务",
+            "description": "修改 DDNS 任务的绑定节点、IP 版本或启停状态",
+            "server": "监控节点",
+            "serverPlaceholder": "选择服务器",
+            "serverSearch": "搜索服务器...",
+            "serverEmpty": "未找到匹配的服务器",
+            "ipVersion": "IP 版本",
+            "active": "启用任务"
+          },
+          "delete": {
+            "title": "删除 DDNS 任务",
+            "description": "确定要删除此 DDNS 任务吗？删除后将不再自动同步 IP。"
+          },
+          "toast": {
+            "creating": "创建任务中…",
+            "createSuccess": "DDNS 任务已创建",
+            "createFailed": "创建任务失败",
+            "editSuccess": "DDNS 任务已更新",
+            "editFailed": "更新任务失败",
+            "noChanges": "未检测到修改",
+            "deleting": "删除任务中…",
+            "deleteSuccess": "DDNS 任务已删除",
+            "deleteFailed": "删除任务失败"
+          }
+        }
+      }
+    },
+    "logs": {
+      "title": "审计日志",
+      "subtitle": "查看系统审计日志，包括数据变更、后台任务与运行时事件",
+      "fetchError": "获取审计日志失败，请稍后重试",
+      "empty": "暂无日志记录",
+      "filter": {
+        "msgType": "日志类型",
+        "level": "日志级别",
+        "source": "来源模块",
+        "serverUuid": "服务器 UUID",
+        "serverUuidPlaceholder": "输入服务器 UUID",
+        "startTime": "开始时间",
+        "endTime": "结束时间",
+        "all": "全部",
+        "search": "搜索",
+        "reset": "重置"
+      },
+      "msgTypes": {
+        "auth": "认证",
+        "server": "服务器",
+        "config": "配置",
+        "alert": "告警",
+        "task": "任务",
+        "error": "错误",
+        "billing": "计费",
+        "network": "网络",
+        "system": "系统"
+      },
+      "levels": {
+        "info": "信息",
+        "warning": "警告",
+        "error": "错误"
+      },
+      "table": {
+        "level": "级别",
+        "message": "消息",
+        "source": "来源",
+        "time": "时间",
+        "detail": "详情",
+        "viewDetail": "查看详情"
+      },
+      "detail": {
+        "title": "日志详情"
+      },
+      "pagination": {
+        "total": "共 {{count}} 条"
+      },
+      "toast": {
+        "refreshSuccess": "日志已刷新"
+      }
+    },
+    "oidc": {
+      "title": "SSO 提供商管理",
+      "subtitle": "管理第三方 SSO 登录提供商（Google、GitHub 等）",
+      "add": "添加提供商",
+      "fetchError": "获取提供商列表失败，请稍后重试",
+      "empty": "暂无 SSO 提供商",
+      "table": {
+        "clientId": "Client ID",
+        "secret": "密钥",
+        "secretSet": "已配置",
+        "secretMissing": "未配置",
+        "off": "禁用",
+        "order": "排序"
+      },
+      "form": {
+        "namePlaceholder": "输入唯一标识名称",
+        "providerType": "提供商类型",
+        "providerTypePlaceholder": "选择提供商类型",
+        "clientId": "Client ID",
+        "clientIdPlaceholder": "输入 OAuth Client ID",
+        "clientSecret": "Client Secret",
+        "clientSecretPlaceholder": "输入 OAuth Client Secret",
+        "clientSecretEditPlaceholder": "留空则保留原密钥",
+        "displayOrder": "显示排序",
+        "scope": "自定义 Scope",
+        "scopePlaceholder": "逗号分隔，留空使用默认值",
+        "addition": "附加配置",
+        "additionPlaceholder": "JSON 格式的附加配置参数（选填）",
+        "secretStatus": "当前密钥状态"
+      },
+      "dialog": {
+        "createTitle": "添加 SSO 提供商",
+        "createDesc": "配置新的第三方 SSO 登录提供商",
+        "editTitle": "编辑 SSO 提供商",
+        "editDesc": "修改 SSO 提供商的配置信息",
+        "create": "添加"
+      },
+      "delete": {
+        "title": "删除 SSO 提供商",
+        "description": "确定要删除提供商 \"{{name}}\" 吗？此操作不可撤销。"
+      },
+      "toast": {
+        "refreshSuccess": "提供商列表已刷新",
+        "createSuccess": "提供商已创建",
+        "updating": "更新中…",
+        "updateSuccess": "提供商已更新",
+        "saveFailed": "保存失败",
+        "deleteSuccess": "提供商已删除",
+        "deleteFailed": "删除失败"
+      }
+    }
+  },
+  "settings": {
+    "title": "系统设置",
+    "subtitle": "管理全局系统配置项",
+    "general": {
+      "title": "基本设置",
+      "desc": "配置应用名称与 Agent 注册令牌",
+      "appName": "应用名称",
+      "appNameDesc": "前端显示的应用名称",
+      "regToken": "全局注册令牌",
+      "regTokenDesc": "Agent 注册时使用的全局令牌，请妥善保管",
+      "regTokenPlaceholder": "输入注册令牌",
+      "agentUrl": "Agent 连接地址",
+      "agentUrlDesc": "Agent 安装时使用的连接地址，留空则使用当前站点地址",
+      "agentInstallScriptUrl": "安装脚本下载地址",
+      "agentInstallScriptUrlDesc": "Agent 安装脚本的下载地址，留空则从 GitHub 直接下载",
+      "agentInstallScriptUrlPlaceholder": "https://example.com/install.sh",
+      "favicon": "网站图标",
+      "faviconDesc": "上传自定义的 Favicon 图标，支持常见图片格式",
+      "faviconUpload": "上传图标",
+      "faviconDelete": "删除图标",
+      "faviconUploading": "上传中…",
+      "faviconSuccess": "图标已更新",
+      "faviconFailed": "图标上传失败",
+      "faviconDeleted": "图标已删除",
+      "faviconDeleteFailed": "图标删除失败",
+      "faviconTooLarge": "文件大小不能超过 2MB"
+    },
+    "themes": {
+      "title": "展示主题管理",
+      "desc": "上传和管理展示页面主题，支持上传 ZIP 包并切换当前使用的主题",
+      "upload": "上传主题",
+      "uploading": "上传中…",
+      "active": "当前使用",
+      "builtin": "内置",
+      "activateSuccess": "主题已切换",
+      "activateFailed": "主题切换失败",
+      "deleteSuccess": "主题已删除",
+      "deleteFailed": "主题删除失败",
+      "uploadSuccess": "主题上传成功",
+      "uploadFailed": "主题上传失败",
+      "deleteConfirm": "确认删除主题",
+      "deleteConfirmDesc": "确定要删除主题「{{name}}」吗？此操作不可撤销。",
+      "uploadHint": "选择 ZIP 文件上传，包内须包含 theme.json 和 index.html",
+      "files": "个文件",
+      "fileTooLarge": "文件大小不能超过 50MB",
+      "cannotDeleteBuiltin": "内置主题无法删除",
+      "noThemes": "暂无主题"
+    },
+    "script": {
+      "title": "展示页自定义代码",
+      "desc": "为公开展示页面注入自定义样式和脚本，应用于首页和服务器详情页",
+      "customHeaders": "自定义 Head",
+      "customHeadersDesc": "注入到页面 <head> 中的自定义 HTML 代码，如 <style>、<link>、<meta> 等标签",
+      "customHeadersPlaceholder": "<style>\n  body { background: #000; }\n</style>",
+      "customBody": "自定义 Body",
+      "customBodyDesc": "注入到页面 <body> 末尾的自定义 HTML 代码，如 <script> 标签",
+      "customBodyPlaceholder": "<script>\n  console.log('Hello');\n</script>"
+    },
+    "monitoring": {
+      "title": "监控参数",
+      "desc": "调整离线检测和数据保留策略",
+      "offlineThreshold": "离线判定阈值",
+      "offlineThresholdDesc": "超过此时间未上报则判定为离线",
+      "offlineInterval": "离线检测间隔",
+      "offlineIntervalDesc": "心跳检测定时执行的间隔",
+      "loadRetain": "实时负载数据保留时长",
+      "loadRetainDesc": "超过此时间的负载数据将降采样处理",
+      "seconds": "秒"
+    },
+    "dataRetain": {
+      "title": "数据保留策略",
+      "desc": "配置各类型数据在数据库中的保留时间"
+    },
+    "networkRetain": {
+      "title": "网络探测数据",
+      "desc": "配置网络探测结果的数据保留策略",
+      "label": "探测数据保留时长（小时）",
+      "labelDesc": "网络探测结果在数据库中保存的最长时间，默认 24 小时"
+    },
+    "loadRetain": {
+      "title": "负载数据",
+      "desc": "配置节点负载数据的保留策略",
+      "label": "负载数据保留时长（小时）",
+      "labelDesc": "节点负载数据在数据库中保存的最长时间，默认 72 小时"
+    },
+    "ipDb": {
+      "title": "IP 归属地数据库",
+      "desc": "选择用于解析 Agent IP 归属地的数据库，并可在线测试",
+      "current": "当前数据库",
+      "selectPlaceholder": "选择数据库",
+      "noDbAvailable": "未检测到可用数据库文件，请将 .mmdb 文件放入 data/ 目录",
+      "testTitle": "测试 IP 查询",
+      "testDesc": "输入任意 IP 地址，验证当前所选数据库是否正常工作",
+      "testIpPlaceholder": "如 8.8.8.8",
+      "testButton": "测试",
+      "testing": "查询中…",
+      "testSuccess": "查询成功",
+      "testResultDesc": "IP {{ip}} \n查询结果：{{code}}",
+      "testNotFound": "该 IP 未找到记录",
+      "testFailed": "查询失败，请确认 IP 格式正确且数据库文件有效",
+      "result": "查询结果：",
+      "resultNull": "未找到",
+      "disputedTitle": "统一地区标识",
+      "disputedDesc": "开启后，将强制把所有记录中的 TW 地区代码映射为 CN",
+      "disputedActive": "已开启",
+      "disputedEnable": "开启合并",
+      "disputedDisable": "关闭",
+      "disputedActiveHint": "当前已开启地区合并。关闭后仅停止后续自动转换，已修改的服务器地区记录无法恢复。",
+      "disputedConfirmWord": "确认开启",
+      "confirmTitle": "确认开启统一地区标识",
+      "confirmDesc": "此操作将立即修改数据库中所有 region=TW 的服务器记录为 CN，已修改的记录无法恢复。",
+      "confirmButton": "我已了解风险，确认开启"
+    },
+    "toast": {
+      "saveSuccess": "配置已保存",
+      "saveFailed": "保存失败，请重试",
+      "saveConflict": "此配置项已锁定，无法修改",
+      "saveInvalid": "配置值不合法，请检查输入",
+      "deleteSuccess": "配置已删除",
+      "deleteConflict": "此配置项已锁定，无法删除"
+    }
+  },
+  "ssh": {
+    "tabs": {
+      "terminal": "终端",
+      "files": "文件管理",
+      "hideFiles": "隐藏文件管理"
+    },
+    "status": {
+      "idle": "未连接",
+      "creating": "创建会话中",
+      "waiting": "等待 Agent 连接",
+      "auth_required": "需要认证",
+      "authenticating": "认证中",
+      "connected": "已连接",
+      "error": "连接错误",
+      "closed": "已断开"
+    },
+    "auth": {
+      "title": "SSH 认证",
+      "description": "证书认证失败，请输入密码进行连接",
+      "password": "密码",
+      "connect": "连接"
+    },
+    "terminal": {
+      "back": "返回节点管理",
+      "connecting": "正在连接 {{name}}",
+      "reconnecting": "正在重新连接",
+      "disconnected": "连接已断开",
+      "error": "错误",
+      "noServer": "未指定服务器",
+      "reconnect": "重新连接",
+      "disconnect": "断开连接"
+    }
+  },
+  "sftp": {
+    "status": {
+      "idle": "未连接",
+      "creating": "创建会话中",
+      "waiting": "等待连接",
+      "auth_required": "需要认证",
+      "authenticating": "认证中",
+      "connected": "已连接",
+      "error": "连接错误",
+      "closed": "已断开"
+    },
+    "reconnect": "重新连接",
+    "empty": "当前目录为空",
+    "itemCount": "共 {{count}} 项",
+    "table": {
+      "size": "大小",
+      "permissions": "权限",
+      "modified": "修改时间"
+    },
+    "actions": {
+      "mkdir": "新建文件夹",
+      "newFile": "新建文件",
+      "upload": "上传文件",
+      "download": "下载",
+      "rename": "重命名"
+    },
+    "editor": {
+      "createTitle": "新建文件",
+      "editTitle": "编辑文件",
+      "createDescription": "创建并编辑新文件内容",
+      "editDescription": "在线编辑文件并保存到服务器",
+      "fileName": "文件名",
+      "fileNamePlaceholder": "请输入文件名，例如 notes.txt"
+    },
+    "mkdir": {
+      "title": "新建文件夹",
+      "description": "在当前目录下创建新文件夹",
+      "name": "文件夹名称",
+      "placeholder": "请输入文件夹名称"
+    },
+    "rename": {
+      "title": "重命名",
+      "description": "将 \"{{name}}\" 重命名为：",
+      "newName": "新名称",
+      "confirm": "确认"
+    },
+    "delete": {
+      "descriptionFile": "确定要删除文件 \"{{name}}\" 吗？此操作不可恢复。",
+      "descriptionDir": "确定要删除目录 \"{{name}}\" 及其所有内容吗？此操作不可恢复。"
+    },
+    "toast": {
+      "sessionClosed": "SFTP 会话已关闭：{{reason}}",
+      "loadFailed": "加载文件列表失败",
+      "cannotDownloadDir": "不能下载目录",
+      "downloading": "正在下载 {{name}}…",
+      "downloadSuccess": "{{name}} 下载完成",
+      "downloadFailed": "下载失败",
+      "uploadSuccess": "{{name}} 上传完成",
+      "uploadFailed": "{{name}} 上传失败",
+      "mkdirSuccess": "文件夹 \"{{name}}\" 已创建",
+      "mkdirFailed": "创建文件夹失败",
+      "deleteSuccess": "\"{{name}}\" 已删除",
+      "deleteFailed": "删除失败",
+      "renameSuccess": "重命名成功",
+      "renameFailed": "重命名失败",
+      "onlyFileEditable": "仅支持编辑普通文件",
+      "readFailed": "读取文件失败",
+      "saveSuccess": "文件 \"{{name}}\" 已保存",
+      "saveFailed": "保存失败",
+      "createFileSuccess": "文件 \"{{name}}\" 已创建",
+      "fileNameRequired": "请输入文件名"
+    }
+  }
+}

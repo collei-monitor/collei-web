@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useCreateDnsRecord } from "@/services/dns";
@@ -85,32 +85,31 @@ export function CreateRecordDialog({ domainId, open, onOpenChange }: Props) {
     );
   };
 
-  const tp = "admin.services.dns.records";
   const showPriority = type === "MX" || type === "SRV";
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.create.title`)}</DialogTitle>
-          <DialogDescription>{t(`${tp}.create.description`)}</DialogDescription>
+          <DialogTitle>{t("admin.services.dns.records.create.title")}</DialogTitle>
+          <DialogDescription>{t("admin.services.dns.records.create.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t(`${tp}.create.name`)}</Label>
+              <Label>{t("admin.services.dns.records.create.name")}</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t(`${tp}.create.namePlaceholder`)}
+                placeholder={t("admin.services.dns.records.create.namePlaceholder")}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label>{t(`${tp}.create.type`)}</Label>
+              <Label>{t("admin.services.dns.records.create.type")}</Label>
               <Select value={type} onValueChange={setType}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t(`${tp}.create.typePlaceholder`)} />
+                  <SelectValue placeholder={t("admin.services.dns.records.create.typePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
                   {RECORD_TYPES.map((rt) => (
@@ -124,35 +123,35 @@ export function CreateRecordDialog({ domainId, open, onOpenChange }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.content`)}</Label>
+            <Label>{t("admin.services.dns.records.create.content")}</Label>
             <Input
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder={t(`${tp}.create.contentPlaceholder`)}
+              placeholder={t("admin.services.dns.records.create.contentPlaceholder")}
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t(`${tp}.create.ttl`)}</Label>
+              <Label>{t("admin.services.dns.records.create.ttl")}</Label>
               <Input
                 type="number"
                 min={1}
                 value={ttl}
                 onChange={(e) => setTtl(e.target.value)}
-                placeholder={t(`${tp}.create.ttlPlaceholder`)}
+                placeholder={t("admin.services.dns.records.create.ttlPlaceholder")}
               />
             </div>
             {showPriority && (
               <div className="space-y-2">
-                <Label>{t(`${tp}.create.priority`)}</Label>
+                <Label>{t("admin.services.dns.records.create.priority")}</Label>
                 <Input
                   type="number"
                   min={0}
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  placeholder={t(`${tp}.create.priorityPlaceholder`)}
+                  placeholder={t("admin.services.dns.records.create.priorityPlaceholder")}
                 />
               </div>
             )}
@@ -164,18 +163,18 @@ export function CreateRecordDialog({ domainId, open, onOpenChange }: Props) {
               checked={proxied}
               onCheckedChange={(v) => setProxied(!!v)}
             />
-            <Label htmlFor="proxied">{t(`${tp}.create.proxied`)}</Label>
+            <Label htmlFor="proxied">{t("admin.services.dns.records.create.proxied")}</Label>
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t(`${tp}.create.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={createRecord.isPending || !name.trim() || !type || !content.trim()}
             >
-              {createRecord.isPending ? t("common.loading") : t(`${tp}.create.save`)}
+              {createRecord.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

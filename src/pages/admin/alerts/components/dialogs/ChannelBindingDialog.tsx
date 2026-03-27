@@ -146,13 +146,13 @@ export function ChannelBindingDialog({ rule, open, onOpenChange }: Props) {
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t("admin.alerts.rules.channelBinding.cancel")}
+            {t("common.cancel")}
           </Button>
           <Button
             onClick={handleSave}
             disabled={isLoading || updateChannels.isPending || !hasChanges}
           >
-            {t("admin.alerts.rules.channelBinding.save")}
+            {t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -81,10 +81,10 @@ export function GroupSortableRow({
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(group)}>
                 <Pencil className="h-4 w-4" />
-                <span className="sr-only">{t("admin.groups.actions.edit")}</span>
+                <span className="sr-only">{t("common.edit")}</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.groups.actions.edit")}</TooltipContent>
+            <TooltipContent>{t("common.edit")}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -95,10 +95,10 @@ export function GroupSortableRow({
                 onClick={() => onDelete(group)}
               >
                 <Trash2 className="h-4 w-4" />
-                <span className="sr-only">{t("admin.groups.actions.delete")}</span>
+                <span className="sr-only">{t("common.delete")}</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.groups.actions.delete")}</TooltipContent>
+            <TooltipContent>{t("common.delete")}</TooltipContent>
           </Tooltip>
         </div>
       </TableCell>

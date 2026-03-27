@@ -263,7 +263,7 @@ export function SortableRow({
                 <Pencil className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.nodes.actions.edit")}</TooltipContent>
+            <TooltipContent>{t("common.edit")}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>

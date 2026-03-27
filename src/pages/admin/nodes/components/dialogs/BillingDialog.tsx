@@ -125,7 +125,7 @@ function BillingForm({
       ...form,
       expiry_date: dateStrToTimestamp(expiryDate),
     };
-    const toastId = toast.loading(t("admin.nodes.billing.toast.saving"));
+    const toastId = toast.loading(t("common.saving"));
     upsertBilling.mutate(
       { uuid: server.uuid, payload },
       {
@@ -146,7 +146,7 @@ function BillingForm({
 
   const handleDelete = () => {
     if (!server) return;
-    const toastId = toast.loading(t("admin.nodes.billing.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteBilling.mutate(server.uuid, {
       onSuccess: () => {
         toast.success(t("admin.nodes.billing.toast.deleteSuccess"), {
@@ -155,7 +155,7 @@ function BillingForm({
         onOpenChange(false);
       },
       onError: () => {
-        toast.error(t("admin.nodes.billing.toast.deleteFailed"), {
+        toast.error(t("common.deleteFailed"), {
           id: toastId,
         });
       },
@@ -285,12 +285,12 @@ function BillingForm({
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
-            {t("admin.nodes.billing.cancel")}
+            {t("common.cancel")}
           </Button>
           <Button type="submit" disabled={upsertBilling.isPending}>
             {upsertBilling.isPending
               ? t("common.loading")
-              : t("admin.nodes.billing.save")}
+              : t("common.save")}
           </Button>
         </div>
       </DialogFooter>

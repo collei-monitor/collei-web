@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useCreateDdnsTask, useDnsDomains, useDnsRecords } from "@/services/dns";
@@ -96,14 +96,13 @@ export function CreateDdnsTaskDialog({ open, onOpenChange }: Props) {
     });
   };
 
-  const tp = "admin.services.dns.ddns";
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.create.title`)}</DialogTitle>
-          <DialogDescription>{t(`${tp}.create.description`)}</DialogDescription>
+          <DialogTitle>{t("admin.services.dns.ddns.create.title")}</DialogTitle>
+          <DialogDescription>{t("admin.services.dns.ddns.create.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Domain selector (helper to filter records) */}
@@ -125,10 +124,10 @@ export function CreateDdnsTaskDialog({ open, onOpenChange }: Props) {
 
           {/* Record selector */}
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.record`)}</Label>
+            <Label>{t("admin.services.dns.ddns.create.record")}</Label>
             <Select value={recordId} onValueChange={setRecordId} disabled={!domainId}>
               <SelectTrigger>
-                <SelectValue placeholder={t(`${tp}.create.recordPlaceholder`)} />
+                <SelectValue placeholder={t("admin.services.dns.ddns.create.recordPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {records.map((r) => (
@@ -142,7 +141,7 @@ export function CreateDdnsTaskDialog({ open, onOpenChange }: Props) {
 
           {/* Server selector */}
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.server`)}</Label>
+            <Label>{t("admin.services.dns.ddns.create.server")}</Label>
             <Popover open={serverPopoverOpen} onOpenChange={setServerPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -154,16 +153,16 @@ export function CreateDdnsTaskDialog({ open, onOpenChange }: Props) {
                   <span className="truncate">
                     {serverUuid
                       ? (servers.find((s) => s.uuid === serverUuid)?.name ?? serverUuid)
-                      : t(`${tp}.create.serverPlaceholder`)}
+                      : t("admin.services.dns.ddns.create.serverPlaceholder")}
                   </span>
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-full p-0" align="start">
                 <Command>
-                  <CommandInput placeholder={t(`${tp}.create.serverSearch`)} />
+                  <CommandInput placeholder={t("admin.services.dns.ddns.create.serverSearch")} />
                   <CommandList>
-                    <CommandEmpty>{t(`${tp}.create.serverEmpty`)}</CommandEmpty>
+                    <CommandEmpty>{t("admin.services.dns.ddns.create.serverEmpty")}</CommandEmpty>
                     <CommandGroup>
                       {servers.map((s) => (
                         <CommandItem
@@ -186,7 +185,7 @@ export function CreateDdnsTaskDialog({ open, onOpenChange }: Props) {
 
           {/* IP version */}
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.ipVersion`)}</Label>
+            <Label>{t("admin.services.dns.ddns.create.ipVersion")}</Label>
             <Select value={ipVersion} onValueChange={setIpVersion}>
               <SelectTrigger>
                 <SelectValue />
@@ -200,13 +199,13 @@ export function CreateDdnsTaskDialog({ open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t(`${tp}.create.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={createTask.isPending || !recordId || !serverUuid}
             >
-              {createTask.isPending ? t("common.loading") : t(`${tp}.create.save`)}
+              {createTask.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

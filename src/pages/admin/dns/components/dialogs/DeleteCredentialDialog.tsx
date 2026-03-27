@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDeleteDnsCredential } from "@/services/dns";
 import type { CredentialRead } from "@/types/dns";
@@ -37,25 +37,24 @@ export function DeleteCredentialDialog({ credential, open, onOpenChange }: Props
     });
   };
 
-  const tp = "admin.services.dns.credentials";
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t(`${tp}.delete.title`)}</AlertDialogTitle>
+          <AlertDialogTitle>{t("admin.services.dns.credentials.delete.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t(`${tp}.delete.description`, { name: credential?.name ?? "" })}
+            {t("admin.services.dns.credentials.delete.description", { name: credential?.name ?? "" })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t(`${tp}.delete.cancel`)}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteCredential.isPending}
             className="bg-destructive text-white hover:bg-destructive/90"
           >
-            {deleteCredential.isPending ? t("common.loading") : t(`${tp}.delete.confirm`)}
+            {deleteCredential.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+﻿import { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useDnsDomains, useDnsCredentials } from "@/services/dns";
@@ -21,9 +21,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Plus, Pencil, Trash2 } from "lucide-react";
-import { CreateDomainDialog } from "../services/dns/components/dialogs/CreateDomainDialog";
-import { EditDomainDialog } from "../services/dns/components/dialogs/EditDomainDialog";
-import { DeleteDomainDialog } from "../services/dns/components/dialogs/DeleteDomainDialog";
+import { CreateDomainDialog } from "./components/dialogs/CreateDomainDialog";
+import { EditDomainDialog } from "./components/dialogs/EditDomainDialog";
+import { DeleteDomainDialog } from "./components/dialogs/DeleteDomainDialog";
 
 export default function DomainsPage() {
   const { t } = useTranslation();
@@ -51,7 +51,6 @@ export default function DomainsPage() {
     return new Date(ts * 1000).toLocaleString();
   }, []);
 
-  const tp = "admin.services.dns.domains";
 
   return (
     <TooltipProvider>
@@ -59,12 +58,12 @@ export default function DomainsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {t(`${tp}.title`)}
+              {t("admin.services.dns.domains.title")}
             </h1>
           </div>
           <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
             <Plus className="h-4 w-4" />
-            {t(`${tp}.add`)}
+            {t("admin.services.dns.domains.add")}
           </Button>
         </div>
 
@@ -78,10 +77,10 @@ export default function DomainsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t(`${tp}.table.domain`)}</TableHead>
-                <TableHead>{t(`${tp}.table.credential`)}</TableHead>
-                <TableHead>{t(`${tp}.table.syncStatus`)}</TableHead>
-                <TableHead>{t(`${tp}.table.lastSync`)}</TableHead>
+                <TableHead>{t("admin.services.dns.domains.table.domain")}</TableHead>
+                <TableHead>{t("admin.services.dns.domains.table.credential")}</TableHead>
+                <TableHead>{t("admin.services.dns.domains.table.syncStatus")}</TableHead>
+                <TableHead>{t("admin.services.dns.domains.table.lastSync")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -99,7 +98,7 @@ export default function DomainsPage() {
               ) : domains.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                    {t(`${tp}.empty`)}
+                    {t("admin.services.dns.domains.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -112,18 +111,18 @@ export default function DomainsPage() {
                       onClick={() => navigate(`/admin/dns/domains/${dom.id}`)}
                     >
                       <TableCell className="font-medium">{dom.domain_name}</TableCell>
-                      <TableCell>{cred?.name ?? t(`${tp}.noCredential`)}</TableCell>
+                      <TableCell>{cred?.name ?? t("admin.services.dns.domains.noCredential")}</TableCell>
                       <TableCell>
                         <Badge variant={dom.sync_status === "synced" ? "default" : "secondary"}>
                           {dom.sync_status === "synced"
-                            ? t(`${tp}.syncSynced`)
-                            : t(`${tp}.syncPending`)}
+                            ? t("admin.services.dns.domains.syncSynced")
+                            : t("admin.services.dns.domains.syncPending")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {dom.last_sync_at
                           ? formatTime(dom.last_sync_at)
-                          : t(`${tp}.neverSynced`)}
+                          : t("admin.services.dns.domains.neverSynced")}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>

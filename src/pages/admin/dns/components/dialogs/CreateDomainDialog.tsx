@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useCreateDnsDomain, useDnsCredentials } from "@/services/dns";
@@ -70,22 +70,21 @@ export function CreateDomainDialog({ open, onOpenChange }: Props) {
     });
   };
 
-  const tp = "admin.services.dns.domains";
   const canSubmit = credentialId !== "" && domainName.trim() !== "";
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.create.title`)}</DialogTitle>
-          <DialogDescription>{t(`${tp}.create.description`)}</DialogDescription>
+          <DialogTitle>{t("admin.services.dns.domains.create.title")}</DialogTitle>
+          <DialogDescription>{t("admin.services.dns.domains.create.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.credential`)}</Label>
+            <Label>{t("admin.services.dns.domains.create.credential")}</Label>
             <Select value={credentialId} onValueChange={setCredentialId}>
               <SelectTrigger>
-                <SelectValue placeholder={t(`${tp}.create.credentialPlaceholder`)} />
+                <SelectValue placeholder={t("admin.services.dns.domains.create.credentialPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {credentials.map((c) => (
@@ -97,31 +96,31 @@ export function CreateDomainDialog({ open, onOpenChange }: Props) {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.domainName`)}</Label>
+            <Label>{t("admin.services.dns.domains.create.domainName")}</Label>
             <Input
               value={domainName}
               onChange={(e) => setDomainName(e.target.value)}
-              placeholder={t(`${tp}.create.domainNamePlaceholder`)}
+              placeholder={t("admin.services.dns.domains.create.domainNamePlaceholder")}
               maxLength={253}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.zoneId`)}</Label>
+            <Label>{t("admin.services.dns.domains.create.zoneId")}</Label>
             <Input
               value={zoneId}
               onChange={(e) => setZoneId(e.target.value)}
-              placeholder={t(`${tp}.create.zoneIdPlaceholder`)}
+              placeholder={t("admin.services.dns.domains.create.zoneIdPlaceholder")}
               maxLength={128}
             />
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t(`${tp}.create.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createDomain.isPending || !canSubmit}>
-              {createDomain.isPending ? t("common.loading") : t(`${tp}.create.save`)}
+              {createDomain.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

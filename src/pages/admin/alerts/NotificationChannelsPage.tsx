@@ -76,9 +76,9 @@ export default function NotificationChannelsPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(Promise.all([refetchProviders(), refetchChannels()]), {
-      loading: t("admin.alerts.channels.toast.refreshing"),
-      success: t("admin.alerts.channels.toast.refreshSuccess"),
-      error: t("admin.alerts.channels.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.listRefreshed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetchProviders, refetchChannels, t]);
 
@@ -108,7 +108,7 @@ export default function NotificationChannelsPage() {
               <RefreshCw className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{t("admin.alerts.channels.refresh")}</TooltipContent>
+          <TooltipContent>{t("common.refreshList")}</TooltipContent>
         </Tooltip>
       </div>
 
@@ -132,7 +132,7 @@ export default function NotificationChannelsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("admin.alerts.channels.providers.table.name")}</TableHead>
-                <TableHead>{t("admin.alerts.channels.providers.table.type")}</TableHead>
+                <TableHead>{t("common.type")}</TableHead>
                 <TableHead>{t("admin.alerts.channels.providers.table.config")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
@@ -174,7 +174,7 @@ export default function NotificationChannelsPage() {
                               <Pencil className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>{t("admin.groups.actions.edit")}</TooltipContent>
+                          <TooltipContent>{t("common.edit")}</TooltipContent>
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -187,7 +187,7 @@ export default function NotificationChannelsPage() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>{t("admin.groups.actions.delete")}</TooltipContent>
+                          <TooltipContent>{t("common.delete")}</TooltipContent>
                         </Tooltip>
                       </div>
                     </TableCell>
@@ -279,7 +279,7 @@ export default function NotificationChannelsPage() {
                               <Pencil className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>{t("admin.groups.actions.edit")}</TooltipContent>
+                          <TooltipContent>{t("common.edit")}</TooltipContent>
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -292,7 +292,7 @@ export default function NotificationChannelsPage() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>{t("admin.groups.actions.delete")}</TooltipContent>
+                          <TooltipContent>{t("common.delete")}</TooltipContent>
                         </Tooltip>
                       </div>
                     </TableCell>

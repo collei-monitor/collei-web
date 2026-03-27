@@ -16,12 +16,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -53,10 +48,7 @@ const changePasswordSchema = z
 type ChangePasswordValues = z.infer<typeof changePasswordSchema>;
 
 const totpSchema = z.object({
-  totp_code: z
-    .string()
-    .length(6)
-    .regex(/^\d+$/),
+  totp_code: z.string().length(6).regex(/^\d+$/),
 });
 type TotpValues = z.infer<typeof totpSchema>;
 
@@ -118,7 +110,9 @@ function ChangePasswordCard() {
               name="current_password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("users.changePassword.currentPassword")}</FormLabel>
+                  <FormLabel>
+                    {t("users.changePassword.currentPassword")}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -154,7 +148,9 @@ function ChangePasswordCard() {
               name="confirm_password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("users.changePassword.confirmPassword")}</FormLabel>
+                  <FormLabel>
+                    {t("users.changePassword.confirmPassword")}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -164,7 +160,8 @@ function ChangePasswordCard() {
                     />
                   </FormControl>
                   <FormMessage>
-                    {form.formState.errors.confirm_password?.message === "__mismatch__"
+                    {form.formState.errors.confirm_password?.message ===
+                    "__mismatch__"
                       ? t("users.changePassword.errors.mismatch")
                       : form.formState.errors.confirm_password?.message}
                   </FormMessage>
@@ -173,9 +170,7 @@ function ChangePasswordCard() {
             />
             <div className="flex justify-end">
               <Button type="submit" disabled={loading}>
-                {loading
-                  ? t("users.changePassword.saving")
-                  : t("users.changePassword.save")}
+                {loading ? t("common.saving") : t("common.save")}
               </Button>
             </div>
           </form>
@@ -231,7 +226,7 @@ function EnableTwoFactorDialog({
       })
       .catch(() => setSetupError(t("users.setup.errors.networkError")))
       .finally(() => setSetupLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   async function onVerify(values: TotpValues) {
@@ -356,7 +351,7 @@ function EnableTwoFactorDialog({
                 {t("users.setup.back")}
               </span>
             ) : (
-              t("users.setup.cancel")
+              t("common.cancel")
             )}
           </AlertDialogCancel>
           {step === "setup" ? (
@@ -441,7 +436,7 @@ function DisableTwoFactorDialog({
         )}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>
-            {t("users.disable.cancel")}
+            {t("common.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -451,7 +446,9 @@ function DisableTwoFactorDialog({
               handleDisable();
             }}
           >
-            {loading ? t("users.disable.disabling") : t("users.disable.confirm")}
+            {loading
+              ? t("users.disable.disabling")
+              : t("users.disable.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -488,7 +485,7 @@ export default function UsersPage() {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">
-              {t("users.username")}
+              {t("common.username")}
             </span>
             <span className="text-sm font-medium">{user?.username ?? "—"}</span>
           </div>

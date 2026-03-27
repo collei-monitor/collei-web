@@ -44,7 +44,7 @@ export function CreateTargetDialog({ open, onOpenChange }: CreateTargetDialogPro
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const toastId = toast.loading(t("admin.services.network.toast.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createTarget.mutate(form, {
       onSuccess: () => {
         toast.success(t("admin.services.network.toast.createSuccess"), { id: toastId });
@@ -52,7 +52,7 @@ export function CreateTargetDialog({ open, onOpenChange }: CreateTargetDialogPro
         onOpenChange(false);
       },
       onError: () => {
-        toast.error(t("admin.services.network.toast.createFailed"), { id: toastId });
+        toast.error(t("common.createFailed"), { id: toastId });
       },
     });
   };
@@ -152,7 +152,7 @@ export function CreateTargetDialog({ open, onOpenChange }: CreateTargetDialogPro
               />
             </div>
             <div className="space-y-2">
-              <Label>{t("admin.services.network.create.enabled")}</Label>
+              <Label>{t("common.status")}</Label>
               <Select
                 value={String(form.enabled ?? 1)}
                 onValueChange={(v) =>
@@ -171,13 +171,13 @@ export function CreateTargetDialog({ open, onOpenChange }: CreateTargetDialogPro
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t("admin.services.network.create.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={createTarget.isPending || !form.name.trim() || !form.host.trim()}
             >
-              {createTarget.isPending ? t("common.loading") : t("admin.services.network.create.save")}
+              {createTarget.isPending ? t("common.loading") : t("common.create")}
             </Button>
           </DialogFooter>
         </form>

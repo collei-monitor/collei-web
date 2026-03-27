@@ -70,7 +70,7 @@ export function SFTPEditorDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] !max-w-7xl" aria-describedby={undefined}>
+      <DialogContent className="w-[95vw] max-w-7xl!" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{fileName}</DialogTitle>
           {filePath && (
@@ -159,7 +159,7 @@ export function SFTPEditorDialog({
               onClick={() => onOpenChange(false)}
               disabled={saving}
             >
-              {t("sftp.editor.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button onClick={onSave} disabled={saving || loading}>
               {saving ? (
@@ -167,7 +167,7 @@ export function SFTPEditorDialog({
               ) : (
                 <Save className="mr-2 h-4 w-4" />
               )}
-              {t("sftp.editor.save")}
+              {t("common.save")}
             </Button>
           </div>
         </div>

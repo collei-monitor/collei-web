@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDnsRecord } from "@/services/dns";
@@ -96,21 +96,20 @@ export function EditRecordDialog({ record, domainId, open, onOpenChange }: Props
     );
   };
 
-  const tp = "admin.services.dns.records";
   const showPriority = record?.type === "MX" || record?.type === "SRV";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.edit.title`)}</DialogTitle>
+          <DialogTitle>{t("admin.services.dns.records.edit.title")}</DialogTitle>
           <DialogDescription>
             {record ? `${record.name} (${record.type})` : ""}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t(`${tp}.edit.content`)}</Label>
+            <Label>{t("admin.services.dns.records.edit.content")}</Label>
             <Input
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -120,7 +119,7 @@ export function EditRecordDialog({ record, domainId, open, onOpenChange }: Props
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>{t(`${tp}.edit.ttl`)}</Label>
+              <Label>{t("admin.services.dns.records.edit.ttl")}</Label>
               <Input
                 type="number"
                 min={1}
@@ -130,7 +129,7 @@ export function EditRecordDialog({ record, domainId, open, onOpenChange }: Props
             </div>
             {showPriority && (
               <div className="space-y-2">
-                <Label>{t(`${tp}.edit.priority`)}</Label>
+                <Label>{t("admin.services.dns.records.edit.priority")}</Label>
                 <Input
                   type="number"
                   min={0}
@@ -147,15 +146,15 @@ export function EditRecordDialog({ record, domainId, open, onOpenChange }: Props
               checked={proxied}
               onCheckedChange={(v) => setProxied(!!v)}
             />
-            <Label htmlFor="editProxied">{t(`${tp}.edit.proxied`)}</Label>
+            <Label htmlFor="editProxied">{t("admin.services.dns.records.edit.proxied")}</Label>
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t(`${tp}.edit.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateRecord.isPending}>
-              {updateRecord.isPending ? t("common.loading") : t(`${tp}.edit.save`)}
+              {updateRecord.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

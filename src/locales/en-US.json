@@ -1,0 +1,1631 @@
+{
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "common": {
+    "appTitle": "Collei Monitor",
+    "appSubtitle": "Self-Hosted Server Monitoring Platform",
+    "login": "Login",
+    "logout": "Logout",
+    "loginAdmin": "Login",
+    "back": "Back",
+    "backHome": "Back to Home",
+    "loading": "Loading…",
+    "error": "Error",
+    "success": "Success",
+    "username": "Username",
+    "password": "Password",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "name": "Name",
+    "status": "Status",
+    "save": "Save",
+    "saving": "Saving…",
+    "refreshList": "Refresh List",
+    "confirmDelete": "Confirm Delete",
+    "refreshing": "Refreshing…",
+    "listRefreshed": "List refreshed",
+    "refreshFailed": "Refresh failed",
+    "updateFailed": "Update failed, please try again",
+    "deleting": "Deleting…",
+    "deleteFailed": "Delete failed, please try again",
+    "creating": "Creating…",
+    "createFailed": "Create failed, please try again",
+    "create": "Create",
+    "enable": "Enable",
+    "disable": "Disable",
+    "type": "Type",
+    "refresh": "Refresh",
+    "refreshSuccess": "Refresh successful",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "time": {
+    "day": "d",
+    "hour": "h",
+    "min": "m",
+    "sec": "s"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you're looking for doesn't exist. Please check the URL or go back to the home page."
+  },
+  "display": {
+    "title": "Collei Monitor",
+    "subtitle": "Self-hosted server monitoring platform. Monitor your infrastructure in real-time.",
+    "features": {
+      "monitoring": "Real-time Monitoring",
+      "security": "Secure & Reliable",
+      "selfHosted": "Self-Hosted Deployment"
+    },
+    "placeholder": "Monitoring data display area (to be implemented)",
+    "error": "Failed to load server data. Please try again later.",
+    "empty": "No servers found",
+    "groups": {
+      "all": "All"
+    },
+    "stats": {
+      "online": "{{count}} online",
+      "total": "{{count}} total"
+    },
+    "summary": {
+      "total": "Total Nodes",
+      "online": "Online",
+      "offline": "Offline",
+      "network": "Network"
+    },
+    "ws": {
+      "connected": "Live",
+      "disconnected": "Disconnected"
+    },
+    "view": {
+      "card": "Card view",
+      "list": "List view"
+    },
+    "server": {
+      "online": "Online",
+      "offline": "Offline",
+      "ram": "RAM",
+      "disk": "Disk",
+      "unknownRegion": "Unknown region",
+      "connecting": "Fetching data…",
+      "offlineHint": "Server offline",
+      "offlineFor": "Offline for {{duration}}"
+    },
+    "table": {
+      "os": "OS",
+      "network": "Network",
+      "networkUpload": "Upload",
+      "networkDownload": "Download"
+    },
+    "buildTime": "Built at {{time}}",
+    "billing": {
+      "free": "Free",
+      "month": "mo",
+      "quarter": "qtr",
+      "halfYear": "6mo",
+      "year": "yr",
+      "monthUnit": "mo",
+      "daysLeft": "d left",
+      "expired": "Expired",
+      "traffic": "Traffic"
+    }
+  },
+  "detail": {
+    "notFound": "Server not found",
+    "tabs": {
+      "network": "Network"
+    },
+    "info": {
+      "arch": "Architecture",
+      "uptime": "Uptime",
+      "upload": "Upload Speed",
+      "download": "Download Speed",
+      "connections": "Connections",
+      "process": "Processes",
+      "virtualization": "Virtualization",
+      "totalUpload": "Total Upload",
+      "totalDownload": "Total Download",
+      "lastOnline": "Last Online"
+    },
+    "chart": {
+      "title": "Historical Metrics",
+      "cpu": "CPU Usage",
+      "memory": "Memory Usage",
+      "ram": "RAM",
+      "disk": "Disk Usage",
+      "network": "Network Speed",
+      "netIn": "Download",
+      "netOut": "Upload",
+      "connections": "Connections",
+      "process": "Processes",
+      "range": {
+        "realtime": "Real-time",
+        "1h": "1 Hour",
+        "4h": "4 Hours",
+        "1d": "1 Day",
+        "3d": "3 Days",
+        "custom": "Custom"
+      },
+      "customRange": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "apply": "Apply"
+      }
+    },
+    "network": {
+      "chartTitle": "Network Probe Latency",
+      "empty": "No network probe data available",
+      "range": {
+        "realtime": "Real-time",
+        "1h": "Last 1h",
+        "6h": "Last 6h",
+        "12h": "Last 12h",
+        "24h": "Last 24h",
+        "custom": "Custom"
+      },
+      "metrics": {
+        "medianLatency": "Median Latency",
+        "maxLatency": "Max Latency",
+        "minLatency": "Min Latency"
+      },
+      "card": {
+        "latency": "Latency",
+        "packetLoss": "Packet Loss"
+      },
+      "areaMode": "Peak cut",
+      "customRange": {
+        "startDate": "Start date",
+        "endDate": "End date"
+      }
+    }
+  },
+  "login": {
+    "title": "Login",
+    "description": "Sign in with your admin account",
+    "twoFactorTitle": "Two-Factor Authentication",
+    "twoFactorDescription": "Enter the 6-digit code from your authenticator app",
+    "password": "Password",
+    "totpCode": "Verification Code",
+    "loginButton": "Login",
+    "verifyButton": "Verify",
+    "loggingIn": "Logging in…",
+    "verifying": "Verifying…",
+    "backToPassword": "Back to Password Login",
+    "sso": {
+      "or": "Or continue with",
+      "loginWith": "Login with {{provider}}"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid username or password",
+      "tooManyAttempts": "Too many login attempts. Please try again later",
+      "invalidTotp": "Invalid verification code or challenge expired. Please login again",
+      "tooManyTotpAttempts": "Too many verification attempts. Please try again later",
+      "networkError": "Network error. Please check your connection",
+      "generalError": "Login failed. Please try again"
+    },
+    "validation": {
+      "usernameRequired": "Please enter username",
+      "passwordRequired": "Please enter password",
+      "totpInvalid": "Verification code must be 6 digits",
+      "totpNumericOnly": "Verification code must contain only numbers"
+    }
+  },
+  "users": {
+    "title": "User Settings",
+    "account": "Account Information",
+    "twoFactor": "Two-Factor Authentication",
+    "twoFactorEnabled": "Enabled",
+    "twoFactorDisabled": "Not Enabled",
+    "enableTwoFactor": "Enable 2FA",
+    "disableTwoFactor": "Disable 2FA",
+    "changePassword": {
+      "title": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "success": "Password changed successfully",
+      "errors": {
+        "wrongCurrent": "Current password is incorrect. Please try again",
+        "mismatch": "Passwords do not match",
+        "failed": "Failed to change password. Please try again",
+        "networkError": "Network error. Please try again"
+      }
+    },
+    "setup": {
+      "title": "Enable Two-Factor Authentication",
+      "step1Title": "Scan QR Code",
+      "step1Desc": "Scan the QR code below with Google Authenticator, Authy, or any TOTP app. Or manually enter the secret key.",
+      "secret": "Manual Entry Key",
+      "nextStep": "Next: Verify",
+      "step2Title": "Enter Verification Code",
+      "step2Desc": "Enter the 6-digit code from your authenticator app to complete setup.",
+      "totpCode": "Verification Code",
+      "confirmEnable": "Confirm & Enable",
+      "back": "Back",
+      "loading": "Loading…",
+      "verifying": "Verifying…",
+      "errors": {
+        "setupFailed": "Failed to get secret. Please try again",
+        "verifyFailed": "Invalid code. Please try again",
+        "networkError": "Network error. Please try again"
+      }
+    },
+    "disable": {
+      "title": "Disable Two-Factor Authentication",
+      "description": "Are you sure you want to disable two-factor authentication? This will reduce the security of your account.",
+      "confirm": "Confirm Disable",
+      "disabling": "Disabling…",
+      "errors": {
+        "failed": "Failed to disable. Please try again",
+        "networkError": "Network error. Please try again"
+      }
+    }
+  },
+  "admin": {
+    "nodes": {
+      "title": "Node Management",
+      "subtitle": "Manage all registered server nodes",
+      "resetSort": "Reset Sort",
+      "resetSortDesc": "Re-number sort values based on current list order",
+      "fetchError": "Failed to fetch server list. Please try again later.",
+      "empty": "No server nodes found",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "regionLocked": "Region Locked",
+      "searchPlaceholder": "Search name…",
+      "columns": "Customize Columns",
+      "add": "Add",
+      "table": {
+        "sort": "Sort",
+        "ip": "IP Address",
+        "groups": "Groups",
+        "version": "Version"
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "pending": "Pending"
+      },
+      "actions": {
+        "open": "Open menu",
+        "approve": "Approve",
+        "install": "Install",
+        "terminal": "Open Terminal",
+        "groups": "Manage Groups",
+        "show": "Show",
+        "hide": "Hide"
+      },
+      "edit": {
+        "title": "Edit Server",
+        "description": "Update the server display name, region, and sort order",
+        "region": "Region",
+        "regionPlaceholder": "Select region…",
+        "regionSearch": "Search country/region…",
+        "regionEmpty": "No matching region found",
+        "lockRegion": "Lock",
+        "tags": "Tags",
+        "tagPlaceholder": "Enter tag name",
+        "sort": "Sort Order",
+        "visibility": "Visibility"
+      },
+      "delete": {
+        "description": "Are you sure you want to delete server \"{{name}}\"? This action cannot be undone and all associated data will be removed."
+      },
+      "groups": {
+        "title": "Manage Groups",
+        "description": "Select the groups this server belongs to",
+        "empty": "No groups available"
+      },
+      "detail": {
+        "title": "Server Details",
+        "basicInfo": "Basic Info",
+        "hardwareInfo": "Hardware",
+        "networkInfo": "Network",
+        "runtimeInfo": "Runtime",
+        "groupInfo": "Groups",
+        "uuid": "UUID",
+        "region": "Region",
+        "os": "OS",
+        "arch": "Architecture",
+        "kernelVersion": "Kernel Version",
+        "virtualization": "Virtualization",
+        "cpuName": "CPU",
+        "cpuCores": "CPU Cores",
+        "memTotal": "Total Memory",
+        "swapTotal": "Swap",
+        "diskTotal": "Total Disk",
+        "ipv4": "IPv4",
+        "ipv6": "IPv6",
+        "totalFlowIn": "Total Inbound Traffic",
+        "totalFlowOut": "Total Outbound Traffic",
+        "lastOnline": "Last Online",
+        "bootTime": "Boot Time",
+        "version": "Agent Version",
+        "remark": "Remark",
+        "createdAt": "Created At",
+        "currentRunId": "Process ID",
+        "statisticsMode": "Statistics Mode",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "noGroup": "No group",
+        "unknown": "Unknown"
+      },
+      "toast": {
+        "sortResetting": "Resorting…",
+        "sortResetSuccess": "Sort reset",
+        "sortResetFailed": "Sort reset failed",
+        "editSuccess": "Server updated",
+        "showSuccess": "Server is now visible",
+        "hideSuccess": "Server is now hidden",
+        "visibilityFailed": "Action failed, please try again",
+        "approveSuccess": "Server approved",
+        "approveFailed": "Approval failed, please try again"
+      },
+      "billing": {
+        "title": "Billing",
+        "description": "Configure billing cycle, cost, and expiry date",
+        "billingCycle": "Billing Cycle",
+        "billingDay": "Billing Day",
+        "cost": "Cycle Cost",
+        "costPlaceholder": "0 = free",
+        "currency": "Currency",
+        "trafficThreshold": "Traffic Threshold",
+        "trafficResetDay": "Traffic Reset Day",
+        "accountingMode": "Accounting Mode",
+        "expiryDate": "Expiry Date",
+        "delete": "Delete Rule",
+        "hints": {
+          "cycleTitle": "Billing Cycle (months)",
+          "cycleRenew": "When the server is online and expires, it auto-renews by the billing cycle.",
+          "resetDayTitle": "Traffic Reset Day",
+          "resetDay0": "No reset",
+          "resetDayMinus1": "Reset on the last day of each month",
+          "resetDay131": "Reset on the specified day each month",
+          "resetDayFallback": "If unset, falls back to the billing day."
+        },
+        "cycles": {
+          "monthly": "Monthly",
+          "quarterly": "Quarterly",
+          "semiAnnual": "Semi-Annual",
+          "annual": "Annual"
+        },
+        "modes": {
+          "outOnly": "Outbound Only",
+          "inOnly": "Inbound Only",
+          "sum": "Total (In + Out)",
+          "max": "Max (In, Out)",
+          "min": "Min (In, Out)"
+        },
+        "toast": {
+          "saveSuccess": "Billing rule saved",
+          "saveFailed": "Save failed, please try again",
+          "deleteSuccess": "Billing rule deleted"
+        }
+      },
+      "trafficRule": {
+        "title": "Traffic Rule",
+        "description": "Configure traffic accounting mode, reset day, and threshold. Requires a billing rule to exist.",
+        "trafficThreshold": "Traffic Threshold",
+        "trafficThresholdHint": "Set to 0 for unlimited traffic",
+        "trafficResetDay": "Traffic Reset Day",
+        "accountingMode": "Accounting Mode",
+        "accountingModeHint": "Changing the mode or reset day will trigger a recalculation of cycle traffic",
+        "clear": "Clear Rule",
+        "hints": {
+          "resetDayTitle": "Traffic Reset Day",
+          "resetDayNull": "Unset — falls back to billing day",
+          "resetDay0": "No reset",
+          "resetDayMinus1": "Reset on the last day of each month",
+          "resetDay131": "Reset on the specified day each month"
+        },
+        "modes": {
+          "outOnly": "Outbound Only",
+          "inOnly": "Inbound Only",
+          "sum": "Total (In + Out)",
+          "max": "Max (In, Out)",
+          "min": "Min (In, Out)"
+        },
+        "toast": {
+          "saveSuccess": "Traffic rule saved",
+          "saveFailed": "Save failed, please try again",
+          "clearing": "Clearing…",
+          "clearSuccess": "Traffic rule cleared",
+          "clearFailed": "Clear failed, please try again"
+        }
+      },
+      "install": {
+        "title": "Install Agent",
+        "description": "Generate a one-click install command to deploy the monitoring agent on the target server",
+        "autoRegister": "Auto-register mode (use global registration token)",
+        "name": "Server Name",
+        "namePlaceholder": "Leave empty to use system hostname",
+        "remark": "Remark",
+        "remarkPlaceholder": "Optional remark",
+        "regTokenLabel": "Global Registration Token",
+        "serverTokenLabel": "Server Token",
+        "interval": "Report Interval (seconds)",
+        "enableSsh": "Enable Web SSH tunnel",
+        "setupCa": "Configure SSH CA passwordless login",
+        "force": "Force re-register",
+        "proxyDownload": "Download via panel proxy (requires configuration)",
+        "proxyHint": "This command downloads the install script and agent binary through the panel proxy",
+        "showAdvanced": "Show advanced options ▸",
+        "hideAdvanced": "Hide advanced options ▾",
+        "installDir": "Install Directory",
+        "installDirPlaceholder": "Default: /usr/local/bin",
+        "configDir": "Config Directory",
+        "configDirPlaceholder": "Default: /etc/collei-agent",
+        "version": "Version",
+        "command": "Install Command",
+        "hint": "Run this command as root on the target Linux server",
+        "caHint": "CA setup requires root privileges",
+        "passiveDesc": "Manually create a server record. An install command with a dedicated token will be generated after creation.",
+        "createServer": "Create Server",
+        "createSuccess": "Server created successfully",
+        "close": "Close",
+        "comingSoon": "Coming soon",
+        "error": {
+          "noRegToken": "Global registration token not configured. Please set it in system settings.",
+          "caRequiresSsh": "SSH CA setup requires SSH to be enabled",
+          "intervalPositive": "Report interval must be positive",
+          "nameInvalid": "Name cannot contain quotes or backslashes",
+          "nameRequired": "Please enter a server name"
+        }
+      }
+    },
+    "sidebar": {
+      "monitoring": "Monitoring",
+      "nodes": "Nodes",
+      "groups": "Groups",
+      "alerts": "Alerts",
+      "alertRules": "Alert Rules",
+      "notificationChannels": "Notification Channels",
+      "eventCenter": "Event Center",
+      "alertEngine": "Alert Engine",
+      "system": "System",
+      "account": "Account Settings",
+      "users": "Users",
+      "logs": "Audit Logs",
+      "settings": "Settings",
+      "settingsOIDC": "SSO Providers",
+      "services": "Services",
+      "servicesGroup": "Services",
+      "networkMonitor": "Network Monitor",
+      "remoteExec": "Remote Execution",
+      "dns": "DNS Management",
+      "dnsDomains": "Domains",
+      "dnsCredentials": "DNS Credentials",
+      "dnsDdns": "DDNS"
+    },
+    "header": {
+      "admin": "Admin Panel",
+      "myAccount": "My Account",
+      "accountSettings": "Account Settings"
+    },
+    "groups": {
+      "title": "Group Management",
+      "subtitle": "Manage server groups for categorized display",
+      "resetSort": "Reset Sort",
+      "fetchError": "Failed to fetch group list. Please try again later.",
+      "empty": "No groups found",
+      "add": "New Group",
+      "table": {
+        "sort": "Sort",
+        "serverCount": "Servers"
+      },
+      "actions": {
+        "open": "Open menu"
+      },
+      "servers": {
+        "search": "Search Servers",
+        "searchPlaceholder": "Enter server name or UUID",
+        "selected": "Selected Servers",
+        "selectedCount": "{{count}} server(s) selected",
+        "empty": "No servers available",
+        "noResults": "No matching servers found"
+      },
+      "create": {
+        "title": "New Group",
+        "description": "Create a new server group",
+        "name": "Group Name",
+        "namePlaceholder": "Enter group name (1-64 characters)",
+        "sort": "Sort Order",
+        "sortPlaceholder": "Leave blank to skip"
+      },
+      "edit": {
+        "title": "Edit Group",
+        "description": "Update the group name, sort order, or associated servers",
+        "name": "Group Name",
+        "sort": "Sort Order"
+      },
+      "delete": {
+        "description": "Are you sure you want to delete group \"{{name}}\"? This action cannot be undone. Servers in this group will not be deleted."
+      },
+      "toast": {
+        "sortResetting": "Resorting…",
+        "sortResetSuccess": "Sort reset",
+        "sortResetFailed": "Sort reset failed",
+        "createSuccess": "Group created",
+        "editSuccess": "Group updated",
+        "noChanges": "No changes",
+        "deleteSuccess": "Group deleted"
+      }
+    },
+    "alerts": {
+      "rules": {
+        "title": "Alert Rules",
+        "subtitle": "Manage alert trigger conditions. Alerts fire when metrics exceed thresholds.",
+        "add": "New Rule",
+        "fetchError": "Failed to fetch alert rules. Please try again later.",
+        "empty": "No alert rules found",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "table": {
+          "name": "Rule Name",
+          "metric": "Metric",
+          "condition": "Condition",
+          "threshold": "Threshold",
+          "duration": "Duration",
+          "enabled": "Enabled",
+          "off": "Off",
+          "mappings": "Target Bindings",
+          "channels": "Bind Channels",
+          "on": "On"
+        },
+        "metrics": {
+          "cpu": "CPU Usage",
+          "ram": "Memory Usage",
+          "swap": "Swap Usage",
+          "disk": "Disk Usage",
+          "load": "System Load",
+          "net_in": "Inbound Traffic",
+          "traffic_in": "Inbound Traffic",
+          "net_out": "Outbound Traffic",
+          "traffic_out": "Outbound Traffic",
+          "tcp": "TCP Connections",
+          "udp": "UDP Connections",
+          "process": "Processes",
+          "offline": "Offline Detection",
+          "expiry": "Expiry Reminder",
+          "login": "Login Notification",
+          "traffic_percent": "Traffic Percentage"
+        },
+        "durationUnit": "{{value}}s",
+        "thresholdUnits": {
+          "days": "days",
+          "percent": "%",
+          "ratio": "ratio 0~1",
+          "bytesPerSec": "bytes/s"
+        },
+        "thresholdHints": {
+          "expiry": "Days before expiry to remind",
+          "trafficPercent": "Traffic usage percentage",
+          "ratio": "0~1, e.g. 0.9 means 90%",
+          "load": "System load (absolute), usually reference CPU cores",
+          "netIn": "Inbound traffic rate",
+          "netOut": "Outbound traffic rate",
+          "tcp": "TCP connections",
+          "udp": "UDP connections",
+          "process": "Process count"
+        },
+        "create": {
+          "title": "New Alert Rule",
+          "description": "Create a new alert rule",
+          "name": "Rule Name",
+          "namePlaceholder": "Enter rule name (1-128 chars)",
+          "metric": "Metric",
+          "metricPlaceholder": "Select metric",
+          "condition": "Condition",
+          "conditionPlaceholder": "Select condition",
+          "threshold": "Threshold",
+          "thresholdPlaceholder": "Enter threshold",
+          "duration": "Duration (seconds)",
+          "durationPlaceholder": "Default 60s",
+          "enabled": "Enable immediately",
+          "notifyRecovery": "Enable recovery notification",
+          "customMessage": "Custom Message Template",
+          "customMessagePlaceholder": "Leave empty for default template. Variables: {server_name}, {metric}, {value}, {threshold}, {rule_name}, {condition}, {event}",
+          "customMessageHint": "Supports template variables. Login metric also supports: {username}, {ip}, {user_agent}, {login_method}",
+          "trafficNotifyStep": "Traffic Notify Step (%)",
+          "trafficNotifyStepPlaceholder": "e.g. 10 means notify every 10%"
+        },
+        "edit": {
+          "title": "Edit Alert Rule",
+          "description": "Modify alert rule trigger conditions and parameters",
+          "name": "Rule Name",
+          "metric": "Metric",
+          "condition": "Condition",
+          "threshold": "Threshold",
+          "duration": "Duration (seconds)",
+          "notifyRecovery": "Enable recovery notification",
+          "customMessage": "Custom Message Template",
+          "trafficNotifyStep": "Traffic Notify Step (%)"
+        },
+        "delete": {
+          "description": "Are you sure you want to delete alert rule \"{{name}}\"? This will cascade delete all associated mappings and alert history."
+        },
+        "targets": {
+          "title": "Manage Target Bindings",
+          "description": "Configure monitoring targets for this rule, with include and exclude modes",
+          "targetType": "Target Type",
+          "mode": "Mode",
+          "include": "Include",
+          "exclude": "Exclude",
+          "add": "Add Targets",
+          "empty": "No target bindings",
+          "server": "Server",
+          "group": "Group",
+          "global": "Global",
+          "globalAll": "All Servers",
+          "selectTargets": "Select Targets",
+          "searchPlaceholder": "Search by name…",
+          "selectedCount": "{{count}} selected",
+          "noResults": "No results found",
+          "whitelist": "Active Targets",
+          "blacklist": "Excluded Targets",
+          "emptyWhitelist": "No active targets",
+          "emptyBlacklist": "No excluded targets",
+          "batchSelected": "{{count}} selected",
+          "batchDelete": "Delete Selected ({{count}})",
+          "cancel": "Close"
+        },
+        "channelBinding": {
+          "title": "Bind Notification Channels",
+          "description": "Select channels to notify when this rule triggers",
+          "empty": "No channels available. Please create a notification channel first."
+        },
+        "toast": {
+          "createSuccess": "Alert rule created",
+          "editSuccess": "Alert rule updated",
+          "noChanges": "No changes",
+          "deleteSuccess": "Alert rule deleted",
+          "toggleSuccess": "Status updated",
+          "toggleFailed": "Status update failed",
+          "mappingBatchAdded": "{{count}} mapping(s) added",
+          "mappingBatchSkipped": "{{count}} duplicate mapping(s) skipped",
+          "mappingAddFailed": "Failed to add mapping",
+          "mappingDeleted": "Mapping deleted",
+          "mappingDeleteFailed": "Failed to delete mapping",
+          "targetAdded": "{{count}} target binding(s) added",
+          "targetAddFailed": "Failed to add target binding",
+          "targetDeleted": "Target binding deleted",
+          "targetBatchDeleted": "{{count}} target binding(s) removed",
+          "targetDeleteFailed": "Failed to delete target binding",
+          "channelsSaved": "Channel bindings saved",
+          "channelsSaveFailed": "Failed to save channel bindings"
+        }
+      },
+      "channels": {
+        "title": "Notification Channels",
+        "subtitle": "Manage notification channels and message providers for alert delivery",
+        "fetchError": "Failed to fetch data. Please try again later.",
+        "providers": {
+          "title": "Message Providers",
+          "add": "New Provider",
+          "empty": "No providers found",
+          "table": {
+            "name": "Provider Name",
+            "config": "Configuration"
+          },
+          "types": {
+            "webhook": "Webhook",
+            "telegram": "Telegram",
+            "email": "Email (SMTP)"
+          },
+          "fields": {
+            "webhook": {
+              "title": "Webhook Configuration",
+              "url": "Webhook URL",
+              "method": "HTTP Method"
+            },
+            "telegram": {
+              "title": "Telegram Configuration",
+              "botToken": "Bot Token"
+            },
+            "email": {
+              "title": "SMTP Email Configuration",
+              "smtpHost": "SMTP Host",
+              "smtpPort": "Port",
+              "smtpPassword": "Password",
+              "fromAddress": "From Address"
+            }
+          },
+          "create": {
+            "title": "New Provider",
+            "description": "Create a new message delivery provider",
+            "namePlaceholder": "Enter name (1-64 chars)",
+            "typePlaceholder": "Select provider type",
+            "addition": "Config JSON",
+            "additionPlaceholder": "Optional, e.g. {\"bot_token\": \"xxx\"}"
+          },
+          "edit": {
+            "title": "Edit Provider",
+            "description": "Modify provider configuration",
+            "addition": "Config JSON"
+          },
+          "delete": {
+            "description": "Are you sure you want to delete provider \"{{name}}\"? This will cascade delete all associated notification channels."
+          },
+          "toast": {
+            "createSuccess": "Provider created",
+            "editSuccess": "Provider updated",
+            "noChanges": "No changes",
+            "deleteSuccess": "Provider deleted"
+          }
+        },
+        "channels": {
+          "title": "Notification Channels",
+          "add": "New Channel",
+          "empty": "No channels found",
+          "test": "Send Test Notification",
+          "table": {
+            "name": "Channel Name",
+            "provider": "Provider",
+            "target": "Target"
+          },
+          "create": {
+            "title": "New Channel",
+            "description": "Create a new notification channel",
+            "name": "Channel Name",
+            "namePlaceholder": "Enter channel name (1-128 chars)",
+            "provider": "Provider",
+            "providerPlaceholder": "Select provider",
+            "target": "Target",
+            "targetPlaceholder": "chat_id / Webhook URL / Email"
+          },
+          "edit": {
+            "title": "Edit Channel",
+            "description": "Modify notification channel configuration",
+            "name": "Channel Name",
+            "provider": "Provider",
+            "providerPlaceholder": "Select provider",
+            "target": "Target"
+          },
+          "delete": {
+            "description": "Are you sure you want to delete channel \"{{name}}\"?"
+          },
+          "toast": {
+            "createSuccess": "Channel created",
+            "editSuccess": "Channel updated",
+            "noChanges": "No changes",
+            "deleteSuccess": "Channel deleted",
+            "testing": "Sending test notification…",
+            "testSuccess": "Test notification sent",
+            "testFailed": "Test notification failed"
+          }
+        }
+      },
+      "events": {
+        "title": "Event Center",
+        "subtitle": "View alert trigger and recovery history",
+        "fetchError": "Failed to fetch alert history. Please try again later.",
+        "empty": "No alert records found",
+        "filterServer": "Filter by Server",
+        "filterServerPlaceholder": "Enter server UUID",
+        "filterRule": "Filter by Rule",
+        "filterRulePlaceholder": "Enter rule ID",
+        "limit": "Limit",
+        "filter": "Filter",
+        "reset": "Reset",
+        "table": {
+          "id": "ID",
+          "serverUuid": "Server UUID",
+          "ruleId": "Rule ID",
+          "value": "Value",
+          "createdAt": "Triggered At",
+          "updatedAt": "Updated At"
+        },
+        "status": {
+          "firing": "Firing",
+          "resolved": "Resolved"
+        }
+      },
+      "engine": {
+        "title": "Alert Engine",
+        "subtitle": "View alert engine runtime status and state machine information",
+        "reload": "Reload Config",
+        "fetchError": "Failed to fetch engine status. Please try again later.",
+        "status": {
+          "title": "Engine Status",
+          "running": "Running",
+          "stopped": "Stopped",
+          "rulesCount": "Enabled Rules",
+          "mappingsCount": "Total Mappings",
+          "channelsCount": "Channels",
+          "statesCount": "State Entries",
+          "firingCount": "Firing",
+          "pendingCount": "Pending"
+        },
+        "states": {
+          "title": "State Machine Entries",
+          "empty": "No state entries",
+          "filterAll": "All",
+          "filterFiring": "Firing",
+          "filterPending": "Pending",
+          "filterOk": "OK",
+          "table": {
+            "server": "Server",
+            "rule": "Rule",
+            "metric": "Metric",
+            "value": "Current Value",
+            "pendingSince": "Pending Since",
+            "lastNotified": "Last Notified"
+          },
+          "status": {
+            "ok": "OK",
+            "pending": "Pending",
+            "firing": "Firing"
+          }
+        },
+        "toast": {
+          "refreshSuccess": "Refreshed",
+          "reloading": "Reloading config…",
+          "reloadSuccess": "Config reloaded",
+          "reloadFailed": "Reload failed, please try again"
+        }
+      }
+    },
+    "services": {
+      "network": {
+        "title": "Network Monitor",
+        "subtitle": "Manage probe targets and monitor latency/packet loss via distributed nodes",
+        "add": "New Target",
+        "fetchError": "Failed to fetch network targets, please try again",
+        "empty": "No network targets",
+        "noResults": "No matching targets found",
+        "searchPlaceholder": "Search name/host…",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "table": {
+          "name": "Name",
+          "host": "Host",
+          "protocol": "Protocol",
+          "port": "Port",
+          "interval": "Interval"
+        },
+        "protocols": {
+          "icmp": "ICMP",
+          "tcp": "TCP",
+          "http": "HTTP"
+        },
+        "actions": {
+          "dispatch": "Dispatch Config",
+          "viewStatus": "View Results"
+        },
+        "create": {
+          "title": "New Monitor Target",
+          "description": "Add a new network probe target",
+          "name": "Name",
+          "namePlaceholder": "e.g. Cloudflare DNS",
+          "host": "Host",
+          "hostPlaceholder": "IP address or hostname, e.g. 1.1.1.1",
+          "protocol": "Protocol",
+          "protocolPlaceholder": "Select protocol",
+          "port": "Port",
+          "portPlaceholder": "Required for tcp/http",
+          "interval": "Interval (seconds)",
+          "intervalPlaceholder": "Default 60"
+        },
+        "edit": {
+          "title": "Edit Monitor Target",
+          "description": "Modify the probe target configuration",
+          "name": "Name",
+          "host": "Host",
+          "protocol": "Protocol",
+          "port": "Port",
+          "portPlaceholder": "Required for tcp/http",
+          "interval": "Interval (seconds)"
+        },
+        "delete": {
+          "description": "Delete target \"{{name}}\"? This will cascade-delete all associated probe records."
+        },
+        "dispatch": {
+          "title": "Dispatch Config",
+          "description": "Configure which nodes probe this target",
+          "current": "Current Config",
+          "empty": "No dispatch rules — no nodes will probe this target",
+          "add": "Add Rule",
+          "addRule": "Add Rule",
+          "nodeType": "Node Type",
+          "nodeId": "Node",
+          "nodeIdPlaceholder": "Select server",
+          "allNodes": "All Nodes",
+          "selectedCount": "{{count}} selected",
+          "noServers": "No servers available",
+          "isExclude": "Mode",
+          "include": "Include",
+          "exclude": "Exclude",
+          "types": {
+            "global": "Global",
+            "server": "Specific Server"
+          },
+          "save": "Save Config",
+          "toast": {
+            "saveSuccess": "Dispatch config updated",
+            "saveFailed": "Save failed, please try again"
+          }
+        },
+        "status": {
+          "title": "Probe Results",
+          "empty": "No probe data yet",
+          "serverName": "Node",
+          "time": "Time",
+          "medianLatency": "Median Latency",
+          "maxLatency": "Max Latency",
+          "minLatency": "Min Latency",
+          "packetLoss": "Packet Loss"
+        },
+        "toast": {
+          "createSuccess": "Target created",
+          "editSuccess": "Target updated",
+          "deleteSuccess": "Target deleted"
+        }
+      },
+      "remote": {
+        "title": "Remote Execution",
+        "subtitle": "Dispatch commands to approved Agent nodes and view results",
+        "empty": "No task records",
+        "fetchError": "Failed to fetch tasks. Please try again later.",
+        "newTask": "New Task",
+        "deleteTask": "Delete Task",
+        "viewDetail": "View Detail",
+        "table": {
+          "id": "Task ID",
+          "payload": "Command",
+          "timeout": "Timeout(s)",
+          "createdAt": "Created At",
+          "actions": "Actions"
+        },
+        "taskType": {
+          "shell": "Shell",
+          "command": "Command",
+          "script": "Script",
+          "upgrade_agent": "Upgrade Agent"
+        },
+        "status": {
+          "pending": "Pending",
+          "sent": "Sent",
+          "running": "Running",
+          "success": "Success",
+          "failed": "Failed",
+          "timeout": "Timeout"
+        },
+        "create": {
+          "title": "Create Remote Task",
+          "description": "Select target servers and configure the command to execute",
+          "type": "Task Type",
+          "typePlaceholder": "Select task type",
+          "command": "Command",
+          "commandPlaceholder": "Enter command, e.g. apt update -y",
+          "script": "Script Content",
+          "scriptPlaceholder": "Enter script content",
+          "scriptArgs": "Script Arguments",
+          "scriptArgsPlaceholder": "Optional, space-separated",
+          "upgradeVersion": "Target Version",
+          "upgradeVersionPlaceholder": "e.g. 1.2.0",
+          "upgradeUrl": "Download URL",
+          "upgradeUrlPlaceholder": "Agent package download URL",
+          "timeout": "Timeout (seconds)",
+          "timeoutPlaceholder": "Default 300",
+          "servers": "Target Servers",
+          "serversPlaceholder": "Search and select servers",
+          "selectedCount": "{{count}} server(s) selected",
+          "selectAll": "Select All",
+          "deselectAll": "Deselect All",
+          "noApprovedServers": "No approved online servers",
+          "submit": "Dispatch Task"
+        },
+        "detail": {
+          "title": "Task Detail",
+          "taskInfo": "Task Info",
+          "executions": "Executions",
+          "executionDetail": "Execution Detail",
+          "server": "Server",
+          "exitCode": "Exit Code",
+          "dispatchedAt": "Dispatched At",
+          "completedAt": "Completed At",
+          "output": "Terminal Output",
+          "noOutput": "No output yet",
+          "viewOutput": "View Output",
+          "backToExecutions": "Back to Executions"
+        },
+        "confirm": {
+          "deleteTitle": "Confirm Delete Task",
+          "deleteDescription": "This will permanently delete the task along with all executions and logs. Continue?"
+        },
+        "toast": {
+          "creating": "Creating task…",
+          "createSuccess": "Task created",
+          "createFailed": "Failed to create task",
+          "deleting": "Deleting task…",
+          "deleteSuccess": "Task deleted",
+          "deleteFailed": "Failed to delete task",
+          "refreshSuccess": "Refreshed"
+        }
+      },
+      "dns": {
+        "title": "DNS Management",
+        "subtitle": "Manage DNS credentials, hosted domains, DNS records and DDNS tasks",
+        "fetchError": "Failed to fetch DNS data. Please try again later.",
+        "credentials": {
+          "title": "DNS Credentials",
+          "add": "Add Credential",
+          "empty": "No credentials",
+          "table": {
+            "provider": "Provider"
+          },
+          "validBadge": "Valid",
+          "invalidBadge": "Invalid",
+          "create": {
+            "title": "Add DNS Credential",
+            "description": "Create a new DNS provider credential",
+            "name": "Credential Name",
+            "namePlaceholder": "e.g. My Cloudflare",
+            "provider": "DNS Provider",
+            "providerPlaceholder": "Select DNS provider",
+            "providerOther": "Other Provider",
+            "providerOtherPlaceholder": "Enter provider identifier, e.g. cloudflare",
+            "credentials": "Authentication",
+            "credentialsJson": "Authentication (JSON)",
+            "credentialsJsonPlaceholder": "{\"auth_token\": \"xxx\"}"
+          },
+          "edit": {
+            "title": "Edit DNS Credential",
+            "description": "Update credential name or authentication (credentials are not displayed)",
+            "name": "Credential Name",
+            "updateCredentials": "Update Authentication",
+            "updateCredentialsHint": "Leave empty to keep existing credentials"
+          },
+          "delete": {
+            "title": "Delete Credential",
+            "description": "Are you sure you want to delete credential \"{{name}}\"? Associated domains will be unbound."
+          },
+          "providers": {
+            "cloudflare": "Cloudflare",
+            "aliyun": "Alibaba Cloud",
+            "dnspod": "DNSPod / Tencent Cloud",
+            "route53": "AWS Route53",
+            "other": "Other"
+          },
+          "fields": {
+            "cloudflare": {
+              "title": "Cloudflare Authentication",
+              "authToken": "API Token",
+              "authTokenPlaceholder": "Cloudflare API Token"
+            },
+            "aliyun": {
+              "title": "Alibaba Cloud Authentication",
+              "authKeyId": "Access Key ID",
+              "authKeyIdPlaceholder": "LTAI5t...",
+              "authSecret": "Access Key Secret",
+              "authSecretPlaceholder": "Access Key Secret"
+            },
+            "dnspod": {
+              "title": "DNSPod Authentication",
+              "authToken": "API Token",
+              "authTokenPlaceholder": "id,token format"
+            },
+            "route53": {
+              "title": "AWS Route53 Authentication",
+              "authAccessKey": "Access Key",
+              "authAccessKeyPlaceholder": "AKIA...",
+              "authAccessSecret": "Secret Key",
+              "authAccessSecretPlaceholder": "Secret Access Key"
+            }
+          },
+          "toast": {
+            "creating": "Creating credential...",
+            "createSuccess": "Credential created",
+            "createFailed": "Failed to create credential",
+            "editSaving": "Saving credential...",
+            "editSuccess": "Credential updated",
+            "editFailed": "Failed to update credential",
+            "noChanges": "No changes detected",
+            "deleting": "Deleting credential...",
+            "deleteSuccess": "Credential deleted",
+            "deleteFailed": "Failed to delete credential",
+            "refreshSuccess": "Refreshed"
+          }
+        },
+        "domains": {
+          "title": "Hosted Domains",
+          "add": "Add Domain",
+          "empty": "No domains",
+          "table": {
+            "domain": "Domain",
+            "credential": "Credential",
+            "syncStatus": "Sync Status",
+            "lastSync": "Last Synced"
+          },
+          "syncPending": "Pending",
+          "syncSynced": "Synced",
+          "neverSynced": "Never synced",
+          "noCredential": "Unbound",
+          "create": {
+            "title": "Add Domain",
+            "description": "Add a new hosted domain",
+            "credential": "Credential",
+            "credentialPlaceholder": "Select credential",
+            "domainName": "Domain Name",
+            "domainNamePlaceholder": "example.com",
+            "zoneId": "Zone ID (optional)",
+            "zoneIdPlaceholder": "Required for Cloudflare scoped tokens etc."
+          },
+          "edit": {
+            "title": "Edit Domain",
+            "description": "Change bound credential or update Zone ID",
+            "credential": "Credential",
+            "credentialPlaceholder": "Select credential",
+            "zoneId": "Zone ID",
+            "zoneIdPlaceholder": "Optional"
+          },
+          "delete": {
+            "title": "Delete Domain",
+            "description": "Are you sure you want to delete domain \"{{name}}\"? This will cascade delete all DNS records and DDNS tasks."
+          },
+          "toast": {
+            "creating": "Adding domain...",
+            "createSuccess": "Domain added",
+            "createFailed": "Failed to add domain",
+            "editSuccess": "Domain updated",
+            "editFailed": "Failed to update domain",
+            "noChanges": "No changes detected",
+            "deleting": "Deleting domain...",
+            "deleteSuccess": "Domain deleted",
+            "deleteFailed": "Failed to delete domain",
+            "syncing": "Syncing...",
+            "syncSuccess": "Sync complete",
+            "syncFailed": "Sync failed"
+          }
+        },
+        "records": {
+          "title": "DNS Records",
+          "add": "Add Record",
+          "sync": "Sync Records",
+          "syncHint": "Pull all records from DNS provider",
+          "empty": "No DNS records. Please sync first.",
+          "table": {
+            "name": "Host",
+            "content": "Value",
+            "ttl": "TTL",
+            "priority": "Priority",
+            "proxied": "Proxy"
+          },
+          "proxiedOn": "On",
+          "proxiedOff": "Off",
+          "create": {
+            "title": "Add DNS Record",
+            "description": "Add a new DNS record",
+            "name": "Host Record",
+            "namePlaceholder": "e.g. @ or www",
+            "type": "Record Type",
+            "typePlaceholder": "Select type",
+            "content": "Value",
+            "contentPlaceholder": "e.g. 1.2.3.4",
+            "ttl": "TTL (seconds)",
+            "ttlPlaceholder": "Default 600",
+            "priority": "Priority",
+            "priorityPlaceholder": "MX/SRV priority",
+            "proxied": "Cloudflare Proxy"
+          },
+          "edit": {
+            "title": "Edit DNS Record",
+            "description": "Modify DNS record",
+            "content": "Value",
+            "ttl": "TTL (seconds)",
+            "priority": "Priority",
+            "proxied": "Cloudflare Proxy"
+          },
+          "delete": {
+            "title": "Delete DNS Record",
+            "description": "Are you sure you want to delete record \"{{name}}\" ({{type}})? This will be synced to the DNS provider."
+          },
+          "toast": {
+            "creating": "Creating record...",
+            "createSuccess": "Record created",
+            "createFailed": "Failed to create record",
+            "editSaving": "Saving record...",
+            "editSuccess": "Record updated",
+            "editFailed": "Failed to update record",
+            "noChanges": "No changes detected",
+            "deleting": "Deleting record...",
+            "deleteSuccess": "Record deleted",
+            "deleteFailed": "Failed to delete record",
+            "syncing": "Syncing records...",
+            "syncSuccess": "Sync complete",
+            "syncFailed": "Sync failed"
+          }
+        },
+        "ddns": {
+          "title": "DDNS Tasks",
+          "add": "Create Task",
+          "empty": "No DDNS tasks",
+          "table": {
+            "record": "Bound Record",
+            "server": "Bound Server",
+            "ipVersion": "IP Version",
+            "lastIp": "Last IP",
+            "lastUpdated": "Last Updated",
+            "lastError": "Last Error",
+            "errorCount": "Errors"
+          },
+          "activeBadge": "Active",
+          "inactiveBadge": "Inactive",
+          "noIp": "None",
+          "noError": "None",
+          "create": {
+            "title": "Create DDNS Task",
+            "description": "Bind a DNS record to a server node for automatic IP sync",
+            "record": "DNS Record",
+            "recordPlaceholder": "Select DNS record",
+            "server": "Server Node",
+            "serverPlaceholder": "Select server",
+            "serverSearch": "Search servers...",
+            "serverEmpty": "No matching server found",
+            "ipVersion": "IP Version"
+          },
+          "edit": {
+            "title": "Edit DDNS Task",
+            "description": "Modify DDNS task server binding, IP version or active status",
+            "server": "Server Node",
+            "serverPlaceholder": "Select server",
+            "serverSearch": "Search servers...",
+            "serverEmpty": "No matching server found",
+            "ipVersion": "IP Version",
+            "active": "Enable Task"
+          },
+          "delete": {
+            "title": "Delete DDNS Task",
+            "description": "Are you sure you want to delete this DDNS task? IP will no longer be synced automatically."
+          },
+          "toast": {
+            "creating": "Creating task...",
+            "createSuccess": "DDNS task created",
+            "createFailed": "Failed to create task",
+            "editSuccess": "DDNS task updated",
+            "editFailed": "Failed to update task",
+            "noChanges": "No changes detected",
+            "deleting": "Deleting task...",
+            "deleteSuccess": "DDNS task deleted",
+            "deleteFailed": "Failed to delete task"
+          }
+        }
+      }
+    },
+    "logs": {
+      "title": "Audit Logs",
+      "subtitle": "View system audit logs including data changes, background tasks and runtime events",
+      "fetchError": "Failed to fetch audit logs. Please try again later.",
+      "empty": "No log records found",
+      "filter": {
+        "msgType": "Log Type",
+        "level": "Level",
+        "source": "Source",
+        "serverUuid": "Server UUID",
+        "serverUuidPlaceholder": "Enter server UUID",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "all": "All",
+        "search": "Search",
+        "reset": "Reset"
+      },
+      "msgTypes": {
+        "auth": "Auth",
+        "server": "Server",
+        "config": "Config",
+        "alert": "Alert",
+        "task": "Task",
+        "error": "Error",
+        "billing": "Billing",
+        "network": "Network",
+        "system": "System"
+      },
+      "levels": {
+        "info": "Info",
+        "warning": "Warning",
+        "error": "Error"
+      },
+      "table": {
+        "level": "Level",
+        "message": "Message",
+        "source": "Source",
+        "time": "Time",
+        "detail": "Detail",
+        "viewDetail": "View detail"
+      },
+      "detail": {
+        "title": "Log Detail"
+      },
+      "pagination": {
+        "total": "{{count}} total"
+      },
+      "toast": {
+        "refreshSuccess": "Logs refreshed"
+      }
+    },
+    "oidc": {
+      "title": "SSO Provider Management",
+      "subtitle": "Manage third-party SSO login providers (Google, GitHub, etc.)",
+      "add": "Add Provider",
+      "fetchError": "Failed to fetch providers. Please try again later.",
+      "empty": "No SSO providers configured",
+      "table": {
+        "clientId": "Client ID",
+        "secret": "Secret",
+        "secretSet": "Configured",
+        "secretMissing": "Missing",
+        "off": "Disabled",
+        "order": "Order"
+      },
+      "form": {
+        "namePlaceholder": "Enter a unique identifier",
+        "providerType": "Provider Type",
+        "providerTypePlaceholder": "Select provider type",
+        "clientId": "Client ID",
+        "clientIdPlaceholder": "Enter OAuth Client ID",
+        "clientSecret": "Client Secret",
+        "clientSecretPlaceholder": "Enter OAuth Client Secret",
+        "clientSecretEditPlaceholder": "Leave empty to keep existing secret",
+        "displayOrder": "Display Order",
+        "scope": "Custom Scope",
+        "scopePlaceholder": "Comma-separated, leave empty for defaults",
+        "addition": "Additional Config",
+        "additionPlaceholder": "Additional parameters in JSON format (optional)",
+        "secretStatus": "Current Secret"
+      },
+      "dialog": {
+        "createTitle": "Add SSO Provider",
+        "createDesc": "Configure a new third-party SSO login provider",
+        "editTitle": "Edit SSO Provider",
+        "editDesc": "Modify SSO provider configuration",
+        "create": "Add"
+      },
+      "delete": {
+        "title": "Delete SSO Provider",
+        "description": "Are you sure you want to delete provider \"{{name}}\"? This action cannot be undone."
+      },
+      "toast": {
+        "refreshSuccess": "Providers refreshed",
+        "createSuccess": "Provider created",
+        "updating": "Updating…",
+        "updateSuccess": "Provider updated",
+        "saveFailed": "Save failed",
+        "deleteSuccess": "Provider deleted",
+        "deleteFailed": "Delete failed"
+      }
+    }
+  },
+  "settings": {
+    "title": "System Settings",
+    "subtitle": "Manage global system configuration",
+    "general": {
+      "title": "General",
+      "desc": "Configure application name and agent registration token",
+      "appName": "App Name",
+      "appNameDesc": "The application name shown in the frontend",
+      "regToken": "Global Registration Token",
+      "regTokenDesc": "Token used by agents to register. Keep it secret.",
+      "regTokenPlaceholder": "Enter registration token",
+      "agentUrl": "Agent URL",
+      "agentUrlDesc": "The URL agents use to connect. Leave empty to use the current site URL.",
+      "agentInstallScriptUrl": "Install Script URL",
+      "agentInstallScriptUrlDesc": "Download URL for the agent install script. Leave empty to download directly from GitHub.",
+      "agentInstallScriptUrlPlaceholder": "https://example.com/install.sh",
+      "favicon": "Favicon",
+      "faviconDesc": "Upload a custom favicon icon. Common image formats are supported.",
+      "faviconUpload": "Upload Icon",
+      "faviconDelete": "Delete Icon",
+      "faviconUploading": "Uploading…",
+      "faviconSuccess": "Favicon updated",
+      "faviconFailed": "Favicon upload failed",
+      "faviconDeleted": "Favicon deleted",
+      "faviconDeleteFailed": "Favicon deletion failed",
+      "faviconTooLarge": "File size cannot exceed 2MB"
+    },
+    "themes": {
+      "title": "Display Themes",
+      "desc": "Upload and manage display page themes. Upload ZIP packages and switch between themes.",
+      "upload": "Upload Theme",
+      "uploading": "Uploading…",
+      "active": "Active",
+      "builtin": "Built-in",
+      "activateSuccess": "Theme activated",
+      "activateFailed": "Failed to activate theme",
+      "deleteSuccess": "Theme deleted",
+      "deleteFailed": "Failed to delete theme",
+      "uploadSuccess": "Theme uploaded successfully",
+      "uploadFailed": "Theme upload failed",
+      "deleteConfirm": "Delete Theme",
+      "deleteConfirmDesc": "Are you sure you want to delete the theme \"{{name}}\"? This action cannot be undone.",
+      "uploadHint": "Select a ZIP file to upload. It must contain theme.json and index.html.",
+      "files": "files",
+      "fileTooLarge": "File size cannot exceed 50MB",
+      "cannotDeleteBuiltin": "Built-in theme cannot be deleted",
+      "noThemes": "No themes available"
+    },
+    "script": {
+      "title": "Display Page Custom Code",
+      "desc": "Inject custom styles and scripts into the public display pages (home & server detail)",
+      "customHeaders": "Custom Head",
+      "customHeadersDesc": "Custom HTML injected into the page <head>, such as <style>, <link>, or <meta> tags",
+      "customHeadersPlaceholder": "<style>\n  body { background: #000; }\n</style>",
+      "customBody": "Custom Body",
+      "customBodyDesc": "Custom HTML appended to the page <body>, such as <script> tags",
+      "customBodyPlaceholder": "<script>\n  console.log('Hello');\n</script>"
+    },
+    "monitoring": {
+      "title": "Monitoring Parameters",
+      "desc": "Adjust offline detection and data retention policies",
+      "offlineThreshold": "Offline Threshold",
+      "offlineThresholdDesc": "Mark server offline if no report received within this time",
+      "offlineInterval": "Offline Check Interval",
+      "offlineIntervalDesc": "How often the heartbeat check runs",
+      "loadRetain": "Real-time load data retention time",
+      "loadRetainDesc": "Load data exceeding this time will be downsampled.",
+      "seconds": "seconds"
+    },
+    "dataRetain": {
+      "title": "Data Retention Policy",
+      "desc": "Configure how long various types of data are retained in the database"
+    },
+    "networkRetain": {
+      "title": "Network Probe Data",
+      "desc": "Configure data retention policy for network probe results",
+      "label": "Probe Data Retention (hours)",
+      "labelDesc": "How long network probe results are kept in the database. Default: 24 hours"
+    },
+    "loadRetain": {
+      "title": "Load Data",
+      "desc": "Configure data retention policy for node load metrics",
+      "label": "Load Data Retention (hours)",
+      "labelDesc": "How long node load data is kept in the database. Default: 72 hours"
+    },
+    "ipDb": {
+      "title": "IP Geolocation Database",
+      "desc": "Select the database for resolving agent IP locations and test it online",
+      "current": "Active Database",
+      "selectPlaceholder": "Select database",
+      "noDbAvailable": "No database files found. Place .mmdb files in the data/ directory.",
+      "testTitle": "Test IP Lookup",
+      "testDesc": "Enter any IP address to verify the selected database is working correctly",
+      "testIpPlaceholder": "e.g. 8.8.8.8",
+      "testButton": "Test",
+      "testing": "Looking up…",
+      "testSuccess": "Lookup successful",
+      "testResultDesc": "IP {{ip}} — Query results: {{code}}",
+      "testNotFound": "No record found for this IP address.",
+      "testFailed": "Lookup failed. Check the IP format and database file.",
+      "result": "Result:",
+      "resultNull": "Not found",
+      "disputedTitle": "Unified regional identifier",
+      "disputedDesc": "When enabled, all servers with region=TW are changed to CN, and future agent reports are converted automatically. Disabling stops future conversion, but already-changed records cannot be reverted.",
+      "disputedActive": "Enabled",
+      "disputedEnable": "Enable Merge",
+      "disputedDisable": "Disable",
+      "disputedActiveHint": "Territory merge is active. Disabling will only stop future conversions — records already changed from TW to CN cannot be reverted.",
+      "disputedConfirmWord": "CONFIRM",
+      "confirmTitle": "Confirm Territory Merge",
+      "confirmDesc": "This will immediately update all servers with region=TW to CN in the database. Already-changed records cannot be reverted.",
+      "confirmButton": "I understand the risk, enable"
+    },
+    "toast": {
+      "saveSuccess": "Configuration saved",
+      "saveFailed": "Save failed, please try again",
+      "saveConflict": "This setting is locked and cannot be changed",
+      "saveInvalid": "Invalid value, please check your input",
+      "deleteSuccess": "Configuration deleted",
+      "deleteConflict": "This setting is locked and cannot be deleted"
+    }
+  },
+  "ssh": {
+    "tabs": {
+      "terminal": "Terminal",
+      "files": "Files",
+      "hideFiles": "Hide Files"
+    },
+    "status": {
+      "idle": "Disconnected",
+      "creating": "Creating session",
+      "waiting": "Waiting for Agent",
+      "auth_required": "Auth required",
+      "authenticating": "Authenticating",
+      "connected": "Connected",
+      "error": "Error",
+      "closed": "Disconnected"
+    },
+    "auth": {
+      "title": "SSH Authentication",
+      "description": "Certificate auth failed. Please enter your password to connect.",
+      "password": "Password",
+      "connect": "Connect"
+    },
+    "terminal": {
+      "back": "Back to Nodes",
+      "connecting": "Connecting to {{name}}",
+      "reconnecting": "Reconnecting",
+      "disconnected": "Connection closed",
+      "error": "Error",
+      "noServer": "No server specified",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect"
+    }
+  },
+  "sftp": {
+    "status": {
+      "idle": "Disconnected",
+      "creating": "Creating session",
+      "waiting": "Connecting",
+      "auth_required": "Auth required",
+      "authenticating": "Authenticating",
+      "connected": "Connected",
+      "error": "Error",
+      "closed": "Disconnected"
+    },
+    "reconnect": "Reconnect",
+    "empty": "This directory is empty",
+    "itemCount": "{{count}} items",
+    "table": {
+      "size": "Size",
+      "permissions": "Permissions",
+      "modified": "Modified"
+    },
+    "actions": {
+      "mkdir": "New Folder",
+      "newFile": "New File",
+      "upload": "Upload Files",
+      "download": "Download",
+      "rename": "Rename"
+    },
+    "editor": {
+      "createTitle": "Create File",
+      "editTitle": "Edit File",
+      "createDescription": "Create and edit a new file",
+      "editDescription": "Edit file content online and save to server",
+      "fileName": "File Name",
+      "fileNamePlaceholder": "Enter file name, e.g. notes.txt"
+    },
+    "mkdir": {
+      "title": "New Folder",
+      "description": "Create a new folder in the current directory",
+      "name": "Folder Name",
+      "placeholder": "Enter folder name"
+    },
+    "rename": {
+      "title": "Rename",
+      "description": "Rename \"{{name}}\" to:",
+      "newName": "New Name",
+      "confirm": "Confirm"
+    },
+    "delete": {
+      "descriptionFile": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "descriptionDir": "Are you sure you want to delete directory \"{{name}}\" and all its contents? This action cannot be undone."
+    },
+    "toast": {
+      "sessionClosed": "SFTP session closed: {{reason}}",
+      "loadFailed": "Failed to load file list",
+      "cannotDownloadDir": "Cannot download a directory",
+      "downloading": "Downloading {{name}}…",
+      "downloadSuccess": "{{name}} downloaded",
+      "downloadFailed": "Download failed",
+      "uploadSuccess": "{{name}} uploaded",
+      "uploadFailed": "{{name}} upload failed",
+      "mkdirSuccess": "Folder \"{{name}}\" created",
+      "mkdirFailed": "Failed to create folder",
+      "deleteSuccess": "\"{{name}}\" deleted",
+      "deleteFailed": "Delete failed",
+      "renameSuccess": "Renamed successfully",
+      "renameFailed": "Rename failed",
+      "onlyFileEditable": "Only regular files can be edited",
+      "readFailed": "Failed to read file",
+      "saveSuccess": "File \"{{name}}\" saved",
+      "saveFailed": "Save failed",
+      "createFileSuccess": "File \"{{name}}\" created",
+      "fileNameRequired": "Please enter a file name"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDnsCredentials } from "@/services/dns";
@@ -21,9 +21,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
-import { CreateCredentialDialog } from "../services/dns/components/dialogs/CreateCredentialDialog";
-import { EditCredentialDialog } from "../services/dns/components/dialogs/EditCredentialDialog";
-import { DeleteCredentialDialog } from "../services/dns/components/dialogs/DeleteCredentialDialog";
+import { CreateCredentialDialog } from "./components/dialogs/CreateCredentialDialog";
+import { EditCredentialDialog } from "./components/dialogs/EditCredentialDialog";
+import { DeleteCredentialDialog } from "./components/dialogs/DeleteCredentialDialog";
 
 export default function CredentialsPage() {
   const { t } = useTranslation();
@@ -41,20 +41,19 @@ export default function CredentialsPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.services.dns.credentials.toast.refreshing"),
+      loading: t("common.refreshing"),
       success: t("admin.services.dns.credentials.toast.refreshSuccess"),
-      error: t("admin.services.dns.credentials.toast.refreshFailed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
-  const tp = "admin.services.dns.credentials";
 
   return (
     <TooltipProvider>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">
-            {t(`${tp}.title`)}
+            {t("admin.services.dns.credentials.title")}
           </h1>
           <div className="flex items-center gap-2">
             <Tooltip>
@@ -63,11 +62,11 @@ export default function CredentialsPage() {
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t("admin.services.dns.refresh")}</TooltipContent>
+              <TooltipContent>{t("common.refreshList")}</TooltipContent>
             </Tooltip>
             <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4" />
-              {t(`${tp}.add`)}
+              {t("admin.services.dns.credentials.add")}
             </Button>
           </div>
         </div>
@@ -82,9 +81,9 @@ export default function CredentialsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t(`${tp}.table.name`)}</TableHead>
-                <TableHead>{t(`${tp}.table.provider`)}</TableHead>
-                <TableHead>{t(`${tp}.table.valid`)}</TableHead>
+                <TableHead>{t("common.name")}</TableHead>
+                <TableHead>{t("admin.services.dns.credentials.table.provider")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -101,7 +100,7 @@ export default function CredentialsPage() {
               ) : credentials.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                    {t(`${tp}.empty`)}
+                    {t("admin.services.dns.credentials.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -112,8 +111,8 @@ export default function CredentialsPage() {
                     <TableCell>
                       <Badge variant={cred.is_valid ? "default" : "destructive"}>
                         {cred.is_valid
-                          ? t(`${tp}.validBadge`)
-                          : t(`${tp}.invalidBadge`)}
+                          ? t("admin.services.dns.credentials.validBadge")
+                          : t("admin.services.dns.credentials.invalidBadge")}
                       </Badge>
                     </TableCell>
                     <TableCell>

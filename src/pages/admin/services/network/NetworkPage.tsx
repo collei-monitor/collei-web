@@ -41,9 +41,9 @@ export default function NetworkPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.services.network.toast.refreshing"),
-      success: t("admin.services.network.toast.refreshSuccess"),
-      error: t("admin.services.network.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.listRefreshed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -74,7 +74,7 @@ export default function NetworkPage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.services.network.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refreshList")}</TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function NetworkPage() {
               <TableHead>{t("admin.services.network.table.protocol")}</TableHead>
               <TableHead>{t("admin.services.network.table.port")}</TableHead>
               <TableHead>{t("admin.services.network.table.interval")}</TableHead>
-              <TableHead>{t("admin.services.network.table.status")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
               <TableHead className="w-28" />
             </TableRow>
           </TableHeader>

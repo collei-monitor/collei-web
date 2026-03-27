@@ -25,14 +25,14 @@ export function DeleteTargetDialog({ target, open, onOpenChange }: DeleteTargetD
 
   const handleDelete = () => {
     if (!target) return;
-    const toastId = toast.loading(t("admin.services.network.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteTarget.mutate(target.id, {
       onSuccess: () => {
         toast.success(t("admin.services.network.toast.deleteSuccess"), { id: toastId });
         onOpenChange(false);
       },
       onError: () => {
-        toast.error(t("admin.services.network.toast.deleteFailed"), { id: toastId });
+        toast.error(t("common.deleteFailed"), { id: toastId });
       },
     });
   };
@@ -41,7 +41,7 @@ export function DeleteTargetDialog({ target, open, onOpenChange }: DeleteTargetD
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.services.network.delete.title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("admin.services.network.delete.description", {
               name: target?.name ?? "",
@@ -49,7 +49,7 @@ export function DeleteTargetDialog({ target, open, onOpenChange }: DeleteTargetD
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t("admin.services.network.delete.cancel")}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteTarget.isPending}
@@ -57,7 +57,7 @@ export function DeleteTargetDialog({ target, open, onOpenChange }: DeleteTargetD
           >
             {deleteTarget.isPending
               ? t("common.loading")
-              : t("admin.services.network.delete.confirm")}
+              : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

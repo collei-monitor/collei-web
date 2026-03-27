@@ -125,7 +125,7 @@ export function DispatchDialog({ target, open, onOpenChange }: DispatchDialogPro
 
   const handleSave = () => {
     if (!target) return;
-    const toastId = toast.loading(t("admin.services.network.dispatch.toast.saving"));
+    const toastId = toast.loading(t("common.saving"));
     setDispatch.mutate(
       { id: target.id, payload: { dispatches: rows } },
       {
@@ -344,12 +344,12 @@ export function DispatchDialog({ target, open, onOpenChange }: DispatchDialogPro
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t("admin.services.network.dispatch.cancel")}
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleSave} disabled={setDispatch.isPending}>
             {setDispatch.isPending
               ? t("common.loading")
-              : t("admin.services.network.dispatch.save")}
+              : t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

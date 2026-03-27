@@ -54,7 +54,7 @@ export function EditTargetDialog({ target, open, onOpenChange }: EditTargetDialo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!target) return;
-    const toastId = toast.loading(t("admin.services.network.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateTarget.mutate(
       { id: target.id, payload: form },
       {
@@ -63,7 +63,7 @@ export function EditTargetDialog({ target, open, onOpenChange }: EditTargetDialo
           onOpenChange(false);
         },
         onError: () => {
-          toast.error(t("admin.services.network.toast.editFailed"), { id: toastId });
+          toast.error(t("common.updateFailed"), { id: toastId });
         },
       },
     );
@@ -155,7 +155,7 @@ export function EditTargetDialog({ target, open, onOpenChange }: EditTargetDialo
               />
             </div>
             <div className="space-y-2">
-              <Label>{t("admin.services.network.edit.enabled")}</Label>
+              <Label>{t("common.status")}</Label>
               <Select
                 value={String(form.enabled ?? target?.enabled ?? 1)}
                 onValueChange={(v) =>
@@ -174,10 +174,10 @@ export function EditTargetDialog({ target, open, onOpenChange }: EditTargetDialo
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("admin.services.network.edit.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateTarget.isPending}>
-              {updateTarget.isPending ? t("common.loading") : t("admin.services.network.edit.save")}
+              {updateTarget.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

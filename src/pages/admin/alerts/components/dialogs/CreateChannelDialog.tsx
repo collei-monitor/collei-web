@@ -45,7 +45,7 @@ export function CreateChannelDialog({ open, onOpenChange }: Props) {
       provider_id: form.provider_id as number,
       target: form.target?.trim() || null,
     };
-    const toastId = toast.loading(t("admin.alerts.channels.channels.toast.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createChannel.mutate(payload, {
       onSuccess: () => {
         toast.success(t("admin.alerts.channels.channels.toast.createSuccess"), { id: toastId });
@@ -53,7 +53,7 @@ export function CreateChannelDialog({ open, onOpenChange }: Props) {
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.alerts.channels.channels.toast.createFailed"), { id: toastId });
+        toast.error(err.message || t("common.createFailed"), { id: toastId });
       },
     });
   };
@@ -109,13 +109,13 @@ export function CreateChannelDialog({ open, onOpenChange }: Props) {
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t("admin.alerts.channels.channels.create.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
               disabled={createChannel.isPending || !form.name.trim() || form.provider_id === ""}
             >
-              {createChannel.isPending ? t("common.loading") : t("admin.alerts.channels.channels.create.save")}
+              {createChannel.isPending ? t("common.loading") : t("common.create")}
             </Button>
           </DialogFooter>
         </form>

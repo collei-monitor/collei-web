@@ -45,9 +45,9 @@ export default function EventCenterPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.alerts.events.toast.refreshing"),
-      success: t("admin.alerts.events.toast.refreshSuccess"),
-      error: t("admin.alerts.events.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.listRefreshed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -84,7 +84,7 @@ export default function EventCenterPage() {
               <RefreshCw className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{t("admin.alerts.events.refresh")}</TooltipContent>
+          <TooltipContent>{t("common.refresh")}</TooltipContent>
         </Tooltip>
       </div>
 
@@ -144,7 +144,7 @@ export default function EventCenterPage() {
               <TableHead>{t("admin.alerts.events.table.id")}</TableHead>
               <TableHead>{t("admin.alerts.events.table.serverUuid")}</TableHead>
               <TableHead>{t("admin.alerts.events.table.ruleId")}</TableHead>
-              <TableHead>{t("admin.alerts.events.table.status")}</TableHead>
+              <TableHead>{t("common.status")}</TableHead>
               <TableHead>{t("admin.alerts.events.table.value")}</TableHead>
               <TableHead>{t("admin.alerts.events.table.createdAt")}</TableHead>
               <TableHead>{t("admin.alerts.events.table.updatedAt")}</TableHead>

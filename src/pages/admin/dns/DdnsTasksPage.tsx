@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+﻿import { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDdnsTasks } from "@/services/dns";
@@ -22,9 +22,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
-import { CreateDdnsTaskDialog } from "../services/dns/components/dialogs/CreateDdnsTaskDialog";
-import { EditDdnsTaskDialog } from "../services/dns/components/dialogs/EditDdnsTaskDialog";
-import { DeleteDdnsTaskDialog } from "../services/dns/components/dialogs/DeleteDdnsTaskDialog";
+import { CreateDdnsTaskDialog } from "./components/dialogs/CreateDdnsTaskDialog";
+import { EditDdnsTaskDialog } from "./components/dialogs/EditDdnsTaskDialog";
+import { DeleteDdnsTaskDialog } from "./components/dialogs/DeleteDdnsTaskDialog";
 
 export default function DdnsTasksPage() {
   const { t } = useTranslation();
@@ -49,9 +49,9 @@ export default function DdnsTasksPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.services.dns.ddns.toast.creating").replace(/…$/, ""),
-      success: t("admin.services.dns.credentials.toast.refreshSuccess"),
-      error: t("admin.services.dns.credentials.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.listRefreshed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -60,14 +60,13 @@ export default function DdnsTasksPage() {
     return new Date(ts * 1000).toLocaleString();
   }, []);
 
-  const tp = "admin.services.dns.ddns";
 
   return (
     <TooltipProvider>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">
-            {t(`${tp}.title`)}
+            {t("admin.services.dns.ddns.title")}
           </h1>
           <div className="flex items-center gap-2">
             <Tooltip>
@@ -76,11 +75,11 @@ export default function DdnsTasksPage() {
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t("admin.services.dns.refresh")}</TooltipContent>
+              <TooltipContent>{t("common.refreshList")}</TooltipContent>
             </Tooltip>
             <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4" />
-              {t(`${tp}.add`)}
+              {t("admin.services.dns.ddns.add")}
             </Button>
           </div>
         </div>
@@ -95,13 +94,13 @@ export default function DdnsTasksPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t(`${tp}.table.record`)}</TableHead>
-                <TableHead>{t(`${tp}.table.server`)}</TableHead>
-                <TableHead>{t(`${tp}.table.ipVersion`)}</TableHead>
-                <TableHead>{t(`${tp}.table.lastIp`)}</TableHead>
-                <TableHead>{t(`${tp}.table.active`)}</TableHead>
-                <TableHead>{t(`${tp}.table.lastUpdated`)}</TableHead>
-                <TableHead>{t(`${tp}.table.lastError`)}</TableHead>
+                <TableHead>{t("admin.services.dns.ddns.table.record")}</TableHead>
+                <TableHead>{t("admin.services.dns.ddns.table.server")}</TableHead>
+                <TableHead>{t("admin.services.dns.ddns.table.ipVersion")}</TableHead>
+                <TableHead>{t("admin.services.dns.ddns.table.lastIp")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead>{t("admin.services.dns.ddns.table.lastUpdated")}</TableHead>
+                <TableHead>{t("admin.services.dns.ddns.table.lastError")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -117,7 +116,7 @@ export default function DdnsTasksPage() {
               ) : ddnsTasks.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                    {t(`${tp}.empty`)}
+                    {t("admin.services.dns.ddns.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -131,20 +130,20 @@ export default function DdnsTasksPage() {
                         <Badge variant="outline">{task.ip_version.toUpperCase()}</Badge>
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {task.last_ip ?? t(`${tp}.noIp`)}
+                        {task.last_ip ?? t("admin.services.dns.ddns.noIp")}
                       </TableCell>
                       <TableCell>
                         <Badge variant={task.is_active ? "default" : "secondary"}>
                           {task.is_active
-                            ? t(`${tp}.activeBadge`)
-                            : t(`${tp}.inactiveBadge`)}
+                            ? t("admin.services.dns.ddns.activeBadge")
+                            : t("admin.services.dns.ddns.inactiveBadge")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {formatTime(task.last_updated)}
                       </TableCell>
                       <TableCell className="text-muted-foreground text-xs max-w-50 truncate">
-                        {task.last_error ?? t(`${tp}.noError`)}
+                        {task.last_error ?? t("admin.services.dns.ddns.noError")}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">

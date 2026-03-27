@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDdnsTask } from "@/services/dns";
@@ -92,7 +92,7 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
       return;
     }
 
-    const toastId = toast.loading(t("admin.services.dns.ddns.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateTask.mutate(
       { id: task.id, payload },
       {
@@ -107,18 +107,17 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
     );
   };
 
-  const tp = "admin.services.dns.ddns";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.edit.title`)}</DialogTitle>
-          <DialogDescription>{t(`${tp}.edit.description`)}</DialogDescription>
+          <DialogTitle>{t("admin.services.dns.ddns.edit.title")}</DialogTitle>
+          <DialogDescription>{t("admin.services.dns.ddns.edit.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t(`${tp}.edit.server`)}</Label>
+            <Label>{t("admin.services.dns.ddns.edit.server")}</Label>
             <Popover open={serverPopoverOpen} onOpenChange={setServerPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -130,16 +129,16 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
                   <span className="truncate">
                     {serverUuid
                       ? (servers.find((s) => s.uuid === serverUuid)?.name ?? serverUuid)
-                      : t(`${tp}.edit.serverPlaceholder`)}
+                      : t("admin.services.dns.ddns.edit.serverPlaceholder")}
                   </span>
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-full p-0" align="start">
                 <Command>
-                  <CommandInput placeholder={t(`${tp}.edit.serverSearch`)} />
+                  <CommandInput placeholder={t("admin.services.dns.ddns.edit.serverSearch")} />
                   <CommandList>
-                    <CommandEmpty>{t(`${tp}.edit.serverEmpty`)}</CommandEmpty>
+                    <CommandEmpty>{t("admin.services.dns.ddns.edit.serverEmpty")}</CommandEmpty>
                     <CommandGroup>
                       {servers.map((s) => (
                         <CommandItem
@@ -161,7 +160,7 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label>{t(`${tp}.edit.ipVersion`)}</Label>
+            <Label>{t("admin.services.dns.ddns.edit.ipVersion")}</Label>
             <Select value={ipVersion} onValueChange={setIpVersion}>
               <SelectTrigger>
                 <SelectValue />
@@ -174,7 +173,7 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
           </div>
 
           <div className="flex items-center justify-between">
-            <Label htmlFor="ddnsActive">{t(`${tp}.edit.active`)}</Label>
+            <Label htmlFor="ddnsActive">{t("admin.services.dns.ddns.edit.active")}</Label>
             <Switch
               id="ddnsActive"
               checked={isActive}
@@ -184,10 +183,10 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t(`${tp}.edit.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateTask.isPending || !serverUuid}>
-              {updateTask.isPending ? t("common.loading") : t(`${tp}.edit.save`)}
+              {updateTask.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

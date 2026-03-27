@@ -1,17 +1,9 @@
-import { useState, useCallback, useMemo } from "react";
+﻿import { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import {
-  useDnsCredentials,
-  useDnsDomains,
-  useDdnsTasks,
-} from "@/services/dns";
+import { useDnsCredentials, useDnsDomains, useDdnsTasks } from "@/services/dns";
 import { useServers } from "@/services/servers";
-import type {
-  CredentialRead,
-  DomainRead,
-  DdnsTaskRead,
-} from "@/types/dns";
+import type { CredentialRead, DomainRead, DdnsTaskRead } from "@/types/dns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,13 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  RefreshCw,
-  Plus,
-  Pencil,
-  Trash2,
-  List,
-} from "lucide-react";
+import { RefreshCw, Plus, Pencil, Trash2, List } from "lucide-react";
 
 import { CreateCredentialDialog } from "./components/dialogs/CreateCredentialDialog";
 import { EditCredentialDialog } from "./components/dialogs/EditCredentialDialog";
@@ -99,16 +85,18 @@ export default function DnsPage() {
   // ── DDNS task dialogs ─────────────────────────────────────────────────────
   const [createDdnsOpen, setCreateDdnsOpen] = useState(false);
   const [editDdnsTask, setEditDdnsTask] = useState<DdnsTaskRead | null>(null);
-  const [deleteDdnsTask, setDeleteDdnsTask] = useState<DdnsTaskRead | null>(null);
+  const [deleteDdnsTask, setDeleteDdnsTask] = useState<DdnsTaskRead | null>(
+    null,
+  );
 
   // ── refresh ───────────────────────────────────────────────────────────────
   const handleRefresh = useCallback(() => {
     toast.promise(
       Promise.all([refetchCreds(), refetchDomains(), refetchDdns()]),
       {
-        loading: t("admin.services.dns.credentials.toast.refreshing"),
-        success: t("admin.services.dns.credentials.toast.refreshSuccess"),
-        error: t("admin.services.dns.credentials.toast.refreshFailed"),
+        loading: t("common.refreshing"),
+        success: t("common.listRefreshed"),
+        error: t("common.refreshFailed"),
       },
     );
   }, [refetchCreds, refetchDomains, refetchDdns, t]);
@@ -122,8 +110,6 @@ export default function DnsPage() {
     return new Date(ts * 1000).toLocaleString();
   };
 
-  const tp = "admin.services.dns";
-
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -131,10 +117,10 @@ export default function DnsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {t(`${tp}.title`)}
+              {t("admin.services.dns.title")}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">
-              {t(`${tp}.subtitle`)}
+              {t("admin.services.dns.subtitle")}
             </p>
           </div>
           <Tooltip>
@@ -143,32 +129,40 @@ export default function DnsPage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t(`${tp}.refresh`)}</TooltipContent>
+            <TooltipContent>{t("common.refreshList")}</TooltipContent>
           </Tooltip>
         </div>
 
         {isError && (
           <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-            {t(`${tp}.fetchError`)}
+            {t("admin.services.dns.fetchError")}
           </div>
         )}
 
         {/* ── Credentials Section ─────────────────────────────────────────── */}
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{t(`${tp}.credentials.title`)}</h2>
-            <Button size="sm" className="gap-1.5" onClick={() => setCreateCredOpen(true)}>
+            <h2 className="text-lg font-semibold">
+              {t("admin.services.dns.credentials.title")}
+            </h2>
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setCreateCredOpen(true)}
+            >
               <Plus className="h-4 w-4" />
-              {t(`${tp}.credentials.add`)}
+              {t("admin.services.dns.credentials.add")}
             </Button>
           </div>
           <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t(`${tp}.credentials.table.name`)}</TableHead>
-                  <TableHead>{t(`${tp}.credentials.table.provider`)}</TableHead>
-                  <TableHead>{t(`${tp}.credentials.table.valid`)}</TableHead>
+                  <TableHead>{t("common.name")}</TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.credentials.table.provider")}
+                  </TableHead>
+                  <TableHead>{t("common.status")}</TableHead>
                   <TableHead className="w-12" />
                 </TableRow>
               </TableHeader>
@@ -176,16 +170,27 @@ export default function DnsPage() {
                 {isLoading ? (
                   Array.from({ length: 2 }).map((_, i) => (
                     <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-32" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-8" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : credentials.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
-                      {t(`${tp}.credentials.empty`)}
+                    <TableCell
+                      colSpan={4}
+                      className="h-24 text-center text-muted-foreground"
+                    >
+                      {t("admin.services.dns.credentials.empty")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -194,10 +199,12 @@ export default function DnsPage() {
                       <TableCell className="font-medium">{cred.name}</TableCell>
                       <TableCell>{cred.provider}</TableCell>
                       <TableCell>
-                        <Badge variant={cred.is_valid ? "default" : "destructive"}>
+                        <Badge
+                          variant={cred.is_valid ? "default" : "destructive"}
+                        >
                           {cred.is_valid
-                            ? t(`${tp}.credentials.validBadge`)
-                            : t(`${tp}.credentials.invalidBadge`)}
+                            ? t("admin.services.dns.credentials.validBadge")
+                            : t("admin.services.dns.credentials.invalidBadge")}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -226,7 +233,9 @@ export default function DnsPage() {
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>
-                            <TooltipContent>{t("common.delete")}</TooltipContent>
+                            <TooltipContent>
+                              {t("common.delete")}
+                            </TooltipContent>
                           </Tooltip>
                         </div>
                       </TableCell>
@@ -241,20 +250,34 @@ export default function DnsPage() {
         {/* ── Domains Section ─────────────────────────────────────────────── */}
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{t(`${tp}.domains.title`)}</h2>
-            <Button size="sm" className="gap-1.5" onClick={() => setCreateDomainOpen(true)}>
+            <h2 className="text-lg font-semibold">
+              {t("admin.services.dns.domains.title")}
+            </h2>
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setCreateDomainOpen(true)}
+            >
               <Plus className="h-4 w-4" />
-              {t(`${tp}.domains.add`)}
+              {t("admin.services.dns.domains.add")}
             </Button>
           </div>
           <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t(`${tp}.domains.table.domain`)}</TableHead>
-                  <TableHead>{t(`${tp}.domains.table.credential`)}</TableHead>
-                  <TableHead>{t(`${tp}.domains.table.syncStatus`)}</TableHead>
-                  <TableHead>{t(`${tp}.domains.table.lastSync`)}</TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.domains.table.domain")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.domains.table.credential")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.domains.table.syncStatus")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.domains.table.lastSync")}
+                  </TableHead>
                   <TableHead className="w-12" />
                 </TableRow>
               </TableHeader>
@@ -262,37 +285,63 @@ export default function DnsPage() {
                 {isLoading ? (
                   Array.from({ length: 2 }).map((_, i) => (
                     <TableRow key={i}>
-                      <TableCell><Skeleton className="h-4 w-40" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-                      <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-16" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-28" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-8" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : domains.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
-                      {t(`${tp}.domains.empty`)}
+                    <TableCell
+                      colSpan={5}
+                      className="h-24 text-center text-muted-foreground"
+                    >
+                      {t("admin.services.dns.domains.empty")}
                     </TableCell>
                   </TableRow>
                 ) : (
                   domains.map((dom) => {
-                    const cred = dom.credential_id ? credMap.get(dom.credential_id) : null;
+                    const cred = dom.credential_id
+                      ? credMap.get(dom.credential_id)
+                      : null;
                     return (
                       <TableRow key={dom.id}>
-                        <TableCell className="font-medium">{dom.domain_name}</TableCell>
-                        <TableCell>{cred?.name ?? t(`${tp}.domains.noCredential`)}</TableCell>
+                        <TableCell className="font-medium">
+                          {dom.domain_name}
+                        </TableCell>
                         <TableCell>
-                          <Badge variant={dom.sync_status === "synced" ? "default" : "secondary"}>
+                          {cred?.name ??
+                            t("admin.services.dns.domains.noCredential")}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              dom.sync_status === "synced"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
                             {dom.sync_status === "synced"
-                              ? t(`${tp}.domains.syncSynced`)
-                              : t(`${tp}.domains.syncPending`)}
+                              ? t("admin.services.dns.domains.syncSynced")
+                              : t("admin.services.dns.domains.syncPending")}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">
                           {dom.last_sync_at
                             ? formatTime(dom.last_sync_at)
-                            : t(`${tp}.domains.neverSynced`)}
+                            : t("admin.services.dns.domains.neverSynced")}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
@@ -307,7 +356,9 @@ export default function DnsPage() {
                                   <List className="h-4 w-4" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{t(`${tp}.records.title`)}</TooltipContent>
+                              <TooltipContent>
+                                {t("admin.services.dns.records.title")}
+                              </TooltipContent>
                             </Tooltip>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -320,7 +371,9 @@ export default function DnsPage() {
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{t("common.edit")}</TooltipContent>
+                              <TooltipContent>
+                                {t("common.edit")}
+                              </TooltipContent>
                             </Tooltip>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -333,7 +386,9 @@ export default function DnsPage() {
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{t("common.delete")}</TooltipContent>
+                              <TooltipContent>
+                                {t("common.delete")}
+                              </TooltipContent>
                             </Tooltip>
                           </div>
                         </TableCell>
@@ -349,23 +404,41 @@ export default function DnsPage() {
         {/* ── DDNS Tasks Section ──────────────────────────────────────────── */}
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">{t(`${tp}.ddns.title`)}</h2>
-            <Button size="sm" className="gap-1.5" onClick={() => setCreateDdnsOpen(true)}>
+            <h2 className="text-lg font-semibold">
+              {t("admin.services.dns.ddns.title")}
+            </h2>
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setCreateDdnsOpen(true)}
+            >
               <Plus className="h-4 w-4" />
-              {t(`${tp}.ddns.add`)}
+              {t("admin.services.dns.ddns.add")}
             </Button>
           </div>
           <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t(`${tp}.ddns.table.record`)}</TableHead>
-                  <TableHead>{t(`${tp}.ddns.table.server`)}</TableHead>
-                  <TableHead>{t(`${tp}.ddns.table.ipVersion`)}</TableHead>
-                  <TableHead>{t(`${tp}.ddns.table.lastIp`)}</TableHead>
-                  <TableHead>{t(`${tp}.ddns.table.active`)}</TableHead>
-                  <TableHead>{t(`${tp}.ddns.table.lastUpdated`)}</TableHead>
-                  <TableHead>{t(`${tp}.ddns.table.lastError`)}</TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.ddns.table.record")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.ddns.table.server")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.ddns.table.ipVersion")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.ddns.table.lastIp")}
+                  </TableHead>
+                  <TableHead>{t("common.status")}</TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.ddns.table.lastUpdated")}
+                  </TableHead>
+                  <TableHead>
+                    {t("admin.services.dns.ddns.table.lastError")}
+                  </TableHead>
                   <TableHead className="w-12" />
                 </TableRow>
               </TableHeader>
@@ -374,14 +447,19 @@ export default function DnsPage() {
                   Array.from({ length: 2 }).map((_, i) => (
                     <TableRow key={i}>
                       {Array.from({ length: 8 }).map((_, j) => (
-                        <TableCell key={j}><Skeleton className="h-4 w-20" /></TableCell>
+                        <TableCell key={j}>
+                          <Skeleton className="h-4 w-20" />
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : ddnsTasks.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                      {t(`${tp}.ddns.empty`)}
+                    <TableCell
+                      colSpan={8}
+                      className="h-24 text-center text-muted-foreground"
+                    >
+                      {t("admin.services.dns.ddns.empty")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -389,26 +467,35 @@ export default function DnsPage() {
                     const server = serverMap.get(task.server_uuid);
                     return (
                       <TableRow key={task.id}>
-                        <TableCell className="font-mono text-xs">#{task.record_id}</TableCell>
-                        <TableCell>{server?.name ?? task.server_uuid}</TableCell>
+                        <TableCell className="font-mono text-xs">
+                          #{task.record_id}
+                        </TableCell>
                         <TableCell>
-                          <Badge variant="outline">{task.ip_version.toUpperCase()}</Badge>
+                          {server?.name ?? task.server_uuid}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">
+                            {task.ip_version.toUpperCase()}
+                          </Badge>
                         </TableCell>
                         <TableCell className="font-mono text-xs">
-                          {task.last_ip ?? t(`${tp}.ddns.noIp`)}
+                          {task.last_ip ?? t("admin.services.dns.ddns.noIp")}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={task.is_active ? "default" : "secondary"}>
+                          <Badge
+                            variant={task.is_active ? "default" : "secondary"}
+                          >
                             {task.is_active
-                              ? t(`${tp}.ddns.activeBadge`)
-                              : t(`${tp}.ddns.inactiveBadge`)}
+                              ? t("admin.services.dns.ddns.activeBadge")
+                              : t("admin.services.dns.ddns.inactiveBadge")}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">
                           {formatTime(task.last_updated)}
                         </TableCell>
                         <TableCell className="text-muted-foreground text-xs max-w-50 truncate">
-                          {task.last_error ?? t(`${tp}.ddns.noError`)}
+                          {task.last_error ??
+                            t("admin.services.dns.ddns.noError")}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1">
@@ -423,7 +510,9 @@ export default function DnsPage() {
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{t("common.edit")}</TooltipContent>
+                              <TooltipContent>
+                                {t("common.edit")}
+                              </TooltipContent>
                             </Tooltip>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -436,7 +525,9 @@ export default function DnsPage() {
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{t("common.delete")}</TooltipContent>
+                              <TooltipContent>
+                                {t("common.delete")}
+                              </TooltipContent>
                             </Tooltip>
                           </div>
                         </TableCell>
@@ -451,45 +542,68 @@ export default function DnsPage() {
       </div>
 
       {/* ── Dialogs ─────────────────────────────────────────────────────────── */}
-      <CreateCredentialDialog open={createCredOpen} onOpenChange={setCreateCredOpen} />
+      <CreateCredentialDialog
+        open={createCredOpen}
+        onOpenChange={setCreateCredOpen}
+      />
       <EditCredentialDialog
         credential={editCred}
         open={!!editCred}
-        onOpenChange={(v) => { if (!v) setEditCred(null); }}
+        onOpenChange={(v) => {
+          if (!v) setEditCred(null);
+        }}
       />
       <DeleteCredentialDialog
         credential={deleteCred}
         open={!!deleteCred}
-        onOpenChange={(v) => { if (!v) setDeleteCred(null); }}
+        onOpenChange={(v) => {
+          if (!v) setDeleteCred(null);
+        }}
       />
 
-      <CreateDomainDialog open={createDomainOpen} onOpenChange={setCreateDomainOpen} />
+      <CreateDomainDialog
+        open={createDomainOpen}
+        onOpenChange={setCreateDomainOpen}
+      />
       <EditDomainDialog
         domain={editDomain}
         open={!!editDomain}
-        onOpenChange={(v) => { if (!v) setEditDomain(null); }}
+        onOpenChange={(v) => {
+          if (!v) setEditDomain(null);
+        }}
       />
       <DeleteDomainDialog
         domain={deleteDomain}
         open={!!deleteDomain}
-        onOpenChange={(v) => { if (!v) setDeleteDomain(null); }}
+        onOpenChange={(v) => {
+          if (!v) setDeleteDomain(null);
+        }}
       />
       <RecordsDialog
         domain={recordsDomain}
         open={!!recordsDomain}
-        onOpenChange={(v) => { if (!v) setRecordsDomain(null); }}
+        onOpenChange={(v) => {
+          if (!v) setRecordsDomain(null);
+        }}
       />
 
-      <CreateDdnsTaskDialog open={createDdnsOpen} onOpenChange={setCreateDdnsOpen} />
+      <CreateDdnsTaskDialog
+        open={createDdnsOpen}
+        onOpenChange={setCreateDdnsOpen}
+      />
       <EditDdnsTaskDialog
         task={editDdnsTask}
         open={!!editDdnsTask}
-        onOpenChange={(v) => { if (!v) setEditDdnsTask(null); }}
+        onOpenChange={(v) => {
+          if (!v) setEditDdnsTask(null);
+        }}
       />
       <DeleteDdnsTaskDialog
         task={deleteDdnsTask}
         open={!!deleteDdnsTask}
-        onOpenChange={(v) => { if (!v) setDeleteDdnsTask(null); }}
+        onOpenChange={(v) => {
+          if (!v) setDeleteDdnsTask(null);
+        }}
       />
     </TooltipProvider>
   );

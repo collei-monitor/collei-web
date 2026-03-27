@@ -98,7 +98,7 @@ export function SFTPFileListContent({
       <TableHeader>
         <TableRow>
           <TableHead className={isMobile ? "w-[60%]" : "w-[40%]"}>
-            {t("sftp.table.name")}
+            {t("common.name")}
           </TableHead>
           <TableHead className={isMobile ? "w-[25%]" : "w-[15%]"}>
             {t("sftp.table.size")}
@@ -170,7 +170,7 @@ export function SFTPFileListContent({
                       {entry.type === "file" && (
                         <DropdownMenuItem onClick={() => onEdit(entry)}>
                           <Pencil className="mr-2 h-4 w-4" />
-                          {t("sftp.actions.edit")}
+                          {t("common.edit")}
                         </DropdownMenuItem>
                       )}
                       {entry.type !== "dir" && (
@@ -189,7 +189,7 @@ export function SFTPFileListContent({
                         onClick={() => onDelete(entry)}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        {t("sftp.actions.delete")}
+                        {t("common.delete")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -206,7 +206,7 @@ export function SFTPFileListContent({
                   {entry.type === "file" && (
                     <ContextMenuItem onClick={() => onEdit(entry)}>
                       <Pencil className="mr-2 h-4 w-4" />
-                      {t("sftp.actions.edit")}
+                      {t("common.edit")}
                     </ContextMenuItem>
                   )}
                   {entry.type !== "dir" && (
@@ -225,7 +225,7 @@ export function SFTPFileListContent({
                     onClick={() => onDelete(entry)}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
-                    {t("sftp.actions.delete")}
+                    {t("common.delete")}
                   </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>

@@ -121,7 +121,7 @@ function TrafficRuleForm({
       ...form,
       traffic_threshold: fromTrafficGB(trafficGB),
     };
-    const toastId = toast.loading(t("admin.nodes.trafficRule.toast.saving"));
+    const toastId = toast.loading(t("common.saving"));
     upsertTrafficRule.mutate(
       { uuid: server.uuid, payload },
       {
@@ -259,12 +259,12 @@ function TrafficRuleForm({
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
-            {t("admin.nodes.trafficRule.cancel")}
+            {t("common.cancel")}
           </Button>
           <Button type="submit" disabled={upsertTrafficRule.isPending}>
             {upsertTrafficRule.isPending
               ? t("common.loading")
-              : t("admin.nodes.trafficRule.save")}
+              : t("common.save")}
           </Button>
         </div>
       </DialogFooter>

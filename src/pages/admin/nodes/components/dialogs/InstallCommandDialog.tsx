@@ -149,7 +149,7 @@ export function InstallCommandDialog({
   // ── 被动注册：创建服务器 ───────────────────────────────────────────────────
   const handleCreateServer = () => {
     if (!name.trim()) return;
-    const toastId = toast.loading(t("admin.nodes.install.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createServer.mutate(
       { name: name.trim(), remark: remark.trim() || undefined },
       {
@@ -158,7 +158,7 @@ export function InstallCommandDialog({
           onOpenChange(false);
         },
         onError: () => {
-          toast.error(t("admin.nodes.install.createFailed"), { id: toastId });
+          toast.error(t("common.createFailed"), { id: toastId });
         },
       },
     );
@@ -326,7 +326,7 @@ export function InstallCommandDialog({
               disabled={!!validationError || createServer.isPending}
             >
               {createServer.isPending
-                ? t("admin.nodes.install.creating")
+                ? t("common.creating")
                 : t("admin.nodes.install.createServer")}
             </Button>
           )}

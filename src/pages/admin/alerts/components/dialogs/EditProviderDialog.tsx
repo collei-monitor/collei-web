@@ -97,7 +97,7 @@ export function EditProviderDialog({ provider, open, onOpenChange }: Props) {
       return;
     }
 
-    const toastId = toast.loading(t("admin.alerts.channels.providers.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateProvider.mutate(
       { id: provider.id, payload },
       {
@@ -106,7 +106,7 @@ export function EditProviderDialog({ provider, open, onOpenChange }: Props) {
           onOpenChange(false);
         },
         onError: (err) => {
-          toast.error(err.message || t("admin.alerts.channels.providers.toast.editFailed"), { id: toastId });
+          toast.error(err.message || t("common.updateFailed"), { id: toastId });
         },
       },
     );
@@ -121,7 +121,7 @@ export function EditProviderDialog({ provider, open, onOpenChange }: Props) {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t("admin.alerts.channels.providers.create.name")}</Label>
+            <Label>{t("common.name")}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -130,7 +130,7 @@ export function EditProviderDialog({ provider, open, onOpenChange }: Props) {
             />
           </div>
           <div className="space-y-2">
-            <Label>{t("admin.alerts.channels.providers.create.type")}</Label>
+            <Label>{t("common.type")}</Label>
             <Select value={providerType} onValueChange={handleTypeChange}>
               <SelectTrigger>
                 <SelectValue placeholder={t("admin.alerts.channels.providers.create.typePlaceholder")} />
@@ -170,10 +170,10 @@ export function EditProviderDialog({ provider, open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("admin.alerts.channels.providers.edit.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateProvider.isPending}>
-              {updateProvider.isPending ? t("common.loading") : t("admin.alerts.channels.providers.edit.save")}
+              {updateProvider.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

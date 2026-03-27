@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDnsDomain, useDnsCredentials } from "@/services/dns";
@@ -60,38 +60,37 @@ export function EditDomainDialog({ domain, open, onOpenChange }: Props) {
       zone_id: zoneId.trim() || null,
     };
 
-    const toastId = toast.loading(t("admin.services.dns.domains.toast.updating"));
+    const toastId = toast.loading(t("common.updating"));
     updateDomain.mutate(
       { id: domain.id, payload },
       {
         onSuccess: () => {
-          toast.success(t("admin.services.dns.domains.toast.updateSuccess"), { id: toastId });
+          toast.success(t("common.updateSuccess"), { id: toastId });
           onOpenChange(false);
         },
         onError: (err) => {
-          toast.error(err.message || t("admin.services.dns.domains.toast.updateFailed"), { id: toastId });
+          toast.error(err.message || t("common.updateFailed"), { id: toastId });
         },
       }
     );
   };
 
-  const tp = "admin.services.dns.domains";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.edit.title`)}</DialogTitle>
+          <DialogTitle>{t("admin.services.dns.domains.edit.title")}</DialogTitle>
           <DialogDescription>
             {domain?.domain_name}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.credential`)}</Label>
+            <Label>{t("admin.services.dns.domains.create.credential")}</Label>
             <Select value={credentialId} onValueChange={setCredentialId}>
               <SelectTrigger>
-                <SelectValue placeholder={t(`${tp}.create.credentialPlaceholder`)} />
+                <SelectValue placeholder={t("admin.services.dns.domains.create.credentialPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {credentials.map((c) => (
@@ -103,21 +102,21 @@ export function EditDomainDialog({ domain, open, onOpenChange }: Props) {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.zoneId`)}</Label>
+            <Label>{t("admin.services.dns.domains.create.zoneId")}</Label>
             <Input
               value={zoneId}
               onChange={(e) => setZoneId(e.target.value)}
-              placeholder={t(`${tp}.create.zoneIdPlaceholder`)}
+              placeholder={t("admin.services.dns.domains.create.zoneIdPlaceholder")}
               maxLength={128}
             />
           </div>
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t(`${tp}.edit.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateDomain.isPending || !credentialId}>
-              {updateDomain.isPending ? t("common.loading") : t(`${tp}.edit.save`)}
+              {updateDomain.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

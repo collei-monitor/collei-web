@@ -127,7 +127,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const toastId = toast.loading(t("admin.services.remote.toast.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createTask.mutate(
       {
         type: taskType,
@@ -145,7 +145,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
         },
         onError: (err) => {
           toast.error(
-            err.message || t("admin.services.remote.toast.createFailed"),
+            err.message || t("common.createFailed"),
             { id: toastId }
           );
         },
@@ -367,7 +367,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              {t("admin.services.remote.create.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"

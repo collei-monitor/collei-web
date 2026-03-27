@@ -121,7 +121,7 @@ export function IpDbSection({
             ) : (
               <Save className="h-4 w-4" />
             )}
-            <span className="ml-1.5">{t("settings.action.save")}</span>
+            <span className="ml-1.5">{t("common.save")}</span>
           </Button>
         </div>
         {availableDbs && availableDbs.length === 0 && (
@@ -244,7 +244,7 @@ export function IpDbSection({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>
-              {t("settings.ipDb.confirmCancel")}
+              {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

@@ -25,14 +25,14 @@ export function DeleteChannelDialog({ channel, open, onOpenChange }: Props) {
 
   const handleDelete = () => {
     if (!channel) return;
-    const toastId = toast.loading(t("admin.alerts.channels.channels.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteChannel.mutate(channel.id, {
       onSuccess: () => {
         toast.success(t("admin.alerts.channels.channels.toast.deleteSuccess"), { id: toastId });
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.alerts.channels.channels.toast.deleteFailed"), { id: toastId });
+        toast.error(err.message || t("common.deleteFailed"), { id: toastId });
       },
     });
   };
@@ -41,19 +41,19 @@ export function DeleteChannelDialog({ channel, open, onOpenChange }: Props) {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.alerts.channels.channels.delete.title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("admin.alerts.channels.channels.delete.description", { name: channel?.name ?? "" })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t("admin.alerts.channels.channels.delete.cancel")}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteChannel.isPending}
             className="bg-destructive text-white hover:bg-destructive/90"
           >
-            {deleteChannel.isPending ? t("common.loading") : t("admin.alerts.channels.channels.delete.confirm")}
+            {deleteChannel.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

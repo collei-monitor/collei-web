@@ -114,7 +114,7 @@ export function EditServerDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!server) return;
-    const toastId = toast.loading(t("admin.nodes.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateServer.mutate(
       { uuid: server.uuid, payload: form },
       {
@@ -123,7 +123,7 @@ export function EditServerDialog({
           onOpenChange(false);
         },
         onError: () => {
-          toast.error(t("admin.nodes.toast.editFailed"), { id: toastId });
+          toast.error(t("common.updateFailed"), { id: toastId });
         },
       },
     );
@@ -140,7 +140,7 @@ export function EditServerDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="edit-name">{t("admin.nodes.edit.name")}</Label>
+            <Label htmlFor="edit-name">{t("common.name")}</Label>
             <Input
               id="edit-name"
               value={form.name ?? ""}
@@ -334,12 +334,12 @@ export function EditServerDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              {t("admin.nodes.edit.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateServer.isPending}>
               {updateServer.isPending
                 ? t("common.loading")
-                : t("admin.nodes.edit.save")}
+                : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

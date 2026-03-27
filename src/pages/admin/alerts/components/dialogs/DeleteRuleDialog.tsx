@@ -25,14 +25,14 @@ export function DeleteRuleDialog({ rule, open, onOpenChange }: Props) {
 
   const handleDelete = () => {
     if (!rule) return;
-    const toastId = toast.loading(t("admin.alerts.rules.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteRule.mutate(rule.id, {
       onSuccess: () => {
         toast.success(t("admin.alerts.rules.toast.deleteSuccess"), { id: toastId });
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.alerts.rules.toast.deleteFailed"), { id: toastId });
+        toast.error(err.message || t("common.deleteFailed"), { id: toastId });
       },
     });
   };
@@ -41,18 +41,18 @@ export function DeleteRuleDialog({ rule, open, onOpenChange }: Props) {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.alerts.rules.delete.title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("admin.alerts.rules.delete.description", { name: rule?.name })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t("admin.alerts.rules.delete.cancel")}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {deleteRule.isPending ? t("common.loading") : t("admin.alerts.rules.delete.confirm")}
+            {deleteRule.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -22,9 +22,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ArrowLeft, RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
-import { CreateRecordDialog } from "../services/dns/components/dialogs/CreateRecordDialog";
-import { EditRecordDialog } from "../services/dns/components/dialogs/EditRecordDialog";
-import { DeleteRecordDialog } from "../services/dns/components/dialogs/DeleteRecordDialog";
+import { CreateRecordDialog } from "./components/dialogs/CreateRecordDialog";
+import { EditRecordDialog } from "./components/dialogs/EditRecordDialog";
+import { DeleteRecordDialog } from "./components/dialogs/DeleteRecordDialog";
 
 export default function DomainDetailPage() {
   const { t } = useTranslation();
@@ -55,7 +55,6 @@ export default function DomainDetailPage() {
     });
   };
 
-  const tp = "admin.services.dns.records";
 
   return (
     <TooltipProvider>
@@ -68,7 +67,7 @@ export default function DomainDetailPage() {
             </Button>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">
-                {domain?.domain_name ?? t(`${tp}.title`)}
+                {domain?.domain_name ?? t("admin.services.dns.records.title")}
               </h1>
             </div>
           </div>
@@ -82,14 +81,14 @@ export default function DomainDetailPage() {
                   disabled={syncDomain.isPending}
                 >
                   <RefreshCw className={`h-4 w-4 mr-1 ${syncDomain.isPending ? "animate-spin" : ""}`} />
-                  {t(`${tp}.sync`)}
+                  {t("admin.services.dns.records.sync")}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t(`${tp}.syncHint`)}</TooltipContent>
+              <TooltipContent>{t("admin.services.dns.records.syncHint")}</TooltipContent>
             </Tooltip>
             <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4" />
-              {t(`${tp}.add`)}
+              {t("admin.services.dns.records.add")}
             </Button>
           </div>
         </div>
@@ -99,12 +98,12 @@ export default function DomainDetailPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t(`${tp}.table.name`)}</TableHead>
-                <TableHead>{t(`${tp}.table.type`)}</TableHead>
-                <TableHead>{t(`${tp}.table.content`)}</TableHead>
-                <TableHead className="text-right">{t(`${tp}.table.ttl`)}</TableHead>
-                <TableHead className="text-right">{t(`${tp}.table.priority`)}</TableHead>
-                <TableHead>{t(`${tp}.table.proxied`)}</TableHead>
+                <TableHead>{t("admin.services.dns.records.table.name")}</TableHead>
+                <TableHead>{t("common.type")}</TableHead>
+                <TableHead>{t("admin.services.dns.records.table.content")}</TableHead>
+                <TableHead className="text-right">{t("admin.services.dns.records.table.ttl")}</TableHead>
+                <TableHead className="text-right">{t("admin.services.dns.records.table.priority")}</TableHead>
+                <TableHead>{t("admin.services.dns.records.table.proxied")}</TableHead>
                 <TableHead className="w-20" />
               </TableRow>
             </TableHeader>
@@ -124,7 +123,7 @@ export default function DomainDetailPage() {
               ) : !records?.length ? (
                 <TableRow>
                   <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                    {t(`${tp}.empty`)}
+                    {t("admin.services.dns.records.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -138,7 +137,7 @@ export default function DomainDetailPage() {
                     <TableCell className="text-right">{rec.ttl}</TableCell>
                     <TableCell className="text-right">{rec.priority ?? "-"}</TableCell>
                     <TableCell>
-                      {rec.proxied ? t(`${tp}.proxiedOn`) : t(`${tp}.proxiedOff`)}
+                      {rec.proxied ? t("admin.services.dns.records.proxiedOn") : t("admin.services.dns.records.proxiedOff")}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1 justify-end">

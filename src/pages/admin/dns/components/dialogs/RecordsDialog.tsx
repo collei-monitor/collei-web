@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
@@ -61,16 +61,15 @@ export function RecordsDialog({ domain, open, onOpenChange }: Props) {
     });
   };
 
-  const tp = "admin.services.dns.records";
 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{t(`${tp}.title`)}</DialogTitle>
+            <DialogTitle>{t("admin.services.dns.records.title")}</DialogTitle>
             <DialogDescription>
-              {t(`${tp}.subtitle`, { domain: domain?.domain_name ?? "" })}
+              {t("common.name", { domain: domain?.domain_name ?? "" })}
             </DialogDescription>
           </DialogHeader>
 
@@ -85,15 +84,15 @@ export function RecordsDialog({ domain, open, onOpenChange }: Props) {
                     disabled={syncDomain.isPending}
                   >
                     <RefreshCw className={`h-4 w-4 mr-1 ${syncDomain.isPending ? "animate-spin" : ""}`} />
-                    {t(`${tp}.sync`)}
+                    {t("admin.services.dns.records.sync")}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>{t(`${tp}.syncHint`)}</TooltipContent>
+                <TooltipContent>{t("admin.services.dns.records.syncHint")}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <Button size="sm" onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4 mr-1" />
-              {t(`${tp}.add`)}
+              {t("admin.services.dns.records.add")}
             </Button>
           </div>
 
@@ -105,37 +104,37 @@ export function RecordsDialog({ domain, open, onOpenChange }: Props) {
             </div>
           ) : !records?.length ? (
             <p className="text-muted-foreground text-sm text-center py-8">
-              {t(`${tp}.empty`)}
+              {t("admin.services.dns.records.empty")}
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t(`${tp}.table.name`)}</TableHead>
-                  <TableHead>{t(`${tp}.table.type`)}</TableHead>
-                  <TableHead>{t(`${tp}.table.content`)}</TableHead>
-                  <TableHead className="text-right">{t(`${tp}.table.ttl`)}</TableHead>
-                  <TableHead className="text-right">{t(`${tp}.table.priority`)}</TableHead>
-                  <TableHead>{t(`${tp}.table.proxied`)}</TableHead>
-                  <TableHead className="w-[80px]" />
+                  <TableHead>{t("admin.services.dns.records.table.name")}</TableHead>
+                  <TableHead>{t("common.type")}</TableHead>
+                  <TableHead>{t("admin.services.dns.records.table.content")}</TableHead>
+                  <TableHead className="text-right">{t("admin.services.dns.records.table.ttl")}</TableHead>
+                  <TableHead className="text-right">{t("admin.services.dns.records.table.priority")}</TableHead>
+                  <TableHead>{t("admin.services.dns.records.table.proxied")}</TableHead>
+                  <TableHead className="w-20" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {records.map((rec) => (
                   <TableRow key={rec.id}>
-                    <TableCell className="font-mono text-xs max-w-[140px] truncate">
+                    <TableCell className="font-mono text-xs max-w-35 truncate">
                       {rec.name}
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary">{rec.type}</Badge>
                     </TableCell>
-                    <TableCell className="font-mono text-xs max-w-[200px] truncate">
+                    <TableCell className="font-mono text-xs max-w-50 truncate">
                       {rec.content}
                     </TableCell>
                     <TableCell className="text-right">{rec.ttl}</TableCell>
                     <TableCell className="text-right">{rec.priority ?? "-"}</TableCell>
                     <TableCell>
-                      {rec.proxied ? t(`${tp}.proxiedOn`) : t(`${tp}.proxiedOff`)}
+                      {rec.proxied ? t("admin.services.dns.records.proxiedOn") : t("admin.services.dns.records.proxiedOff")}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1 justify-end">

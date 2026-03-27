@@ -190,7 +190,7 @@ export default function LoginPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t("login.username")}</FormLabel>
+                          <FormLabel>{t("common.username")}</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="admin"

@@ -25,14 +25,14 @@ export function DeleteProviderDialog({ provider, open, onOpenChange }: Props) {
 
   const handleDelete = () => {
     if (!provider) return;
-    const toastId = toast.loading(t("admin.alerts.channels.providers.toast.deleting"));
+    const toastId = toast.loading(t("common.deleting"));
     deleteProvider.mutate(provider.id, {
       onSuccess: () => {
         toast.success(t("admin.alerts.channels.providers.toast.deleteSuccess"), { id: toastId });
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.alerts.channels.providers.toast.deleteFailed"), { id: toastId });
+        toast.error(err.message || t("common.deleteFailed"), { id: toastId });
       },
     });
   };
@@ -41,19 +41,19 @@ export function DeleteProviderDialog({ provider, open, onOpenChange }: Props) {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("admin.alerts.channels.providers.delete.title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
           <AlertDialogDescription>
             {t("admin.alerts.channels.providers.delete.description", { name: provider?.name ?? "" })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t("admin.alerts.channels.providers.delete.cancel")}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteProvider.isPending}
             className="bg-destructive text-white hover:bg-destructive/90"
           >
-            {deleteProvider.isPending ? t("common.loading") : t("admin.alerts.channels.providers.delete.confirm")}
+            {deleteProvider.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

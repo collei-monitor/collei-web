@@ -66,7 +66,7 @@ export function EditGroupDialog({ group, open, onOpenChange }: EditGroupDialogPr
       return;
     }
 
-    const toastId = toast.loading(t("admin.groups.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateGroup.mutate(
       { id: group.id, payload },
       {
@@ -75,7 +75,7 @@ export function EditGroupDialog({ group, open, onOpenChange }: EditGroupDialogPr
           onOpenChange(false);
         },
         onError: (err) => {
-          toast.error(err.message || t("admin.groups.toast.editFailed"), { id: toastId });
+          toast.error(err.message || t("common.updateFailed"), { id: toastId });
         },
       },
     );
@@ -116,12 +116,12 @@ export function EditGroupDialog({ group, open, onOpenChange }: EditGroupDialogPr
           />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("admin.groups.edit.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateGroup.isPending || !name.trim()}>
               {updateGroup.isPending
                 ? t("common.loading")
-                : t("admin.groups.edit.save")}
+                : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDnsCredential } from "@/services/dns";
@@ -77,18 +77,17 @@ export function EditCredentialDialog({ credential, open, onOpenChange }: Props) 
     );
   };
 
-  const tp = "admin.services.dns.credentials";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.edit.title`)}</DialogTitle>
-          <DialogDescription>{t(`${tp}.edit.description`)}</DialogDescription>
+          <DialogTitle>{t("admin.services.dns.credentials.edit.title")}</DialogTitle>
+          <DialogDescription>{t("admin.services.dns.credentials.edit.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t(`${tp}.edit.name`)}</Label>
+            <Label>{t("admin.services.dns.credentials.edit.name")}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -96,8 +95,8 @@ export function EditCredentialDialog({ credential, open, onOpenChange }: Props) 
             />
           </div>
           <div className="space-y-2">
-            <Label>{t(`${tp}.edit.updateCredentials`)}</Label>
-            <p className="text-xs text-muted-foreground">{t(`${tp}.edit.updateCredentialsHint`)}</p>
+            <Label>{t("admin.services.dns.credentials.edit.updateCredentials")}</Label>
+            <p className="text-xs text-muted-foreground">{t("admin.services.dns.credentials.edit.updateCredentialsHint")}</p>
             <textarea
               className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               value={credsJson}
@@ -108,10 +107,10 @@ export function EditCredentialDialog({ credential, open, onOpenChange }: Props) 
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t(`${tp}.edit.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateCredential.isPending}>
-              {updateCredential.isPending ? t("common.loading") : t(`${tp}.edit.save`)}
+              {updateCredential.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

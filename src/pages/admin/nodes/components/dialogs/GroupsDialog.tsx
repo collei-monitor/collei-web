@@ -75,12 +75,12 @@ export function GroupsDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t("admin.nodes.groups.cancel")}
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleSave} disabled={setServerGroups.isPending}>
             {setServerGroups.isPending
               ? t("common.loading")
-              : t("admin.nodes.groups.save")}
+              : t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -65,7 +65,7 @@ export function EditChannelDialog({ channel, open, onOpenChange }: Props) {
       return;
     }
 
-    const toastId = toast.loading(t("admin.alerts.channels.channels.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateChannel.mutate(
       { id: channel.id, payload },
       {
@@ -74,7 +74,7 @@ export function EditChannelDialog({ channel, open, onOpenChange }: Props) {
           onOpenChange(false);
         },
         onError: (err) => {
-          toast.error(err.message || t("admin.alerts.channels.channels.toast.editFailed"), { id: toastId });
+          toast.error(err.message || t("common.updateFailed"), { id: toastId });
         },
       },
     );
@@ -121,10 +121,10 @@ export function EditChannelDialog({ channel, open, onOpenChange }: Props) {
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("admin.alerts.channels.channels.edit.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateChannel.isPending || !name.trim()}>
-              {updateChannel.isPending ? t("common.loading") : t("admin.alerts.channels.channels.edit.save")}
+              {updateChannel.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

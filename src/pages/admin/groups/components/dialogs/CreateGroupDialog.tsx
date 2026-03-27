@@ -33,7 +33,7 @@ export function CreateGroupDialog({ open, onOpenChange }: CreateGroupDialogProps
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const toastId = toast.loading(t("admin.groups.toast.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createGroup.mutate(form, {
       onSuccess: () => {
         toast.success(t("admin.groups.toast.createSuccess"), { id: toastId });
@@ -41,7 +41,7 @@ export function CreateGroupDialog({ open, onOpenChange }: CreateGroupDialogProps
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.groups.toast.createFailed"), { id: toastId });
+        toast.error(err.message || t("common.createFailed"), { id: toastId });
       },
     });
   };
@@ -97,12 +97,12 @@ export function CreateGroupDialog({ open, onOpenChange }: CreateGroupDialogProps
               variant="outline"
               onClick={() => handleOpenChange(false)}
             >
-              {t("admin.groups.create.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createGroup.isPending || !form.name.trim()}>
               {createGroup.isPending
                 ? t("common.loading")
-                : t("admin.groups.create.save")}
+                : t("common.create")}
             </Button>
           </DialogFooter>
         </form>

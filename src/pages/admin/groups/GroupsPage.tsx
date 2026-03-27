@@ -42,9 +42,9 @@ export default function GroupsPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.groups.toast.refreshing"),
-      success: t("admin.groups.toast.refreshSuccess"),
-      error: t("admin.groups.toast.refreshFailed"),
+      loading: t("common.refreshing"),
+      success: t("common.listRefreshed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -89,7 +89,7 @@ export default function GroupsPage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.groups.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refreshList")}</TooltipContent>
           </Tooltip>
           <Button
             size="sm"
@@ -126,7 +126,7 @@ export default function GroupsPage() {
                 <TableHead className="w-20">
                   {t("admin.groups.table.sort")}
                 </TableHead>
-                <TableHead>{t("admin.groups.table.name")}</TableHead>
+                <TableHead>{t("common.name")}</TableHead>
                 <TableHead className="w-28">
                   {t("admin.groups.table.serverCount")}
                 </TableHead>

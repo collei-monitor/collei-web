@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useDeleteDnsDomain } from "@/services/dns";
 import type { DomainRead } from "@/types/dns";
@@ -38,27 +38,26 @@ export function DeleteDomainDialog({ domain, open, onOpenChange }: Props) {
     });
   };
 
-  const tp = "admin.services.dns.domains";
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t(`${tp}.delete.title`)}</AlertDialogTitle>
+          <AlertDialogTitle>{t("admin.services.dns.domains.delete.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t(`${tp}.delete.description`, { name: domain?.domain_name })}
+            {t("admin.services.dns.domains.delete.description", { name: domain?.domain_name })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteDomain.isPending}>
-            {t(`${tp}.delete.cancel`)}
+            {t("common.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteDomain.isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {deleteDomain.isPending ? t("common.loading") : t(`${tp}.delete.confirm`)}
+            {deleteDomain.isPending ? t("common.loading") : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

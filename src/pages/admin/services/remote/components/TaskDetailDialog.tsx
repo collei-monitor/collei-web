@@ -128,7 +128,7 @@ export function TaskDetailDialog({
                   </div>
                   <div>
                     <span className="text-muted-foreground">
-                      {t("admin.services.remote.detail.status")}:
+                      {t("common.status")}:
                     </span>{" "}
                     <Badge variant={statusVariant(execDetail.status)}>
                       {t(`admin.services.remote.status.${execDetail.status}`)}
@@ -184,7 +184,7 @@ export function TaskDetailDialog({
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <span className="text-muted-foreground">
-                    {t("admin.services.remote.table.type")}:
+                    {t("common.type")}:
                   </span>{" "}
                   {t(`admin.services.remote.taskType.${task.type}`)}
                 </div>
@@ -226,7 +226,7 @@ export function TaskDetailDialog({
                         {t("admin.services.remote.detail.server")}
                       </TableHead>
                       <TableHead>
-                        {t("admin.services.remote.detail.status")}
+                        {t("common.status")}
                       </TableHead>
                       <TableHead>
                         {t("admin.services.remote.detail.exitCode")}

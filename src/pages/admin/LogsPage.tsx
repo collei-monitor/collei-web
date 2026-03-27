@@ -117,9 +117,9 @@ export default function LogsPage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(refetch(), {
-      loading: t("admin.logs.toast.refreshing"),
+      loading: t("common.refreshing"),
       success: t("admin.logs.toast.refreshSuccess"),
-      error: t("admin.logs.toast.refreshFailed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetch, t]);
 
@@ -155,7 +155,7 @@ export default function LogsPage() {
               <RefreshCw className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{t("admin.logs.refresh")}</TooltipContent>
+          <TooltipContent>{t("common.refresh")}</TooltipContent>
         </Tooltip>
       </div>
 
@@ -316,7 +316,7 @@ export default function LogsPage() {
                 {t("admin.logs.table.level")}
               </TableHead>
               <TableHead className="w-24">
-                {t("admin.logs.table.type")}
+                {t("common.type")}
               </TableHead>
               <TableHead>{t("admin.logs.table.message")}</TableHead>
               <TableHead className="w-32">

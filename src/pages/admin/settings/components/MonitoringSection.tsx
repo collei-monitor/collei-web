@@ -88,7 +88,7 @@ export function MonitoringSection({
           ) : (
             <Save className="h-4 w-4" />
           )}
-          <span className="ml-1.5">{t("settings.action.save")}</span>
+          <span className="ml-1.5">{t("common.save")}</span>
         </Button>
       </div>
     </div>

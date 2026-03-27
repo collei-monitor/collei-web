@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useCreateDnsCredential } from "@/services/dns";
@@ -88,7 +88,7 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
     e.preventDefault();
     if (!providerKey) return;
 
-    let finalProvider = providerKey === "other" ? customProvider.trim() : providerKey;
+    const finalProvider = providerKey === "other" ? customProvider.trim() : providerKey;
     if (!finalProvider) return;
 
     let finalCreds: Record<string, string>;
@@ -122,37 +122,36 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
     });
   };
 
-  const tp = "admin.services.dns.credentials";
   const canSubmit = providerKey !== "" && name.trim() !== "" && (providerKey !== "other" || customProvider.trim() !== "");
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t(`${tp}.create.title`)}</DialogTitle>
-          <DialogDescription>{t(`${tp}.create.description`)}</DialogDescription>
+          <DialogTitle>{t("admin.services.dns.credentials.create.title")}</DialogTitle>
+          <DialogDescription>{t("admin.services.dns.credentials.create.description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.name`)}</Label>
+            <Label>{t("admin.services.dns.credentials.create.name")}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t(`${tp}.create.namePlaceholder`)}
+              placeholder={t("admin.services.dns.credentials.create.namePlaceholder")}
               maxLength={128}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label>{t(`${tp}.create.provider`)}</Label>
+            <Label>{t("admin.services.dns.credentials.create.provider")}</Label>
             <Select value={providerKey} onValueChange={handleProviderChange}>
               <SelectTrigger>
-                <SelectValue placeholder={t(`${tp}.create.providerPlaceholder`)} />
+                <SelectValue placeholder={t("admin.services.dns.credentials.create.providerPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {KNOWN_PROVIDERS.map((pk) => (
                   <SelectItem key={pk} value={pk}>
-                    {t(`${tp}.providers.${pk}`)}
+                    {t("admin.services.dns.credentials.providers.${pk}")}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -161,25 +160,25 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
 
           {providerKey === "other" && (
             <div className="space-y-2">
-              <Label>{t(`${tp}.create.providerOther`)}</Label>
+              <Label>{t("admin.services.dns.credentials.create.providerOther")}</Label>
               <Input
                 value={customProvider}
                 onChange={(e) => setCustomProvider(e.target.value)}
-                placeholder={t(`${tp}.create.providerOtherPlaceholder`)}
+                placeholder={t("admin.services.dns.credentials.create.providerOtherPlaceholder")}
                 required
               />
             </div>
           )}
 
           {providerKey === "cloudflare" && (
-            <ProviderFields title={t(`${tp}.fields.cloudflare.title`)}>
+            <ProviderFields title={t("admin.services.dns.credentials.fields.cloudflare.title")}>
               <div className="space-y-2">
-                <Label className="text-xs">{t(`${tp}.fields.cloudflare.authToken`)}</Label>
+                <Label className="text-xs">{t("admin.services.dns.credentials.fields.cloudflare.authToken")}</Label>
                 <Input
                   type="password"
                   value={creds.auth_token ?? ""}
                   onChange={(e) => updateField("auth_token", e.target.value)}
-                  placeholder={t(`${tp}.fields.cloudflare.authTokenPlaceholder`)}
+                  placeholder={t("admin.services.dns.credentials.fields.cloudflare.authTokenPlaceholder")}
                   required
                 />
               </div>
@@ -187,23 +186,23 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
           )}
 
           {providerKey === "aliyun" && (
-            <ProviderFields title={t(`${tp}.fields.aliyun.title`)}>
+            <ProviderFields title={t("admin.services.dns.credentials.fields.aliyun.title")}>
               <div className="space-y-2">
-                <Label className="text-xs">{t(`${tp}.fields.aliyun.authKeyId`)}</Label>
+                <Label className="text-xs">{t("admin.services.dns.credentials.fields.aliyun.authKeyId")}</Label>
                 <Input
                   value={creds.auth_key_id ?? ""}
                   onChange={(e) => updateField("auth_key_id", e.target.value)}
-                  placeholder={t(`${tp}.fields.aliyun.authKeyIdPlaceholder`)}
+                  placeholder={t("admin.services.dns.credentials.fields.aliyun.authKeyIdPlaceholder")}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs">{t(`${tp}.fields.aliyun.authSecret`)}</Label>
+                <Label className="text-xs">{t("admin.services.dns.credentials.fields.aliyun.authSecret")}</Label>
                 <Input
                   type="password"
                   value={creds.auth_secret ?? ""}
                   onChange={(e) => updateField("auth_secret", e.target.value)}
-                  placeholder={t(`${tp}.fields.aliyun.authSecretPlaceholder`)}
+                  placeholder={t("admin.services.dns.credentials.fields.aliyun.authSecretPlaceholder")}
                   required
                 />
               </div>
@@ -211,14 +210,14 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
           )}
 
           {providerKey === "dnspod" && (
-            <ProviderFields title={t(`${tp}.fields.dnspod.title`)}>
+            <ProviderFields title={t("admin.services.dns.credentials.fields.dnspod.title")}>
               <div className="space-y-2">
-                <Label className="text-xs">{t(`${tp}.fields.dnspod.authToken`)}</Label>
+                <Label className="text-xs">{t("admin.services.dns.credentials.fields.dnspod.authToken")}</Label>
                 <Input
                   type="password"
                   value={creds.auth_token ?? ""}
                   onChange={(e) => updateField("auth_token", e.target.value)}
-                  placeholder={t(`${tp}.fields.dnspod.authTokenPlaceholder`)}
+                  placeholder={t("admin.services.dns.credentials.fields.dnspod.authTokenPlaceholder")}
                   required
                 />
               </div>
@@ -226,23 +225,23 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
           )}
 
           {providerKey === "route53" && (
-            <ProviderFields title={t(`${tp}.fields.route53.title`)}>
+            <ProviderFields title={t("admin.services.dns.credentials.fields.route53.title")}>
               <div className="space-y-2">
-                <Label className="text-xs">{t(`${tp}.fields.route53.authAccessKey`)}</Label>
+                <Label className="text-xs">{t("admin.services.dns.credentials.fields.route53.authAccessKey")}</Label>
                 <Input
                   value={creds.auth_access_key ?? ""}
                   onChange={(e) => updateField("auth_access_key", e.target.value)}
-                  placeholder={t(`${tp}.fields.route53.authAccessKeyPlaceholder`)}
+                  placeholder={t("admin.services.dns.credentials.fields.route53.authAccessKeyPlaceholder")}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs">{t(`${tp}.fields.route53.authAccessSecret`)}</Label>
+                <Label className="text-xs">{t("admin.services.dns.credentials.fields.route53.authAccessSecret")}</Label>
                 <Input
                   type="password"
                   value={creds.auth_access_secret ?? ""}
                   onChange={(e) => updateField("auth_access_secret", e.target.value)}
-                  placeholder={t(`${tp}.fields.route53.authAccessSecretPlaceholder`)}
+                  placeholder={t("admin.services.dns.credentials.fields.route53.authAccessSecretPlaceholder")}
                   required
                 />
               </div>
@@ -251,12 +250,12 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
 
           {providerKey === "other" && (
             <div className="space-y-2">
-              <Label>{t(`${tp}.create.credentialsJson`)}</Label>
+              <Label>{t("admin.services.dns.credentials.create.credentialsJson")}</Label>
               <textarea
                 className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 value={credsJson}
                 onChange={(e) => setCredsJson(e.target.value)}
-                placeholder={t(`${tp}.create.credentialsJsonPlaceholder`)}
+                placeholder={t("admin.services.dns.credentials.create.credentialsJsonPlaceholder")}
                 required
               />
             </div>
@@ -264,10 +263,10 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t(`${tp}.create.cancel`)}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createCredential.isPending || !canSubmit}>
-              {createCredential.isPending ? t("common.loading") : t(`${tp}.create.save`)}
+              {createCredential.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

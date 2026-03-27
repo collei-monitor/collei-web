@@ -137,7 +137,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
       return;
     }
 
-    const toastId = toast.loading(t("admin.alerts.rules.toast.editSaving"));
+    const toastId = toast.loading(t("common.saving"));
     updateRule.mutate(
       { id: rule.id, payload },
       {
@@ -146,7 +146,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
           onOpenChange(false);
         },
         onError: (err) => {
-          toast.error(err.message || t("admin.alerts.rules.toast.editFailed"), { id: toastId });
+          toast.error(err.message || t("common.updateFailed"), { id: toastId });
         },
       },
     );
@@ -290,7 +290,7 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
               checked={enabled}
               onCheckedChange={(v) => setEnabled(v === true)}
             />
-            <Label htmlFor="edit-rule-enabled">{t("admin.alerts.rules.edit.enabled")}</Label>
+            <Label htmlFor="edit-rule-enabled">{t("common.enable")}</Label>
           </div>
 
           {/* 恢复通知 */}
@@ -307,10 +307,10 @@ export function EditRuleDialog({ rule, open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t("admin.alerts.rules.edit.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={updateRule.isPending || !name.trim()}>
-              {updateRule.isPending ? t("common.loading") : t("admin.alerts.rules.edit.save")}
+              {updateRule.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

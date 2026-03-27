@@ -108,7 +108,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
     if (!md.hideTrafficStep && form.traffic_notify_step) {
       payload.traffic_notify_step = Number(form.traffic_notify_step);
     }
-    const toastId = toast.loading(t("admin.alerts.rules.toast.creating"));
+    const toastId = toast.loading(t("common.creating"));
     createRule.mutate(payload, {
       onSuccess: () => {
         toast.success(t("admin.alerts.rules.toast.createSuccess"), { id: toastId });
@@ -116,7 +116,7 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
         onOpenChange(false);
       },
       onError: (err) => {
-        toast.error(err.message || t("admin.alerts.rules.toast.createFailed"), { id: toastId });
+        toast.error(err.message || t("common.createFailed"), { id: toastId });
       },
     });
   };
@@ -298,10 +298,10 @@ export function CreateRuleDialog({ open, onOpenChange }: Props) {
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              {t("admin.alerts.rules.create.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button type="submit" disabled={createRule.isPending || !canSubmit}>
-              {createRule.isPending ? t("common.loading") : t("admin.alerts.rules.create.save")}
+              {createRule.isPending ? t("common.loading") : t("common.create")}
             </Button>
           </DialogFooter>
         </form>

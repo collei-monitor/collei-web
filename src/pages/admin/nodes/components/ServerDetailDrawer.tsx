@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { Server } from "@/types/server";
 import { ServerStatus } from "@/types/server";
@@ -20,7 +20,13 @@ interface ServerDetailDrawerProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="flex items-start justify-between gap-4 py-1.5">
       <span className="text-sm text-muted-foreground shrink-0">{label}</span>
@@ -34,13 +40,15 @@ function formatTimestamp(ts: number | null): string {
   return new Date(ts * 1000).toLocaleString();
 }
 
-export function ServerDetailDrawer({ server, open, onOpenChange }: ServerDetailDrawerProps) {
+export function ServerDetailDrawer({
+  server,
+  open,
+  onOpenChange,
+}: ServerDetailDrawerProps) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
 
   if (!server) return null;
-
-  const d = t("admin.nodes.detail", { returnObjects: true }) as Record<string, string>;
 
   return (
     <Drawer
@@ -54,80 +62,196 @@ export function ServerDetailDrawer({ server, open, onOpenChange }: ServerDetailD
             {server.region && <FlagIcon region={server.region} size="md" />}
             {server.name}
           </DrawerTitle>
-          <DrawerDescription>{d.title}</DrawerDescription>
+          <DrawerDescription>{t("admin.nodes.detail.title")}</DrawerDescription>
         </DrawerHeader>
 
         <div className="overflow-y-auto px-4 pb-6 space-y-4">
           {/* 基础信息 */}
           <section>
-            <h4 className="text-sm font-medium mb-1">{d.basicInfo}</h4>
+            <h4 className="text-sm font-medium mb-1">
+              {t("admin.nodes.detail.basicInfo")}
+            </h4>
             <Separator className="mb-2" />
-            <DetailRow label={d.uuid} value={
-              <span className="font-mono text-xs">{server.uuid}</span>
-            } />
-            <DetailRow label={d.name} value={server.name} />
-            <DetailRow label={d.region} value={server.region ?? d.unknown} />
-            <DetailRow label={d.os} value={server.os} />
-            <DetailRow label={d.arch} value={server.arch} />
-            <DetailRow label={d.kernelVersion} value={server.kernel_version} />
-            <DetailRow label={d.virtualization} value={server.virtualization} />
-            <DetailRow label={d.version} value={server.version} />
-            <DetailRow label={d.remark} value={server.remark} />
-            <DetailRow label={d.createdAt} value={formatTimestamp(server.created_at)} />
-            <DetailRow label={d.statisticsMode} value={
-              server.enable_statistics_mode ? d.enabled : d.disabled
-            } />
+            <DetailRow
+              label={t("admin.nodes.detail.uuid")}
+              value={<span className="font-mono text-xs">{server.uuid}</span>}
+            />
+            <DetailRow label={t("common.name")} value={server.name} />
+            <DetailRow
+              label={t("admin.nodes.detail.region")}
+              value={server.region ?? t("admin.nodes.detail.unknown")}
+            />
+            <DetailRow label={t("admin.nodes.detail.os")} value={server.os} />
+            <DetailRow
+              label={t("admin.nodes.detail.arch")}
+              value={server.arch}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.kernelVersion")}
+              value={server.kernel_version}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.virtualization")}
+              value={server.virtualization}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.version")}
+              value={server.version}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.remark")}
+              value={server.remark}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.createdAt")}
+              value={formatTimestamp(server.created_at)}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.statisticsMode")}
+              value={
+                server.enable_statistics_mode
+                  ? t("admin.nodes.detail.enabled")
+                  : t("admin.nodes.detail.disabled")
+              }
+            />
           </section>
 
           {/* 硬件信息 */}
           <section>
-            <h4 className="text-sm font-medium mb-1">{d.hardwareInfo}</h4>
+            <h4 className="text-sm font-medium mb-1">
+              {t("admin.nodes.detail.hardwareInfo")}
+            </h4>
             <Separator className="mb-2" />
-            <DetailRow label={d.cpuName} value={server.cpu_name} />
-            <DetailRow label={d.cpuCores} value={server.cpu_cores != null ? `${server.cpu_cores}` : null} />
-            <DetailRow label={d.memTotal} value={server.mem_total != null ? formatBytes(server.mem_total) : null} />
-            <DetailRow label={d.swapTotal} value={server.swap_total != null ? formatBytes(server.swap_total) : null} />
-            <DetailRow label={d.diskTotal} value={server.disk_total != null ? formatBytes(server.disk_total) : null} />
+            <DetailRow
+              label={t("admin.nodes.detail.cpuName")}
+              value={server.cpu_name}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.cpuCores")}
+              value={server.cpu_cores != null ? `${server.cpu_cores}` : null}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.memTotal")}
+              value={
+                server.mem_total != null ? formatBytes(server.mem_total) : null
+              }
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.swapTotal")}
+              value={
+                server.swap_total != null
+                  ? formatBytes(server.swap_total)
+                  : null
+              }
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.diskTotal")}
+              value={
+                server.disk_total != null
+                  ? formatBytes(server.disk_total)
+                  : null
+              }
+            />
           </section>
 
           {/* 网络信息 */}
           <section>
-            <h4 className="text-sm font-medium mb-1">{d.networkInfo}</h4>
+            <h4 className="text-sm font-medium mb-1">
+              {t("admin.nodes.detail.networkInfo")}
+            </h4>
             <Separator className="mb-2" />
-            <DetailRow label={d.ipv4} value={server.ipv4 ? <span className="font-mono text-xs">{server.ipv4}</span> : null} />
-            <DetailRow label={d.ipv6} value={server.ipv6 ? <span className="font-mono text-xs">{server.ipv6}</span> : null} />
-            <DetailRow label={d.totalFlowIn} value={server.total_flow_in != null ? formatBytes(server.total_flow_in) : null} />
-            <DetailRow label={d.totalFlowOut} value={server.total_flow_out != null ? formatBytes(server.total_flow_out) : null} />
+            <DetailRow
+              label={t("admin.nodes.detail.ipv4")}
+              value={
+                server.ipv4 ? (
+                  <span className="font-mono text-xs">{server.ipv4}</span>
+                ) : null
+              }
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.ipv6")}
+              value={
+                server.ipv6 ? (
+                  <span className="font-mono text-xs">{server.ipv6}</span>
+                ) : null
+              }
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.totalFlowIn")}
+              value={
+                server.total_flow_in != null
+                  ? formatBytes(server.total_flow_in)
+                  : null
+              }
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.totalFlowOut")}
+              value={
+                server.total_flow_out != null
+                  ? formatBytes(server.total_flow_out)
+                  : null
+              }
+            />
           </section>
 
           {/* 运行状态 */}
           <section>
-            <h4 className="text-sm font-medium mb-1">{d.runtimeInfo}</h4>
+            <h4 className="text-sm font-medium mb-1">
+              {t("admin.nodes.detail.runtimeInfo")}
+            </h4>
             <Separator className="mb-2" />
-            <DetailRow label={d.status} value={
-              server.status === ServerStatus.ONLINE
-                ? <Badge variant="default" className="bg-emerald-500">{t("admin.nodes.status.online")}</Badge>
-                : <Badge variant="secondary">{t("admin.nodes.status.offline")}</Badge>
-            } />
-            <DetailRow label={d.lastOnline} value={formatTimestamp(server.last_online)} />
-            <DetailRow label={d.bootTime} value={formatTimestamp(server.boot_time)} />
-            <DetailRow label={d.currentRunId} value={
-              server.current_run_id ? <span className="font-mono text-xs">{server.current_run_id}</span> : null
-            } />
+            <DetailRow
+              label={t("common.status")}
+              value={
+                server.status === ServerStatus.ONLINE ? (
+                  <Badge variant="default" className="bg-emerald-500">
+                    {t("admin.nodes.status.online")}
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary">
+                    {t("admin.nodes.status.offline")}
+                  </Badge>
+                )
+              }
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.lastOnline")}
+              value={formatTimestamp(server.last_online)}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.bootTime")}
+              value={formatTimestamp(server.boot_time)}
+            />
+            <DetailRow
+              label={t("admin.nodes.detail.currentRunId")}
+              value={
+                server.current_run_id ? (
+                  <span className="font-mono text-xs">
+                    {server.current_run_id}
+                  </span>
+                ) : null
+              }
+            />
           </section>
 
           {/* 分组信息 */}
           <section>
-            <h4 className="text-sm font-medium mb-1">{d.groupInfo}</h4>
+            <h4 className="text-sm font-medium mb-1">
+              {t("admin.nodes.detail.groupInfo")}
+            </h4>
             <Separator className="mb-2" />
             {server.groups.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 mt-1">
                 {server.groups.map((g) => (
-                  <Badge key={g.id} variant="secondary">{g.name}</Badge>
+                  <Badge key={g.id} variant="secondary">
+                    {g.name}
+                  </Badge>
                 ))}
               </div>
             ) : (
-              <span className="text-sm text-muted-foreground">{d.noGroup}</span>
+              <span className="text-sm text-muted-foreground">
+                {t("admin.nodes.detail.noGroup")}
+              </span>
             )}
           </section>
         </div>

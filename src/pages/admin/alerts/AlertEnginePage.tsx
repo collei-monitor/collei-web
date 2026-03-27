@@ -67,9 +67,9 @@ export default function AlertEnginePage() {
 
   const handleRefresh = useCallback(() => {
     toast.promise(Promise.all([refetchStatus(), refetchStates()]), {
-      loading: t("admin.alerts.engine.toast.refreshing"),
+      loading: t("common.refreshing"),
       success: t("admin.alerts.engine.toast.refreshSuccess"),
-      error: t("admin.alerts.engine.toast.refreshFailed"),
+      error: t("common.refreshFailed"),
     });
   }, [refetchStatus, refetchStates, t]);
 
@@ -120,7 +120,7 @@ export default function AlertEnginePage() {
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("admin.alerts.engine.refresh")}</TooltipContent>
+            <TooltipContent>{t("common.refresh")}</TooltipContent>
           </Tooltip>
           <Button variant="outline" onClick={handleReload} disabled={reloadEngine.isPending}>
             <RotateCw className="h-4 w-4 mr-2" />
@@ -201,7 +201,7 @@ export default function AlertEnginePage() {
                 <TableHead>{t("admin.alerts.engine.states.table.server")}</TableHead>
                 <TableHead>{t("admin.alerts.engine.states.table.rule")}</TableHead>
                 <TableHead>{t("admin.alerts.engine.states.table.metric")}</TableHead>
-                <TableHead>{t("admin.alerts.engine.states.table.status")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
                 <TableHead>{t("admin.alerts.engine.states.table.value")}</TableHead>
                 <TableHead>{t("admin.alerts.engine.states.table.pendingSince")}</TableHead>
                 <TableHead>{t("admin.alerts.engine.states.table.lastNotified")}</TableHead>
