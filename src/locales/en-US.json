@@ -488,6 +488,20 @@
           "intervalPositive": "Report interval must be positive",
           "nameInvalid": "Name cannot contain quotes or backslashes",
           "nameRequired": "Please enter a server name"
+        },
+        "win": {
+          "enableTerminal": "Enable Web Terminal (ConPTY)",
+          "enableFileApi": "Enable File Management API",
+          "hint": "Run PowerShell as Administrator, then copy and execute the command below",
+          "adminNote": "Recommended: run PowerShell as Administrator. In admin mode, the agent registers as a Windows service and starts automatically on boot.",
+          "terminalHint": "ConPTY terminal enabled — accessible via the Web Terminal in the panel",
+          "fileApiHint": "File management API enabled — manage server files through the panel",
+          "installDirPlaceholder": "Admin: C:\\Program Files\\collei-agent",
+          "configDirPlaceholder": "Admin: C:\\ProgramData\\collei-agent",
+          "error": {
+            "nameSingleQuote": "Name cannot contain single quotes",
+            "pathSingleQuote": "Path cannot contain single quotes"
+          }
         }
       }
     },

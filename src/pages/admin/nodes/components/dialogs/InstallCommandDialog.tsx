@@ -23,8 +23,17 @@ import {
   CommandPreview,
   buildInstallCommand,
   SCRIPT_URL,
+  WindowsOptionsForm,
+  WindowsCommandPreview,
+  buildWindowsInstallCommand,
+  WIN_SCRIPT_URL,
 } from "./install";
-import type { Downloader, DownloadMode, InstallFormValues } from "./install";
+import type {
+  Downloader,
+  DownloadMode,
+  InstallFormValues,
+  WindowsInstallFormValues,
+} from "./install";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -77,6 +86,29 @@ export function InstallCommandDialog({
   const handleFormChange = useCallback((patch: Partial<InstallFormValues>) => {
     setFormValues((prev) => ({ ...prev, ...patch }));
   }, []);
+
+  // ── Windows form state ────────────────────────────────────────────────────
+  const [windowsFormValues, setWindowsFormValues] =
+    useState<WindowsInstallFormValues>({
+      interval: 3,
+      enableTerminal: false,
+      enableFileApi: false,
+      force: false,
+      noAutoUpdate: false,
+      downloadMode: "github" as DownloadMode,
+      installDir: "",
+      configDir: "",
+      version: "",
+    });
+
+  const isWinProxyMode = windowsFormValues.downloadMode === "proxy";
+
+  const handleWindowsFormChange = useCallback(
+    (patch: Partial<WindowsInstallFormValues>) => {
+      setWindowsFormValues((prev) => ({ ...prev, ...patch }));
+    },
+    [],
+  );
 
   // ── Validation ────────────────────────────────────────────────────────────
   const validationError = useMemo(() => {
@@ -145,6 +177,89 @@ export function InstallCommandDialog({
     return buildInstallCommand(makeInstallOpts("token", createdToken), downloader, proxyScriptUrl);
   }, [autoRegister, isPassiveMode, regToken, activeToken, createdToken, downloader, proxyScriptUrl, makeInstallOpts]);
 
+  // ── Windows validation ────────────────────────────────────────────────────
+  const winValidationError = useMemo(() => {
+    if (autoRegister && !isPassiveMode && !regToken) {
+      return t("admin.nodes.install.error.noRegToken");
+    }
+    if (windowsFormValues.interval <= 0) {
+      return t("admin.nodes.install.error.intervalPositive");
+    }
+    if (name && /[']/.test(name)) {
+      return t("admin.nodes.install.win.error.nameSingleQuote");
+    }
+    if (windowsFormValues.installDir && /[']/.test(windowsFormValues.installDir)) {
+      return t("admin.nodes.install.win.error.pathSingleQuote");
+    }
+    if (windowsFormValues.configDir && /[']/.test(windowsFormValues.configDir)) {
+      return t("admin.nodes.install.win.error.pathSingleQuote");
+    }
+    if (!autoRegister && !isPassiveMode && !name.trim()) {
+      return t("admin.nodes.install.error.nameRequired");
+    }
+    return null;
+  }, [autoRegister, isPassiveMode, regToken, windowsFormValues, name, t]);
+
+  // ── Windows proxy script URL ──────────────────────────────────────────────
+  const winProxyScriptUrl = useMemo(() => {
+    if (!isWinProxyMode) return WIN_SCRIPT_URL;
+    const tokenForUrl = autoRegister && !isPassiveMode ? regToken : activeToken;
+    if (!tokenForUrl) return WIN_SCRIPT_URL;
+    return `${apiUrl}/api/v1/agent/install-script?platform=windows&token=${tokenForUrl}`;
+  }, [isWinProxyMode, autoRegister, isPassiveMode, regToken, activeToken, apiUrl]);
+
+  // ── Windows build options ─────────────────────────────────────────────────
+  const makeWinInstallOpts = useCallback(
+    (tokenKey: "regToken" | "token", tokenValue: string) => ({
+      url: apiUrl,
+      [tokenKey]: tokenValue,
+      name: name || undefined,
+      interval: windowsFormValues.interval,
+      enableTerminal: windowsFormValues.enableTerminal || undefined,
+      enableFileApi: windowsFormValues.enableFileApi || undefined,
+      force: windowsFormValues.force || undefined,
+      noAutoUpdate: windowsFormValues.noAutoUpdate || undefined,
+      installDir: windowsFormValues.installDir || undefined,
+      configDir: windowsFormValues.configDir || undefined,
+      version: windowsFormValues.version || undefined,
+      proxyDownload: isWinProxyMode || undefined,
+    }),
+    [apiUrl, name, windowsFormValues, isWinProxyMode],
+  );
+
+  // ── Windows command ───────────────────────────────────────────────────────
+  const windowsCommand = useMemo(() => {
+    if (winValidationError) return null;
+    if (autoRegister || isPassiveMode) {
+      if (autoRegister && !isPassiveMode) {
+        return buildWindowsInstallCommand(
+          makeWinInstallOpts("regToken", regToken),
+          winProxyScriptUrl,
+        );
+      }
+      if (!activeToken) return null;
+      return buildWindowsInstallCommand(
+        makeWinInstallOpts("token", activeToken),
+        winProxyScriptUrl,
+      );
+    }
+    // 被动模式（手动创建）
+    if (!createdToken) return null;
+    return buildWindowsInstallCommand(
+      makeWinInstallOpts("token", createdToken),
+      winProxyScriptUrl,
+    );
+  }, [
+    winValidationError,
+    autoRegister,
+    isPassiveMode,
+    regToken,
+    activeToken,
+    createdToken,
+    winProxyScriptUrl,
+    makeWinInstallOpts,
+  ]);
+
   // ── 被动注册：创建服务器 ───────────────────────────────────────────────────
   const handleCreateServer = () => {
     if (!name.trim()) return;
@@ -194,6 +309,36 @@ export function InstallCommandDialog({
     </>
   );
 
+  // ── Windows 选项表单 + 命令预览 ────────────────────────────────────────────
+  const renderWinOptionsAndCommand = (idPrefix: string) => (
+    <>
+      <WindowsOptionsForm
+        values={windowsFormValues}
+        onChange={handleWindowsFormChange}
+        idPrefix={idPrefix}
+      />
+
+      {winValidationError && (
+        <p className="text-sm text-destructive">{winValidationError}</p>
+      )}
+
+      {windowsCommand && (
+        <>
+          <Label>{t("admin.nodes.install.command")}</Label>
+          <WindowsCommandPreview
+            command={windowsCommand}
+            isProxyMode={isWinProxyMode}
+            enableTerminal={windowsFormValues.enableTerminal}
+            enableFileApi={windowsFormValues.enableFileApi}
+          />
+          <p className="text-xs text-muted-foreground">
+            {t("admin.nodes.install.win.hint")}
+          </p>
+        </>
+      )}
+    </>
+  );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
@@ -208,7 +353,7 @@ export function InstallCommandDialog({
         <Tabs defaultValue="linux">
           <TabsList className="w-full">
             <TabsTrigger value="linux" className="flex-1">Linux</TabsTrigger>
-            <TabsTrigger value="windows" className="flex-1" disabled>
+            <TabsTrigger value="windows" className="flex-1">
               Windows
             </TabsTrigger>
             <TabsTrigger value="macos" className="flex-1" disabled>
@@ -305,11 +450,100 @@ export function InstallCommandDialog({
             )}
           </TabsContent>
 
-          <TabsContent value="windows">
-            <p className="text-sm text-muted-foreground py-8 text-center">
-              {t("admin.nodes.install.comingSoon")}
+          <TabsContent value="windows" className="space-y-4 mt-4">
+            {/* 管理员提示 */}
+            <p className="text-xs bg-muted rounded-md px-3 py-2 text-muted-foreground">
+              {t("admin.nodes.install.win.adminNote")}
             </p>
+
+            {/* 注册模式切换（仅在非已有 server token 时显示） */}
+            {!isPassiveMode && (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="win-auto-register"
+                  checked={autoRegister}
+                  onCheckedChange={(v) => {
+                    setAutoRegister(!!v);
+                    setCreatedToken(null);
+                  }}
+                />
+                <Label htmlFor="win-auto-register" className="text-sm cursor-pointer">
+                  {t("admin.nodes.install.autoRegister")}
+                </Label>
+              </div>
+            )}
+
+            {/* 自动注册 / 已有 serverToken 模式 */}
+            {(autoRegister || isPassiveMode) && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="win-install-name">
+                    {t("admin.nodes.install.name")}
+                  </Label>
+                  <Input
+                    id="win-install-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={t("admin.nodes.install.namePlaceholder")}
+                  />
+                </div>
+
+                {autoRegister && !isPassiveMode && regToken && (
+                  <TokenDisplay
+                    label={t("admin.nodes.install.regTokenLabel")}
+                    token={regToken}
+                  />
+                )}
+                {isPassiveMode && serverToken && (
+                  <TokenDisplay
+                    label={t("admin.nodes.install.serverTokenLabel")}
+                    token={serverToken}
+                  />
+                )}
+
+                {renderWinOptionsAndCommand("win-install-")}
+              </div>
+            )}
+
+            {/* 被动注册模式（手动创建服务器） */}
+            {!autoRegister && !isPassiveMode && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  {t("admin.nodes.install.passiveDesc")}
+                </p>
+                <div className="space-y-2">
+                  <Label htmlFor="win-passive-name">
+                    {t("admin.nodes.install.name")}
+                    <span className="text-destructive ml-0.5">*</span>
+                  </Label>
+                  <Input
+                    id="win-passive-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={t("admin.nodes.install.namePlaceholder")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="win-passive-remark">
+                    {t("admin.nodes.install.remark")}
+                  </Label>
+                  <Input
+                    id="win-passive-remark"
+                    value={remark}
+                    onChange={(e) => setRemark(e.target.value)}
+                    placeholder={t("admin.nodes.install.remarkPlaceholder")}
+                  />
+                </div>
+
+                {createdToken && renderWinOptionsAndCommand("win-passive-")}
+
+                {winValidationError && !createdToken && (
+                  <p className="text-sm text-destructive">{winValidationError}</p>
+                )}
+              </div>
+            )}
           </TabsContent>
+
           <TabsContent value="macos">
             <p className="text-sm text-muted-foreground py-8 text-center">
               {t("admin.nodes.install.comingSoon")}

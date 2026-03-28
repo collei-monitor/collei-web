@@ -491,6 +491,20 @@
           "intervalPositive": "上报间隔必须为正数",
           "nameInvalid": "名称中不能包含引号或反斜杠",
           "nameRequired": "请输入服务器名称"
+        },
+        "win": {
+          "enableTerminal": "启用 Web 终端（ConPTY 直连）",
+          "enableFileApi": "启用文件管理 API",
+          "hint": "请以管理员身份运行 PowerShell，复制并执行以下命令",
+          "adminNote": "建议以管理员身份运行 PowerShell，管理员模式将自动注册 Windows 服务并开机自启",
+          "terminalHint": "已启用 ConPTY 终端直连，可通过面板使用 Web 终端",
+          "fileApiHint": "已启用文件管理 API，可通过面板管理服务器文件",
+          "installDirPlaceholder": "管理员: C:\\Program Files\\collei-agent",
+          "configDirPlaceholder": "管理员: C:\\ProgramData\\collei-agent",
+          "error": {
+            "nameSingleQuote": "名称中不能包含单引号",
+            "pathSingleQuote": "路径中不能包含单引号"
+          }
         }
       }
     },
