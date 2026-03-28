@@ -225,8 +225,8 @@ export interface WsServerStatusInfo {
   boot_time: number | null;
   total_flow_out: number;
   total_flow_in: number;
-  current_disk_io: DiskIOEntry[];
-  current_net_io: NetIOEntry[];
+  current_disk_io?: DiskIOEntry[];
+  current_net_io?: NetIOEntry[];
 }
 
 /** WS status 消息中单台服务器的完整快照 */
