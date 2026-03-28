@@ -745,6 +745,7 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
         mode={editorMode}
         fileName={editorFileName}
         onFileNameChange={setEditorFileName}
+        filePath={editorFilePath}
         content={editorContent}
         onContentChange={setEditorContent}
         loading={editorLoading}

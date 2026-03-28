@@ -2,7 +2,7 @@
  * SSH 脚本库管理页面
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
@@ -11,7 +11,11 @@ import {
   useUpdateSshScript,
   useDeleteSshScript,
 } from "@/services/sshScripts";
-import type { SshScript, CreateSshScriptPayload, UpdateSshScriptPayload } from "@/types/sshScript";
+import type {
+  SshScript,
+  CreateSshScriptPayload,
+  UpdateSshScriptPayload,
+} from "@/types/sshScript";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,21 +101,11 @@ function ScriptDialog({
   const createScript = useCreateSshScript();
   const updateScript = useUpdateSshScript();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [content, setContent] = useState("");
-  const [language, setLanguage] = useState<string>("bash");
-  const [top, setTop] = useState(0);
-
-  useEffect(() => {
-    if (open) {
-      setName(script?.name ?? "");
-      setDescription(script?.description ?? "");
-      setContent(script?.content ?? "");
-      setLanguage(script?.language ?? "bash");
-      setTop(script?.top ?? 0);
-    }
-  }, [open, script]);
+  const [name, setName] = useState(script?.name ?? "");
+  const [description, setDescription] = useState(script?.description ?? "");
+  const [content, setContent] = useState(script?.content ?? "");
+  const [language, setLanguage] = useState<string>(script?.language ?? "bash");
+  const [top, setTop] = useState(script?.top ?? 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,7 +123,9 @@ function ScriptDialog({
         { id: script.id, payload },
         {
           onSuccess: () => {
-            toast.success(t("admin.services.sshScripts.toast.editSuccess"), { id: toastId });
+            toast.success(t("admin.services.sshScripts.toast.editSuccess"), {
+              id: toastId,
+            });
             onOpenChange(false);
           },
           onError: () => toast.error(t("common.updateFailed"), { id: toastId }),
@@ -144,7 +140,9 @@ function ScriptDialog({
       };
       createScript.mutate(payload, {
         onSuccess: () => {
-          toast.success(t("admin.services.sshScripts.toast.createSuccess"), { id: toastId });
+          toast.success(t("admin.services.sshScripts.toast.createSuccess"), {
+            id: toastId,
+          });
           onOpenChange(false);
         },
         onError: () => toast.error(t("common.createFailed"), { id: toastId }),
@@ -186,7 +184,9 @@ function ScriptDialog({
                 id="script-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t("admin.services.sshScripts.fields.namePlaceholder")}
+                placeholder={t(
+                  "admin.services.sshScripts.fields.namePlaceholder",
+                )}
                 required
                 maxLength={128}
               />
@@ -219,7 +219,9 @@ function ScriptDialog({
               id="script-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={t("admin.services.sshScripts.fields.descriptionPlaceholder")}
+              placeholder={t(
+                "admin.services.sshScripts.fields.descriptionPlaceholder",
+              )}
               maxLength={512}
             />
           </div>
@@ -234,7 +236,9 @@ function ScriptDialog({
               id="script-content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder={t("admin.services.sshScripts.fields.contentPlaceholder")}
+              placeholder={t(
+                "admin.services.sshScripts.fields.contentPlaceholder",
+              )}
               required
               rows={10}
               className="font-mono text-sm resize-y"
@@ -260,7 +264,11 @@ function ScriptDialog({
           )}
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               {t("common.cancel")}
             </Button>
             <Button
@@ -295,11 +303,15 @@ function DeleteScriptDialog({
     const toastId = toast.loading(t("common.deleting"));
     deleteScript.mutate(script.id, {
       onSuccess: () => {
-        toast.success(t("admin.services.sshScripts.toast.deleteSuccess"), { id: toastId });
+        toast.success(t("admin.services.sshScripts.toast.deleteSuccess"), {
+          id: toastId,
+        });
         onOpenChange(false);
       },
       onError: () => {
-        toast.error(t("admin.services.sshScripts.toast.deleteFailed"), { id: toastId });
+        toast.error(t("admin.services.sshScripts.toast.deleteFailed"), {
+          id: toastId,
+        });
       },
     });
   };
@@ -322,7 +334,9 @@ function DeleteScriptDialog({
             disabled={deleteScript.isPending}
             className="bg-destructive text-white hover:bg-destructive/90"
           >
-            {deleteScript.isPending ? t("common.deleting") : t("common.confirmDelete")}
+            {deleteScript.isPending
+              ? t("common.deleting")
+              : t("common.confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -376,8 +390,15 @@ export default function SshScriptsPage() {
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isLoading}>
-                <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleRefresh}
+                disabled={isLoading}
+              >
+                <RefreshCw
+                  className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                />
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t("common.refresh")}</TooltipContent>
@@ -403,7 +424,12 @@ export default function SshScriptsPage() {
           <p className="text-sm text-muted-foreground">
             {t("admin.services.sshScripts.fetchError")}
           </p>
-          <Button variant="outline" size="sm" className="mt-4" onClick={handleRefresh}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-4"
+            onClick={handleRefresh}
+          >
             <RefreshCw className="h-4 w-4 mr-2" />
             {t("common.refresh")}
           </Button>
@@ -449,13 +475,13 @@ export default function SshScriptsPage() {
                     <div className="font-medium">{script.name}</div>
                     {/* 移动端显示描述 */}
                     {script.description && (
-                      <div className="md:hidden text-xs text-muted-foreground mt-0.5 truncate max-w-[200px]">
+                      <div className="md:hidden text-xs text-muted-foreground mt-0.5 truncate max-w-50">
                         {script.description}
                       </div>
                     )}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    <span className="text-muted-foreground text-sm truncate block max-w-[240px]">
+                    <span className="text-muted-foreground text-sm truncate block max-w-60">
                       {script.description ?? "—"}
                     </span>
                   </TableCell>
@@ -509,6 +535,7 @@ export default function SshScriptsPage() {
 
       {/* 创建对话框 */}
       <ScriptDialog
+        key="create"
         open={createOpen}
         script={null}
         onOpenChange={setCreateOpen}
@@ -516,6 +543,7 @@ export default function SshScriptsPage() {
 
       {/* 编辑对话框 */}
       <ScriptDialog
+        key={editTarget?.id ?? "edit"}
         open={editOpen}
         script={editTarget}
         onOpenChange={(open) => {
