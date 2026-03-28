@@ -73,7 +73,7 @@ function ServerDetailContent({ server }: { server: Server }) {
 
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         {/* 基础信息 */}
-        <Card>
+        <Card className="gap-2">
           <CardHeader>
             <CardTitle className="text-sm font-medium">
               {t("admin.nodes.detail.basicInfo")}
@@ -121,7 +121,7 @@ function ServerDetailContent({ server }: { server: Server }) {
         </Card>
 
         {/* 硬件信息 */}
-        <Card>
+        <Card className="gap-2">
           <CardHeader>
             <CardTitle className="text-sm font-medium">
               {t("admin.nodes.detail.hardwareInfo")}
@@ -162,7 +162,7 @@ function ServerDetailContent({ server }: { server: Server }) {
         </Card>
 
         {/* 网络信息 */}
-        <Card>
+        <Card className="gap-2">
           <CardHeader>
             <CardTitle className="text-sm font-medium">
               {t("admin.nodes.detail.networkInfo")}
@@ -205,7 +205,7 @@ function ServerDetailContent({ server }: { server: Server }) {
         </Card>
 
         {/* 运行状态 */}
-        <Card>
+        <Card className="gap-2">
           <CardHeader>
             <CardTitle className="text-sm font-medium">
               {t("admin.nodes.detail.runtimeInfo")}
@@ -273,7 +273,7 @@ function ServerDetailContent({ server }: { server: Server }) {
       </Card> */}
 
       {/* 磁盘 IO */}
-      <Card>
+      <Card className="gap-2">
         <CardHeader>
           <CardTitle className="text-sm font-medium">
             {t("admin.nodes.detail.diskIO")}
@@ -332,7 +332,7 @@ function ServerDetailContent({ server }: { server: Server }) {
       </Card>
 
       {/* 网络 IO */}
-      <Card>
+      <Card className="gap-2">
         <CardHeader>
           <CardTitle className="text-sm font-medium">
             {t("admin.nodes.detail.netIO")}
