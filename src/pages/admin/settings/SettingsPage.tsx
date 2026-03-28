@@ -20,6 +20,7 @@ import {
   useConfigList,
   useSetConfig,
   useBatchSetConfig,
+  useDeleteConfig,
   type ConfigBatchItem,
 } from "@/services/config";
 import { ConfigSkeleton } from "./components/ConfigSkeleton";
@@ -35,6 +36,21 @@ export default function SettingsPage() {
   const { data: configs, isLoading } = useConfigList();
   const setConfig = useSetConfig();
   const batchSetConfig = useBatchSetConfig();
+  const deleteConfig = useDeleteConfig();
+
+  const handleDelete = (key: string, onSuccess: () => void) => {
+    deleteConfig.mutate(key, {
+      onSuccess: () => {
+        onSuccess();
+        toast.success(t("settings.toast.deleteSuccess"));
+      },
+      onError: (err) => {
+        const status = (err as { status?: number })?.status;
+        if (status === 409) toast.error(t("settings.toast.deleteConflict"));
+        else toast.error(t("common.deleteFailed"));
+      },
+    });
+  };
 
   const handleSave = (key: string, value: string) => {
     setConfig.mutate(
@@ -127,9 +143,14 @@ export default function SettingsPage() {
                 placeholder={window.location.origin}
                 currentValue={configs?.["agent_url"]}
                 onSave={handleSave}
+                onDelete={handleDelete}
                 saving={
                   setConfig.isPending &&
                   setConfig.variables?.key === "agent_url"
+                }
+                deleting={
+                  deleteConfig.isPending &&
+                  deleteConfig.variables === "agent_url"
                 }
               />
               <Separator />
@@ -142,9 +163,14 @@ export default function SettingsPage() {
                 )}
                 currentValue={configs?.["agent_install_script_url"]}
                 onSave={handleSave}
+                onDelete={handleDelete}
                 saving={
                   setConfig.isPending &&
                   setConfig.variables?.key === "agent_install_script_url"
+                }
+                deleting={
+                  deleteConfig.isPending &&
+                  deleteConfig.variables === "agent_install_script_url"
                 }
               />
               <Separator />

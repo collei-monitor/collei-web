@@ -1531,7 +1531,8 @@
       "saveConflict": "This setting is locked and cannot be changed",
       "saveInvalid": "Invalid value, please check your input",
       "deleteSuccess": "Configuration deleted",
-      "deleteConflict": "This setting is locked and cannot be deleted"
+      "deleteConflict": "This setting is locked and cannot be deleted",
+      "deleteConfirmDesc": "Are you sure you want to delete the value of \"{{label}}\"? This action cannot be undone."
     }
   },
   "ssh": {

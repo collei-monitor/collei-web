@@ -73,7 +73,7 @@ export function InstallCommandDialog({
   // 面板中转可用性检查
   const agentBinaryUrl = configMap?.agent_url || "";
   const agentScriptUrl = configMap?.agent_install_script_url || "";
-  const proxyAvailable = !!agentBinaryUrl && !!agentScriptUrl;
+  const proxyAvailable = !!agentBinaryUrl;
   const isProxyMode = formValues.downloadMode === "proxy";
 
   const handleFormChange = useCallback((patch: Partial<InstallFormValues>) => {

@@ -8,17 +8,32 @@ import {
   Copy,
   Check,
   Shuffle,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-const RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const RANDOM_CHARS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 function generateRandomString(length: number): string {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
-  return Array.from(array, (b) => RANDOM_CHARS[b % RANDOM_CHARS.length]).join("");
+  return Array.from(array, (b) => RANDOM_CHARS[b % RANDOM_CHARS.length]).join(
+    "",
+  );
 }
 
 export function TextConfigField({
@@ -30,7 +45,9 @@ export function TextConfigField({
   secret,
   generateRandom,
   onSave,
+  onDelete,
   saving,
+  deleting,
 }: {
   configKey: string;
   label: string;
@@ -40,7 +57,9 @@ export function TextConfigField({
   secret?: boolean;
   generateRandom?: boolean;
   onSave: (key: string, value: string) => void;
+  onDelete?: (key: string, onSuccess: () => void) => void;
   saving: boolean;
+  deleting?: boolean;
 }) {
   const { t } = useTranslation();
   const [value, setValue] = useState(currentValue ?? "");
@@ -48,6 +67,7 @@ export function TextConfigField({
   const [copied, setCopied] = useState(false);
 
   const isDirty = value !== (currentValue ?? "");
+  const hasValue = !!currentValue;
 
   const handleCopy = () => {
     if (value) {
@@ -116,6 +136,41 @@ export function TextConfigField({
           >
             <Shuffle className="h-4 w-4" />
           </Button>
+        )}{" "}
+        {onDelete && hasValue && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={deleting}
+                className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              >
+                {deleting ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {t("settings.toast.deleteConfirmDesc", { label })}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={() => onDelete(configKey, () => setValue(""))}
+                >
+                  {t("common.delete")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         )}
         <Button
           size="sm"

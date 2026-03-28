@@ -1534,7 +1534,8 @@
       "saveConflict": "此配置项已锁定，无法修改",
       "saveInvalid": "配置值不合法，请检查输入",
       "deleteSuccess": "配置已删除",
-      "deleteConflict": "此配置项已锁定，无法删除"
+      "deleteConflict": "此配置项已锁定，无法删除",
+      "deleteConfirmDesc": "确定要删除「{{label}}」的配置值吗？此操作不可撤销。"
     }
   },
   "ssh": {

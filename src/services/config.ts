@@ -89,7 +89,7 @@ export const configApi = {
   /** 删除配置项 */
   async remove(key: string): Promise<void> {
     const { status, data } = await api.delete(`/config/${key}`);
-    if (status !== 204) {
+    if (status !== 200) {
       const msg = data?.detail || "Failed to delete config";
       throw Object.assign(new Error(msg), { status });
     }
