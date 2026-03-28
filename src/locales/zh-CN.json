@@ -1710,5 +1710,92 @@
       "fileNameRequired": "请输入文件名",
       "binaryFile": "\"{{name}}\" 是二进制文件，无法在线编辑，请使用下载功能"
     }
+  },
+  "terminal": {
+    "tabs": {
+      "terminal": "终端",
+      "files": "文件管理",
+      "hideFiles": "隐藏文件管理"
+    },
+    "status": {
+      "idle": "未连接",
+      "creating": "创建会话中",
+      "waiting": "等待 Agent 连接",
+      "connected": "已连接",
+      "error": "连接错误",
+      "closed": "已断开"
+    },
+    "terminal": {
+      "back": "返回节点管理",
+      "connecting": "正在连接 {{name}}",
+      "reconnecting": "正在重新连接",
+      "disconnected": "连接已断开",
+      "error": "错误",
+      "noServer": "未指定服务器",
+      "reconnect": "重新连接",
+      "disconnect": "断开连接"
+    }
+  },
+  "fileapi": {
+    "status": {
+      "idle": "未连接",
+      "creating": "创建会话中",
+      "waiting": "等待连接",
+      "connected": "已连接",
+      "error": "连接错误",
+      "closed": "已断开"
+    },
+    "reconnect": "重新连接",
+    "empty": "当前目录为空",
+    "itemCount": "共 {{count}} 项",
+    "table": {
+      "size": "大小",
+      "permissions": "权限",
+      "modified": "修改时间"
+    },
+    "actions": {
+      "mkdir": "新建文件夹",
+      "newFile": "新建文件",
+      "upload": "上传文件",
+      "rename": "重命名"
+    },
+    "editor": {
+      "fileName": "文件名",
+      "fileNamePlaceholder": "请输入文件名，例如 notes.txt"
+    },
+    "mkdir": {
+      "title": "新建文件夹",
+      "description": "在当前目录下创建新文件夹",
+      "name": "文件夹名称",
+      "placeholder": "请输入文件夹名称"
+    },
+    "rename": {
+      "title": "重命名",
+      "description": "将 \"{{name}}\" 重命名为：",
+      "newName": "新名称",
+      "confirm": "确认"
+    },
+    "delete": {
+      "descriptionFile": "确定要删除文件 \"{{name}}\" 吗？此操作不可恢复。",
+      "descriptionDir": "确定要删除目录 \"{{name}}\" 及其所有内容吗？此操作不可恢复。"
+    },
+    "toast": {
+      "sessionClosed": "文件会话已关闭：{{reason}}",
+      "loadFailed": "加载文件列表失败",
+      "uploadSuccess": "{{name}} 上传完成",
+      "uploadFailed": "{{name}} 上传失败",
+      "mkdirSuccess": "文件夹 \"{{name}}\" 已创建",
+      "mkdirFailed": "创建文件夹失败",
+      "deleteSuccess": "\"{{name}}\" 已删除",
+      "deleteFailed": "删除失败",
+      "renameSuccess": "重命名成功",
+      "renameFailed": "重命名失败",
+      "onlyFileEditable": "仅支持编辑普通文件",
+      "readFailed": "读取文件失败",
+      "saveSuccess": "文件 \"{{name}}\" 已保存",
+      "saveFailed": "保存失败",
+      "createFileSuccess": "文件 \"{{name}}\" 已创建",
+      "fileNameRequired": "请输入文件名"
+    }
   }
 }

@@ -21,6 +21,7 @@ import DomainDetailPage from "@/pages/admin/dns/DomainDetailPage";
 import CredentialsPage from "@/pages/admin/dns/CredentialsPage";
 import DdnsTasksPage from "@/pages/admin/dns/DdnsTasksPage";
 import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
+import ConPTYTerminalPage from "@/pages/admin/nodes/ConPTYTerminalPage";
 import SshScriptsPage from "@/pages/admin/services/scripts/SshScriptsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
       },
       // 独立全屏页面（不套 AdminLayout）
       { path: "terminal", element: <SSHTerminalPage /> },
+      { path: "conpty-terminal", element: <ConPTYTerminalPage /> },
     ],
   },
   {
