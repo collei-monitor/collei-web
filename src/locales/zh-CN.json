@@ -356,7 +356,19 @@
         "enabled": "已启用",
         "disabled": "已禁用",
         "noGroup": "未分组",
-        "unknown": "未知"
+        "unknown": "未知",
+        "diskIO": "磁盘 IO",
+        "diskMount": "挂载点",
+        "diskFs": "文件系统",
+        "diskUsed": "已用",
+        "diskTotaL": "总计",
+        "diskUsage": "使用率",
+        "netIO": "网络 IO",
+        "netInterface": "网卡",
+        "netRx": "接收",
+        "netTx": "发送",
+        "noData": "暂无数据",
+        "backToList": "返回列表"
       },
       "toast": {
         "sortResetting": "重新排序中…",

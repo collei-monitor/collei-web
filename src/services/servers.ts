@@ -56,6 +56,13 @@ const serverApi = {
     return data as Server[];
   },
 
+  /** 获取单个服务器详情 */
+  async getOne(uuid: string): Promise<Server> {
+    const { status, data } = await api.get(`/clients/servers/${uuid}`);
+    if (status !== 200) throw new Error(data?.detail || "Failed to fetch server");
+    return data as Server;
+  },
+
   /** 更新服务器 */
   async update(uuid: string, payload: UpdateServerPayload): Promise<Server> {
     const { status, data } = await api.put(`/clients/servers/${uuid}`, payload);
@@ -193,6 +200,16 @@ export function useServers(options?: { refetchInterval?: number | false }) {
   return useQuery({
     queryKey: serverKeys.lists(),
     queryFn: serverApi.list,
+    refetchInterval: options?.refetchInterval,
+  });
+}
+
+/** 获取单个服务器详情 */
+export function useServer(uuid: string | null, options?: { refetchInterval?: number | false }) {
+  return useQuery({
+    queryKey: serverKeys.detail(uuid ?? ""),
+    queryFn: () => serverApi.getOne(uuid!),
+    enabled: !!uuid,
     refetchInterval: options?.refetchInterval,
   });
 }

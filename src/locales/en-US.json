@@ -353,7 +353,19 @@
         "enabled": "Enabled",
         "disabled": "Disabled",
         "noGroup": "No group",
-        "unknown": "Unknown"
+        "unknown": "Unknown",
+        "diskIO": "Disk IO",
+        "diskMount": "Mount",
+        "diskFs": "Filesystem",
+        "diskUsed": "Used",
+        "diskTotaL": "Total",
+        "diskUsage": "Usage",
+        "netIO": "Network IO",
+        "netInterface": "Interface",
+        "netRx": "Received",
+        "netTx": "Sent",
+        "noData": "No data",
+        "backToList": "Back to list"
       },
       "toast": {
         "sortResetting": "Resorting…",

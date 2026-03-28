@@ -38,7 +38,6 @@ export function SortableRow({
   onEdit,
   onDelete,
   onGroups,
-  onDetail,
   onBilling,
   onTrafficRule,
   onInstall,
@@ -50,7 +49,6 @@ export function SortableRow({
   onEdit: (s: Server) => void;
   onDelete: (s: Server) => void;
   onGroups: (s: Server) => void;
-  onDetail: (s: Server) => void;
   onBilling: (s: Server) => void;
   onTrafficRule: (s: Server) => void;
   onInstall: (s: Server) => void;
@@ -120,7 +118,7 @@ export function SortableRow({
           <button
             type="button"
             className="hover:underline cursor-pointer text-left"
-            onClick={() => onDetail(server)}
+            onClick={() => navigate(`/admin/nodes/${server.uuid}`)}
           >
             {server.name}
           </button>

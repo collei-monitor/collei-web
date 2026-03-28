@@ -173,8 +173,8 @@ export function useDisplayServers() {
           status: snap.status.status,
           last_online: snap.status.last_online,
           boot_time: snap.status.boot_time,
-          groups: node.groups,
-          tags: node.tags,
+          groups: node.groups ?? [],
+          tags: node.tags ?? [],
           load: snap.load,
           cpu_cores: snap.cpu_cores,
           mem_total: snap.mem_total,
@@ -201,8 +201,8 @@ export function useDisplayServers() {
         status: connected ? ServerStatus.OFFLINE : node.status,
         last_online: node.last_online,
         boot_time: node.boot_time,
-        groups: node.groups,
-        tags: node.tags,
+        groups: node.groups ?? [],
+        tags: node.tags ?? [],
         billing: node.billing,
       };
     });

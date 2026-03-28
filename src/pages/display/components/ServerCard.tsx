@@ -273,7 +273,7 @@ export function ServerCard({ server }: ServerCardProps) {
         )}
 
         {/* 标签 + 计费信息 */}
-        {(server.tags.length > 0 ||
+        {((server.tags ?? []).length > 0 ||
           (server.billing &&
             (server.billing.billing_cycle_cost !== null ||
               server.billing.expiry_date !== null))) && (
@@ -281,9 +281,9 @@ export function ServerCard({ server }: ServerCardProps) {
             {server.billing && (
               <BillingSection billing={server.billing} t={t} />
             )}
-            {server.tags.length > 0 && (
+            {(server.tags ?? []).length > 0 && (
               <>
-                {server.tags.map((tag) => (
+                {(server.tags ?? []).map((tag) => (
                   <Badge
                     key={tag.name}
                     className="text-[10px] px-1.5 py-0 font-normal"

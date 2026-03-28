@@ -4,6 +4,7 @@ import ServerDetailPage from "@/pages/display/ServerDetailPage";
 import LoginPage from "@/pages/LoginPage";
 import AdminLayout from "@/pages/admin/AdminLayout";
 import NodesPage from "@/pages/admin/nodes/NodesPage";
+import AdminServerDetailPage from "@/pages/admin/nodes/ServerDetailPage";
 import GroupsPage from "@/pages/admin/groups/GroupsPage";
 import AlertRulesPage from "@/pages/admin/alerts/AlertRulesPage";
 import NotificationChannelsPage from "@/pages/admin/alerts/NotificationChannelsPage";
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <NodesPage /> },
           { path: "nodes", element: <NodesPage /> },
+          { path: "nodes/:uuid", element: <AdminServerDetailPage /> },
           { path: "groups", element: <GroupsPage /> },
           { path: "alerts/rules", element: <AlertRulesPage /> },
           { path: "alerts/channels", element: <NotificationChannelsPage /> },

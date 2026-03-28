@@ -112,10 +112,27 @@ export interface Server {
   current_run_id: string | null;
   total_flow_out: number | null;
   total_flow_in: number | null;
+  current_disk_io: DiskIOEntry[];
+  current_net_io: NetIOEntry[];
   groups: Group[];
   tags: ServerTag[];
   is_region_locked: number;
   billing: BillingSummary | null;
+}
+
+/** 磁盘 IO 条目 */
+export interface DiskIOEntry {
+  mount: string;
+  fs: string;
+  total: number;
+  used: number;
+}
+
+/** 网络 IO 条目 */
+export interface NetIOEntry {
+  name: string;
+  rx_bytes: number;
+  tx_bytes: number;
 }
 
 export interface UpdateServerPayload {
@@ -208,6 +225,8 @@ export interface WsServerStatusInfo {
   boot_time: number | null;
   total_flow_out: number;
   total_flow_in: number;
+  current_disk_io: DiskIOEntry[];
+  current_net_io: NetIOEntry[];
 }
 
 /** WS status 消息中单台服务器的完整快照 */
