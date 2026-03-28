@@ -607,6 +607,7 @@
           "offline": "Offline Detection",
           "expiry": "Expiry Reminder",
           "login": "Login Notification",
+          "ip_change": "IP Address Change",
           "traffic_percent": "Traffic Percentage"
         },
         "durationUnit": "{{value}}s",

@@ -63,6 +63,7 @@ export type AlertMetric =
   | "offline"
   | "expiry"
   | "login"
+  | "ip_change"
   | "traffic_percent";
 
 export type AlertCondition = ">" | "<" | ">=" | "<=" | "==" | "!=";

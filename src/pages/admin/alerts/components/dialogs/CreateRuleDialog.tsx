@@ -28,7 +28,7 @@ import { getMetricDefaults } from "../metric-defaults";
 const METRICS: AlertMetric[] = [
   "offline", "cpu", "ram", "swap", "disk", "load",
   "net_in", "net_out", "tcp", "udp", "process",
-  "expiry", "login", "traffic_percent",
+  "expiry", "login", "ip_change", "traffic_percent",
 ];
 
 const CONDITIONS: AlertCondition[] = [">", "<", ">=", "<=", "==", "!="];

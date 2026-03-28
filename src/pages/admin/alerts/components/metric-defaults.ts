@@ -48,6 +48,17 @@ export const METRIC_DEFAULTS: Record<string, MetricDefaults> = {
     hideTrafficStep: true,
     defaultNotifyRecovery: 0,
   },
+  ip_change: {
+    condition: "==",
+    threshold: 1,
+    duration: 0,
+    hideCondition: true,
+    hideThreshold: true,
+    hideDuration: true,
+    hideNotifyRecovery: true,
+    hideTrafficStep: true,
+    defaultNotifyRecovery: 0,
+  },
   offline: {
     condition: "==",
     threshold: 1,

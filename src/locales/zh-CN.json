@@ -610,6 +610,7 @@
           "offline": "离线检测",
           "expiry": "到期提醒",
           "login": "登录通知",
+          "ip_change": "IP 地址变更",
           "traffic_percent": "流量百分比"
         },
         "durationUnit": "{{value}} 秒",
