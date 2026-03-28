@@ -25,13 +25,11 @@ export interface InstallFormValues {
 export function InstallOptionsForm({
   values,
   onChange,
-  proxyAvailable,
   /** 为 checkbox id 添加前缀以避免同页面多实例 DOM id 冲突 */
   idPrefix = "",
 }: {
   values: InstallFormValues;
   onChange: (patch: Partial<InstallFormValues>) => void;
-  proxyAvailable: boolean;
   idPrefix?: string;
 }) {
   const { t } = useTranslation();
@@ -64,15 +62,11 @@ export function InstallOptionsForm({
           <Checkbox
             id={id("proxy")}
             checked={isProxyMode}
-            disabled={!proxyAvailable}
             onCheckedChange={(v) =>
               onChange({ downloadMode: v ? "proxy" : "github" })
             }
           />
-          <Label
-            htmlFor={id("proxy")}
-            className={`text-sm cursor-pointer ${!proxyAvailable ? "text-muted-foreground" : ""}`}
-          >
+          <Label htmlFor={id("proxy")} className="text-sm cursor-pointer">
             {t("admin.nodes.install.proxyDownload")}
           </Label>
         </div>
@@ -118,7 +112,11 @@ export function InstallOptionsForm({
       {/* 高级参数 */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm" className="px-0 text-muted-foreground">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-0 text-muted-foreground"
+          >
             {showAdvanced
               ? t("admin.nodes.install.hideAdvanced")
               : t("admin.nodes.install.showAdvanced")}

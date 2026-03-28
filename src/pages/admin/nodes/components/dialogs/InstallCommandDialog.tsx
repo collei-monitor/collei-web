@@ -70,10 +70,7 @@ export function InstallCommandDialog({
   const apiUrl = user?.agent_url || window.location.origin;
   const regToken = configMap?.global_registration_token || "";
 
-  // 面板中转可用性检查
-  const agentBinaryUrl = configMap?.agent_url || "";
-  // const agentScriptUrl = configMap?.agent_install_script_url || "";
-  const proxyAvailable = !!agentBinaryUrl;
+  // 面板中转始终可用（面板作为纯透明代理，不依赖额外配置）
   const isProxyMode = formValues.downloadMode === "proxy";
 
   const handleFormChange = useCallback((patch: Partial<InstallFormValues>) => {
@@ -170,7 +167,6 @@ export function InstallCommandDialog({
       <InstallOptionsForm
         values={formValues}
         onChange={handleFormChange}
-        proxyAvailable={proxyAvailable}
         idPrefix={idPrefix}
       />
 
