@@ -224,6 +224,10 @@ export function AdminSidebar() {
               title: t("admin.sidebar.remoteExec"),
               url: "/admin/services/remote",
             },
+            {
+              title: t("admin.sidebar.sshScripts"),
+              url: "/admin/services/ssh-scripts",
+            },
           ],
         },
         {

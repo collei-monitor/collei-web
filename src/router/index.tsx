@@ -21,6 +21,7 @@ import DomainDetailPage from "@/pages/admin/dns/DomainDetailPage";
 import CredentialsPage from "@/pages/admin/dns/CredentialsPage";
 import DdnsTasksPage from "@/pages/admin/dns/DdnsTasksPage";
 import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
+import SshScriptsPage from "@/pages/admin/services/scripts/SshScriptsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { RequireAuth, RequireGuest } from "./guards";
 import { WebSocketProvider } from "@/providers/WebSocketProvider";
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
           { path: "settings/oidc", element: <OIDCProvidersPage /> },
           { path: "services/network", element: <NetworkPage /> },
           { path: "services/remote", element: <RemotePage /> },
+          { path: "services/ssh-scripts", element: <SshScriptsPage /> },
           { path: "dns/domains", element: <DomainsPage /> },
           { path: "dns/domains/:id", element: <DomainDetailPage /> },
           { path: "dns/credentials", element: <CredentialsPage /> },

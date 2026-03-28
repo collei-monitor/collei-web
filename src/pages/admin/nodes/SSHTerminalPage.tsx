@@ -14,6 +14,7 @@ import { AuthDialog } from "./components/AuthDialog";
 import { StatusIndicator } from "./components/StatusIndicator";
 import { SFTPPanel } from "./components/SFTPPanel";
 import type { SFTPPanelHandle } from "./components/SFTPPanel";
+import { SshScriptsPanel } from "./components/SshScriptsPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -300,6 +301,8 @@ export default function SSHTerminalPage() {
           }`}
         >
           {terminalPanel}
+          {/* SSH 快捷脚本浮动面板 */}
+          <SshScriptsPanel onSend={(content) => sendInput(content)} />
         </div>
       </div>
 

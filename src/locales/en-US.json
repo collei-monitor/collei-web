@@ -509,6 +509,7 @@
       "servicesGroup": "Services",
       "networkMonitor": "Network Monitor",
       "remoteExec": "Remote Execution",
+      "sshScripts": "SSH Scripts",
       "dns": "DNS Management",
       "dnsDomains": "Domains",
       "dnsCredentials": "DNS Credentials",
@@ -1060,6 +1061,55 @@
           "refreshSuccess": "Refreshed"
         }
       },
+      "sshScripts": {
+        "title": "SSH Scripts",
+        "subtitle": "Manage quick scripts for SSH sessions — click to inject into the terminal",
+        "add": "New Script",
+        "fetchError": "Failed to fetch scripts. Please try again later.",
+        "empty": "No scripts yet",
+        "table": {
+          "name": "Name",
+          "description": "Description",
+          "language": "Language",
+          "top": "Sort",
+          "updatedAt": "Updated At"
+        },
+        "create": {
+          "title": "New Script",
+          "description": "Create a script that can be quickly injected into an SSH terminal"
+        },
+        "edit": {
+          "title": "Edit Script",
+          "description": "Modify the script content"
+        },
+        "delete": {
+          "description": "Are you sure you want to delete the script \"{{name}}\"? This action cannot be undone."
+        },
+        "fields": {
+          "name": "Script Name",
+          "namePlaceholder": "e.g. Install Docker",
+          "description": "Description",
+          "descriptionPlaceholder": "Brief description of what this script does",
+          "content": "Script Content",
+          "contentPlaceholder": "Enter your script code here",
+          "language": "Language",
+          "top": "Sort Weight",
+          "topHint": "Higher value appears first"
+        },
+        "language": {
+          "bash": "Bash",
+          "python": "Python",
+          "powershell": "PowerShell",
+          "fish": "Fish"
+        },
+        "toast": {
+          "createSuccess": "Script created",
+          "editSuccess": "Script updated",
+          "deleteSuccess": "Script deleted",
+          "deleteFailed": "Failed to delete script. Please try again.",
+          "refreshSuccess": "List refreshed"
+        }
+      },
       "dns": {
         "title": "DNS Management",
         "subtitle": "Manage DNS credentials, hosted domains, DNS records and DDNS tasks",
@@ -1566,6 +1616,14 @@
       "noServer": "No server specified",
       "reconnect": "Reconnect",
       "disconnect": "Disconnect"
+    },
+    "scripts": {
+      "title": "SSH Scripts",
+      "search": "Search scripts…",
+      "empty": "No scripts available",
+      "noResults": "No matching scripts found",
+      "send": "Inject into terminal",
+      "hint": "Click ▶ to inject a script into the terminal"
     }
   },
   "sftp": {

@@ -512,6 +512,7 @@
       "servicesGroup": "服务管理",
       "networkMonitor": "网络监控",
       "remoteExec": "远程执行",
+      "sshScripts": "SSH 脚本",
       "dns": "DNS管理",
       "dnsDomains": "域名管理",
       "dnsCredentials": "DNS 凭证",
@@ -1063,6 +1064,55 @@
           "refreshSuccess": "已刷新"
         }
       },
+      "sshScripts": {
+        "title": "SSH 脚本库",
+        "subtitle": "管理 SSH 会话中的快捷脚本片段，点击即可注入到终端",
+        "add": "新建脚本",
+        "fetchError": "获取脚本列表失败，请稍后重试",
+        "empty": "暂无脚本",
+        "table": {
+          "name": "脚本名称",
+          "description": "描述",
+          "language": "语言",
+          "top": "排序",
+          "updatedAt": "更新时间"
+        },
+        "create": {
+          "title": "新建脚本",
+          "description": "创建一个可在 SSH 终端中快捷调用的脚本"
+        },
+        "edit": {
+          "title": "编辑脚本",
+          "description": "修改脚本内容"
+        },
+        "delete": {
+          "description": "确定要删除脚本 \"{{name}}\" 吗？此操作不可恢复。"
+        },
+        "fields": {
+          "name": "脚本名称",
+          "namePlaceholder": "如：一键安装 Docker",
+          "description": "描述",
+          "descriptionPlaceholder": "简短说明脚本用途",
+          "content": "脚本内容",
+          "contentPlaceholder": "输入脚本代码",
+          "language": "脚本语言",
+          "top": "排序权重",
+          "topHint": "值越大越靠前"
+        },
+        "language": {
+          "bash": "Bash",
+          "python": "Python",
+          "powershell": "PowerShell",
+          "fish": "Fish"
+        },
+        "toast": {
+          "createSuccess": "脚本已创建",
+          "editSuccess": "脚本已更新",
+          "deleteSuccess": "脚本已删除",
+          "deleteFailed": "删除失败，请重试",
+          "refreshSuccess": "列表已刷新"
+        }
+      },
       "dns": {
         "title": "DNS 管理",
         "subtitle": "管理 DNS 凭证、托管域名、解析记录与 DDNS 任务",
@@ -1569,6 +1619,14 @@
       "noServer": "未指定服务器",
       "reconnect": "重新连接",
       "disconnect": "断开连接"
+    },
+    "scripts": {
+      "title": "SSH 脚本",
+      "search": "搜索脚本…",
+      "empty": "暂无脚本",
+      "noResults": "未找到匹配脚本",
+      "send": "注入到终端",
+      "hint": "点击 ▶ 将脚本注入到终端"
     }
   },
   "sftp": {
