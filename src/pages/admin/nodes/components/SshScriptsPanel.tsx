@@ -79,10 +79,10 @@ function ScriptItem({
   const { t } = useTranslation();
 
   return (
-    <div className="group relative px-3 py-2.5 hover:bg-accent transition-colors border-b border-border/50 last:border-0">
-      {/* 标题行：名称 + 语言徽章 + 操作按钮 */}
-      <div className="flex items-center gap-1.5 pr-20">
-        <span className="font-medium text-sm leading-tight truncate flex-1">
+    <div className="px-3 py-2.5 hover:bg-accent transition-colors border-b border-border/50 last:border-0">
+      {/* 标题行：名称 + 语言徽章 + 操作按钮（始终可见） */}
+      <div className="flex items-center gap-1.5">
+        <span className="font-medium text-sm leading-tight truncate flex-1 min-w-0">
           {script.name}
         </span>
         <Badge
@@ -91,6 +91,36 @@ function ScriptItem({
         >
           {script.language}
         </Badge>
+        {/* 操作按钮组 */}
+        <div className="flex items-center gap-0.5 shrink-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            title={t("ssh.scripts.send")}
+            onClick={() => onSend(script.content + "\n")}
+          >
+            <Play className="h-3 w-3" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            title={t("common.edit")}
+            onClick={() => onEdit(script)}
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 text-destructive hover:text-destructive"
+            title={t("common.delete")}
+            onClick={() => onDelete(script)}
+          >
+            <Trash2 className="h-3 w-3" />
+          </Button>
+        </div>
       </div>
 
       {/* 脚本内容预览 */}
@@ -104,37 +134,6 @@ function ScriptItem({
           {script.description}
         </p>
       )}
-
-      {/* 悬浮操作按钮�?*/}
-      <div className="absolute right-2 top-2 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm rounded border border-border/50 p-0.5">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          title={t("ssh.scripts.send")}
-          onClick={() => onSend(script.content + "\n")}
-        >
-          <Play className="h-3 w-3" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          title={t("common.edit")}
-          onClick={() => onEdit(script)}
-        >
-          <Pencil className="h-3 w-3" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6 text-destructive hover:text-destructive"
-          title={t("common.delete")}
-          onClick={() => onDelete(script)}
-        >
-          <Trash2 className="h-3 w-3" />
-        </Button>
-      </div>
     </div>
   );
 }

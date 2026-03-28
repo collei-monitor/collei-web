@@ -9,6 +9,7 @@ export interface InstallOptions {
   enableSsh?: boolean;
   setupCa?: boolean;
   force?: boolean;
+  noAutoUpdate?: boolean;
   installDir?: string;
   configDir?: string;
   version?: string;
@@ -47,6 +48,7 @@ export function buildInstallCommand(
   if (opts.enableSsh) args.push("--enable-ssh");
   if (opts.setupCa) args.push("--setup-ca");
   if (opts.force) args.push("--force");
+  if (opts.noAutoUpdate) args.push("--no-auto-update");
   if (opts.proxyDownload) args.push("--proxy-download");
 
   if (opts.installDir) args.push(`--install-dir ${opts.installDir}`);

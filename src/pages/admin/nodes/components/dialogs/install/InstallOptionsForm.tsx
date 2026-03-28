@@ -16,6 +16,7 @@ export interface InstallFormValues {
   enableSsh: boolean;
   setupCa: boolean;
   force: boolean;
+  noAutoUpdate: boolean;
   downloadMode: DownloadMode;
   installDir: string;
   configDir: string;
@@ -105,6 +106,16 @@ export function InstallOptionsForm({
           />
           <Label htmlFor={id("force")} className="text-sm cursor-pointer">
             {t("admin.nodes.install.force")}
+          </Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id={id("no-auto-update")}
+            checked={values.noAutoUpdate}
+            onCheckedChange={(v) => onChange({ noAutoUpdate: !!v })}
+          />
+          <Label htmlFor={id("no-auto-update")} className="text-sm cursor-pointer">
+            {t("admin.nodes.install.noAutoUpdate")}
           </Label>
         </div>
       </div>

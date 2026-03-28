@@ -37,7 +37,10 @@ interface CreateTaskDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) {
+export function CreateTaskDialog({
+  open,
+  onOpenChange,
+}: CreateTaskDialogProps) {
   const { t } = useTranslation();
   const createTask = useCreateTask();
   const { data: servers = [] } = useServers();
@@ -46,8 +49,6 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
   const [command, setCommand] = useState("");
   const [script, setScript] = useState("");
   const [scriptArgs, setScriptArgs] = useState("");
-  const [upgradeVersion, setUpgradeVersion] = useState("");
-  const [upgradeUrl, setUpgradeUrl] = useState("");
   const [timeoutSec, setTimeoutSec] = useState("300");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,9 +59,9 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
       servers.filter(
         (s) =>
           s.is_approved === ServerApproval.APPROVED &&
-          s.status === ServerStatus.ONLINE
+          s.status === ServerStatus.ONLINE,
       ),
-    [servers]
+    [servers],
   );
 
   const filteredServers = useMemo(() => {
@@ -71,7 +72,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
         s.name.toLowerCase().includes(q) ||
         s.uuid.toLowerCase().includes(q) ||
         (s.ipv4 && s.ipv4.toLowerCase().includes(q)) ||
-        (s.ipv6 && s.ipv6.toLowerCase().includes(q))
+        (s.ipv6 && s.ipv6.toLowerCase().includes(q)),
     );
   }, [approvedServers, searchQuery]);
 
@@ -81,16 +82,11 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
       case "command":
         return JSON.stringify({ command: command.trim() });
       case "script": {
-        const args = scriptArgs.trim()
-          ? scriptArgs.trim().split(/\s+/)
-          : [];
+        const args = scriptArgs.trim() ? scriptArgs.trim().split(/\s+/) : [];
         return JSON.stringify({ script: script.trim(), args });
       }
       case "upgrade_agent":
-        return JSON.stringify({
-          version: upgradeVersion.trim(),
-          url: upgradeUrl.trim(),
-        });
+        return JSON.stringify({});
       default:
         return "";
     }
@@ -107,7 +103,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
       case "script":
         return script.trim().length > 0;
       case "upgrade_agent":
-        return upgradeVersion.trim().length > 0 && upgradeUrl.trim().length > 0;
+        return true;
       default:
         return false;
     }
@@ -118,8 +114,6 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
     setCommand("");
     setScript("");
     setScriptArgs("");
-    setUpgradeVersion("");
-    setUpgradeUrl("");
     setTimeoutSec("300");
     setSelectedIds([]);
     setSearchQuery("");
@@ -144,18 +138,15 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
           onOpenChange(false);
         },
         onError: (err) => {
-          toast.error(
-            err.message || t("common.createFailed"),
-            { id: toastId }
-          );
+          toast.error(err.message || t("common.createFailed"), { id: toastId });
         },
-      }
+      },
     );
   };
 
   const toggleServer = (uuid: string) => {
     setSelectedIds((prev) =>
-      prev.includes(uuid) ? prev.filter((id) => id !== uuid) : [...prev, uuid]
+      prev.includes(uuid) ? prev.filter((id) => id !== uuid) : [...prev, uuid],
     );
   };
 
@@ -177,9 +168,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
     >
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
-            {t("admin.services.remote.create.title")}
-          </DialogTitle>
+          <DialogTitle>{t("admin.services.remote.create.title")}</DialogTitle>
           <DialogDescription>
             {t("admin.services.remote.create.description")}
           </DialogDescription>
@@ -196,7 +185,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
               <SelectTrigger>
                 <SelectValue
                   placeholder={t(
-                    "admin.services.remote.create.typePlaceholder"
+                    "admin.services.remote.create.typePlaceholder",
                   )}
                 />
               </SelectTrigger>
@@ -218,7 +207,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
                 value={command}
                 onChange={(e) => setCommand(e.target.value)}
                 placeholder={t(
-                  "admin.services.remote.create.commandPlaceholder"
+                  "admin.services.remote.create.commandPlaceholder",
                 )}
                 rows={3}
                 className="font-mono text-sm"
@@ -234,7 +223,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
                   value={script}
                   onChange={(e) => setScript(e.target.value)}
                   placeholder={t(
-                    "admin.services.remote.create.scriptPlaceholder"
+                    "admin.services.remote.create.scriptPlaceholder",
                   )}
                   rows={6}
                   className="font-mono text-sm"
@@ -246,34 +235,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
                   value={scriptArgs}
                   onChange={(e) => setScriptArgs(e.target.value)}
                   placeholder={t(
-                    "admin.services.remote.create.scriptArgsPlaceholder"
-                  )}
-                />
-              </div>
-            </>
-          )}
-
-          {taskType === "upgrade_agent" && (
-            <>
-              <div className="space-y-2">
-                <Label>
-                  {t("admin.services.remote.create.upgradeVersion")}
-                </Label>
-                <Input
-                  value={upgradeVersion}
-                  onChange={(e) => setUpgradeVersion(e.target.value)}
-                  placeholder={t(
-                    "admin.services.remote.create.upgradeVersionPlaceholder"
-                  )}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>{t("admin.services.remote.create.upgradeUrl")}</Label>
-                <Input
-                  value={upgradeUrl}
-                  onChange={(e) => setUpgradeUrl(e.target.value)}
-                  placeholder={t(
-                    "admin.services.remote.create.upgradeUrlPlaceholder"
+                    "admin.services.remote.create.scriptArgsPlaceholder",
                   )}
                 />
               </div>
@@ -289,9 +251,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
               max={86400}
               value={timeoutSec}
               onChange={(e) => setTimeoutSec(e.target.value)}
-              placeholder={t(
-                "admin.services.remote.create.timeoutPlaceholder"
-              )}
+              placeholder={t("admin.services.remote.create.timeoutPlaceholder")}
               className="w-40"
             />
           </div>
@@ -312,9 +272,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t(
-                "admin.services.remote.create.serversPlaceholder"
-              )}
+              placeholder={t("admin.services.remote.create.serversPlaceholder")}
             />
 
             {approvedServers.length > 0 && (
@@ -369,10 +327,7 @@ export function CreateTaskDialog({ open, onOpenChange }: CreateTaskDialogProps) 
             >
               {t("common.cancel")}
             </Button>
-            <Button
-              type="submit"
-              disabled={createTask.isPending || !isValid()}
-            >
+            <Button type="submit" disabled={createTask.isPending || !isValid()}>
               {createTask.isPending
                 ? t("common.loading")
                 : t("admin.services.remote.create.submit")}
