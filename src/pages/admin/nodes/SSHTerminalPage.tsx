@@ -13,6 +13,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { AuthDialog } from "./components/AuthDialog";
 import { StatusIndicator } from "./components/StatusIndicator";
 import { SFTPPanel } from "./components/SFTPPanel";
+import type { SFTPPanelHandle } from "./components/SFTPPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -42,6 +43,7 @@ export default function SSHTerminalPage() {
   const [showFiles, setShowFiles] = useState(true);
   const [filePanelWidth, setFilePanelWidth] = useState(500); // 默认左侧文件面板宽度
   const connectedRef = useRef(false);
+  const sftpRef = useRef<SFTPPanelHandle>(null);
 
   // xterm 实例
   const { terminalRef, write, writeln, focus, getDimensions } = useXterm({
@@ -102,6 +104,7 @@ export default function SSHTerminalPage() {
   );
 
   const handleDisconnect = useCallback(() => {
+    sftpRef.current?.disconnect();
     disconnect();
   }, [disconnect]);
 
@@ -112,6 +115,7 @@ export default function SSHTerminalPage() {
   }, [connect, getDimensions, writeln, t]);
 
   const handleBack = useCallback(() => {
+    sftpRef.current?.disconnect();
     disconnect();
     navigate("/admin/nodes", { replace: true });
   }, [disconnect, navigate]);
@@ -278,7 +282,7 @@ export default function SSHTerminalPage() {
         >
           <div className="relative h-full w-full overflow-hidden">
             <div className="absolute inset-0">
-              <SFTPPanel serverUuid={serverUuid} serverName={serverName} />
+              <SFTPPanel ref={sftpRef} serverUuid={serverUuid} serverName={serverName} />
             </div>
           </div>
         </div>

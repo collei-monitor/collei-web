@@ -3,7 +3,7 @@
  * 桌面端右键菜单操作，手机端保留行内按钮
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSFTPConnection } from "@/hooks/use-sftp-connection";
 import type { SFTPFileEntry, SFTPConnectionStatus } from "@/types/sftp";
@@ -90,9 +90,13 @@ interface SFTPPanelProps {
   serverName?: string;
 }
 
+export interface SFTPPanelHandle {
+  disconnect: () => void;
+}
+
 // ── 组件 ──────────────────────────────────────────────────────────────────────
 
-export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
+export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SFTPPanel({ serverUuid }, ref) {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
 
@@ -156,6 +160,8 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
       toast.info(t("sftp.toast.sessionClosed", { reason }));
     },
   });
+
+  useImperativeHandle(ref, () => ({ disconnect }), [disconnect]);
 
   // 自动连接（使用 ref 防止 StrictMode 双重调用）
   const sftpConnectedRef = useRef(false);
@@ -806,7 +812,7 @@ export function SFTPPanel({ serverUuid }: SFTPPanelProps) {
 
     </div>
   );
-}
+});
 
 // ── 状态图标 ──────────────────────────────────────────────────────────────────
 
