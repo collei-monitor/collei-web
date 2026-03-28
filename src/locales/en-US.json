@@ -1403,7 +1403,13 @@
         "viewDetail": "View detail"
       },
       "detail": {
-        "title": "Log Detail"
+        "title": "Log Detail",
+        "serverInfo": "Associated Server",
+        "serverName": "Name",
+        "serverOs": "OS",
+        "serverRegion": "Region",
+        "serverVersion": "Agent Version",
+        "serverNotFound": "Server not found locally:"
       },
       "pagination": {
         "total": "{{count}} total"

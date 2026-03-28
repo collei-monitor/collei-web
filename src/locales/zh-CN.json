@@ -1406,7 +1406,13 @@
         "viewDetail": "查看详情"
       },
       "detail": {
-        "title": "日志详情"
+        "title": "日志详情",
+        "serverInfo": "关联服务器",
+        "serverName": "名称",
+        "serverOs": "系统",
+        "serverRegion": "地区",
+        "serverVersion": "Agent 版本",
+        "serverNotFound": "本地未找到对应服务器："
       },
       "pagination": {
         "total": "共 {{count}} 条"

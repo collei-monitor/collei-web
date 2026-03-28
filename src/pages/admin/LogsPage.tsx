@@ -8,7 +8,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useLogs } from "@/services/logs";
-import type { LogQueryParams } from "@/types/log";
+import { useServers } from "@/services/servers";
+import type { LogQueryParams, LogRead } from "@/types/log";
 import { LOG_MSG_TYPES, LOG_LEVELS } from "@/types/log";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,7 +93,7 @@ export default function LogsPage() {
 
   // ── 详情弹窗 ─────────────────────────────
   const [detailOpen, setDetailOpen] = useState(false);
-  const [selectedDetail, setSelectedDetail] = useState<string | null>(null);
+  const [selectedLog, setSelectedLog] = useState<LogRead | null>(null);
 
   // ── 构建查询参数 ─────────────────────────
   const buildParams = useCallback((): LogQueryParams => {
@@ -111,6 +112,7 @@ export default function LogsPage() {
 
   const params = buildParams();
   const { data, isLoading, isError, refetch } = useLogs(params);
+  const { data: servers } = useServers();
   const items = data?.items ?? [];
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -383,7 +385,7 @@ export default function LogsPage() {
                             size="icon"
                             className="h-7 w-7"
                             onClick={() => {
-                              setSelectedDetail(item.detail);
+                              setSelectedLog(item);
                               setDetailOpen(true);
                             }}
                           >
@@ -435,13 +437,70 @@ export default function LogsPage() {
 
       {/* Detail dialog */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[70vh]">
+        <DialogContent className="max-w-2xl max-h-[70vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("admin.logs.detail.title")}</DialogTitle>
           </DialogHeader>
-          <pre className="overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 text-sm font-mono max-h-96">
-            {selectedDetail}
-          </pre>
+          <div className="space-y-4">
+            {selectedLog?.server_uuid && (() => {
+              const server = servers?.find((s) => s.uuid === selectedLog.server_uuid);
+              return (
+                <div className="rounded-md border p-3 space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    {t("admin.logs.detail.serverInfo")}
+                  </p>
+                  {server ? (
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                      <dt className="text-muted-foreground">{t("admin.logs.detail.serverName")}</dt>
+                      <dd className="font-medium break-all">{server.name}</dd>
+                      <dt className="text-muted-foreground">UUID</dt>
+                      <dd className="font-mono text-xs break-all">{server.uuid}</dd>
+                      {server.ipv4 && (
+                        <>
+                          <dt className="text-muted-foreground">IPv4</dt>
+                          <dd className="font-mono text-xs">{server.ipv4}</dd>
+                        </>
+                      )}
+                      {server.ipv6 && (
+                        <>
+                          <dt className="text-muted-foreground">IPv6</dt>
+                          <dd className="font-mono text-xs break-all">{server.ipv6}</dd>
+                        </>
+                      )}
+                      {server.os && (
+                        <>
+                          <dt className="text-muted-foreground">{t("admin.logs.detail.serverOs")}</dt>
+                          <dd className="text-xs">{server.os}</dd>
+                        </>
+                      )}
+                      {server.region && (
+                        <>
+                          <dt className="text-muted-foreground">{t("admin.logs.detail.serverRegion")}</dt>
+                          <dd className="text-xs">{server.region}</dd>
+                        </>
+                      )}
+                      {server.version && (
+                        <>
+                          <dt className="text-muted-foreground">{t("admin.logs.detail.serverVersion")}</dt>
+                          <dd className="font-mono text-xs">{server.version}</dd>
+                        </>
+                      )}
+                    </dl>
+                  ) : (
+                    <p className="text-xs text-muted-foreground font-mono">
+                      {t("admin.logs.detail.serverNotFound")}
+                      <span className="ml-1 break-all">{selectedLog.server_uuid}</span>
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
+            {selectedLog?.detail && (
+              <pre className="overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 text-sm font-mono max-h-72">
+                {selectedLog.detail}
+              </pre>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
