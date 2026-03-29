@@ -269,11 +269,13 @@ export function SortableRow({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                onClick={() =>
+                onClick={() => {
+                  const isWindows = server.os?.toLowerCase().includes("windows");
+                  const route = isWindows ? "/admin/conpty-terminal" : "/admin/terminal";
                   navigate(
-                    `/admin/terminal?uuid=${server.uuid}&name=${encodeURIComponent(server.name)}`,
-                  )
-                }
+                    `${route}?uuid=${server.uuid}&name=${encodeURIComponent(server.name)}`,
+                  );
+                }}
                 disabled={server.status !== 1}
               >
                 <TerminalSquare className="h-4 w-4" />
