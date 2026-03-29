@@ -16,7 +16,7 @@ export function GroupFilter({
   const { t } = useTranslation();
 
   const sortedGroups = [...groups].sort(
-    (a, b) => b.top - a.top || a.name.localeCompare(b.name)
+    (a, b) => b.top - a.top || (a.name ?? "").localeCompare(b.name ?? "")
   );
 
   return (

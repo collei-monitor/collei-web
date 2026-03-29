@@ -238,7 +238,7 @@ export function useDisplayServers() {
     }
 
     // 按 top 降序，再按名称排序
-    return result.sort((a, b) => b.top - a.top || a.name.localeCompare(b.name));
+    return result.sort((a, b) => b.top - a.top || (a.name ?? "").localeCompare(b.name ?? ""));
   }, [wsNodes, snapshots, connected]);
 
   const isLoading = !wsReady;
