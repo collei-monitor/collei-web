@@ -191,8 +191,17 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
   // ── 文件操作 ────────────────────────────────────────────────────────────────
 
   const readdir = useCallback(async (path: string): Promise<FileEntry[]> => {
-    const res = await sendRequest<{ entries: FileEntry[] }>("readdir", { path });
-    return res.entries;
+    const res = await sendRequest<{ entries: any[] }>("readdir", { path });
+    return (res.entries || []).map((raw: any): FileEntry => ({
+      name: raw.name ?? "",
+      type: raw.type ?? (raw.is_dir ? "dir" : "file"),
+      size: raw.size ?? 0,
+      permissions: raw.permissions ?? "",
+      owner: raw.owner ?? "",
+      group: raw.group ?? "",
+      mtime: raw.mtime ?? 0,
+      link_target: raw.link_target,
+    }));
   }, [sendRequest]);
 
   const stat = useCallback(async (path: string): Promise<FileEntry> => {

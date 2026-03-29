@@ -1771,13 +1771,15 @@
     "table": {
       "size": "大小",
       "permissions": "权限",
-      "modified": "修改时间"
+      "modified": "修改时间",
+      "total": "总容量"
     },
     "actions": {
       "mkdir": "新建文件夹",
       "newFile": "新建文件",
       "upload": "上传文件",
-      "rename": "重命名"
+      "rename": "重命名",
+      "open": "打开"
     },
     "editor": {
       "fileName": "文件名",

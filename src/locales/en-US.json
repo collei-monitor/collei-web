@@ -1768,13 +1768,15 @@
     "table": {
       "size": "Size",
       "permissions": "Permissions",
-      "modified": "Modified"
+      "modified": "Modified",
+      "total": "Total"
     },
     "actions": {
       "mkdir": "New Folder",
       "newFile": "New File",
       "upload": "Upload Files",
-      "rename": "Rename"
+      "rename": "Rename",
+      "open": "Open"
     },
     "editor": {
       "fileName": "File Name",

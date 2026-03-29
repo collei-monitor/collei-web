@@ -23,7 +23,7 @@ export interface FileSessionsResponse {
 
 export interface FileEntry {
   name: string;
-  type: "file" | "dir" | "link";
+  type: "file" | "dir" | "link" | "drive";
   size: number;
   permissions: string;
   owner: string;

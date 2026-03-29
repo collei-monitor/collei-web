@@ -163,14 +163,17 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
 
   useImperativeHandle(ref, () => ({ disconnect }), [disconnect]);
 
-  // 自动连接（使用 ref 防止 StrictMode 双重调用）
-  const sftpConnectedRef = useRef(false);
+  // 自动连接（cancelled 标志防止 StrictMode / 快速卸载的双重调用）
   useEffect(() => {
-    if (!serverUuid || sftpConnectedRef.current) return;
-    sftpConnectedRef.current = true;
-    connect();
+    if (!serverUuid) return;
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      connect();
+    }, 0);
     return () => {
-      sftpConnectedRef.current = false;
+      cancelled = true;
+      clearTimeout(timer);
       disconnect();
     };
   }, [serverUuid]); // eslint-disable-line react-hooks/exhaustive-deps

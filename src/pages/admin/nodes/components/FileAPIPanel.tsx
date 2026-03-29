@@ -169,14 +169,17 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
 
   useImperativeHandle(ref, () => ({ disconnect }), [disconnect]);
 
-  // 自动连接
-  const fileConnectedRef = useRef(false);
+  // 自动连接（cancelled 标志防止 StrictMode / 快速卸载的双重调用）
   useEffect(() => {
-    if (!serverUuid || fileConnectedRef.current) return;
-    fileConnectedRef.current = true;
-    connect();
+    if (!serverUuid) return;
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      if (cancelled) return;
+      connect();
+    }, 0);
     return () => {
-      fileConnectedRef.current = false;
+      cancelled = true;
+      clearTimeout(timer);
       disconnect();
     };
   }, [serverUuid]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -225,7 +228,7 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
 
   const handleEntryClick = useCallback(
     (entry: FileEntry) => {
-      if (entry.type === "dir") {
+      if (entry.type === "dir" || entry.type === "drive") {
         navigateTo(joinPath(currentPath, entry.name));
       }
     },
