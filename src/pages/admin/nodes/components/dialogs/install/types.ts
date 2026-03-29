@@ -140,9 +140,13 @@ export function buildWindowsInstallCommand(
   scriptUrl: string = WIN_SCRIPT_URL,
 ): string {
   const params = buildWindowsParams(opts).join(" ");
+  
+  // URL 包含查询参数时用单引号包裹，避免 PowerShell 解析 &
+  const quotedUrl = scriptUrl.includes("?") ? `'${scriptUrl}'` : scriptUrl;
+  
   return (
     `powershell -ExecutionPolicy Bypass -Command ` +
-    `"irm ${scriptUrl} -OutFile $env:TEMP\\ci.ps1; ` +
+    `"irm ${quotedUrl} -OutFile $env:TEMP\\ci.ps1; ` +
     `& $env:TEMP\\ci.ps1 ${params}; ` +
     `Remove-Item $env:TEMP\\ci.ps1"`
   );

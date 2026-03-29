@@ -5,5 +5,6 @@ export { CommandPreview } from "./CommandPreview";
 export { WindowsOptionsForm } from "./WindowsOptionsForm";
 export type { WindowsInstallFormValues } from "./WindowsOptionsForm";
 export { WindowsCommandPreview } from "./WindowsCommandPreview";
+export { LinuxUninstallSection, WindowsUninstallSection } from "./UninstallSection";
 export { buildInstallCommand, SCRIPT_URL, buildWindowsInstallCommand, WIN_SCRIPT_URL } from "./types";
 export type { InstallOptions, Downloader, DownloadMode, WindowsInstallOptions } from "./types";

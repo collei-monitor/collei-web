@@ -27,6 +27,8 @@ import {
   WindowsCommandPreview,
   buildWindowsInstallCommand,
   WIN_SCRIPT_URL,
+  LinuxUninstallSection,
+  WindowsUninstallSection,
 } from "./install";
 import type {
   Downloader,
@@ -448,6 +450,11 @@ export function InstallCommandDialog({
                 )}
               </div>
             )}
+
+            {/* 卸载命令 */}
+            <div className="pt-2 border-t">
+              <LinuxUninstallSection />
+            </div>
           </TabsContent>
 
           <TabsContent value="windows" className="space-y-4 mt-4">
@@ -542,6 +549,11 @@ export function InstallCommandDialog({
                 )}
               </div>
             )}
+
+            {/* 卸载命令 */}
+            <div className="pt-2 border-t">
+              <WindowsUninstallSection />
+            </div>
           </TabsContent>
 
           <TabsContent value="macos">

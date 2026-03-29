@@ -465,7 +465,7 @@
         "setupCa": "Configure SSH CA passwordless login",
         "force": "Force re-register",
         "noAutoUpdate": "Disable auto-update",
-        "proxyDownload": "Download via panel proxy (requires configuration)",
+        "proxyDownload": "Download via panel proxy",
         "proxyHint": "This command downloads the install script and agent binary through the panel proxy",
         "showAdvanced": "Show advanced options ▸",
         "hideAdvanced": "Hide advanced options ▾",
@@ -488,6 +488,12 @@
           "intervalPositive": "Report interval must be positive",
           "nameInvalid": "Name cannot contain quotes or backslashes",
           "nameRequired": "Please enter a server name"
+        },
+        "uninstall": {
+          "title": "Uninstall Agent",
+          "desc": "Run the following command on a server with the agent installed to fully remove it",
+          "linuxHint": "Requires the same privileges used during installation (usually root)",
+          "winHint": "Run PowerShell as Administrator to execute the uninstall command"
         },
         "win": {
           "enableTerminal": "Enable Web Terminal (ConPTY)",

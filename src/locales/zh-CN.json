@@ -468,7 +468,7 @@
         "setupCa": "配置 SSH CA 免密登录",
         "force": "强制重新注册",
         "noAutoUpdate": "禁用自动更新",
-        "proxyDownload": "通过面板中转下载（需先配置下载地址）",
+        "proxyDownload": "通过面板中转下载",
         "proxyHint": "此命令通过面板代理下载安装脚本和 Agent 二进制文件",
         "showAdvanced": "显示高级参数 ▸",
         "hideAdvanced": "隐藏高级参数 ▾",
@@ -491,6 +491,12 @@
           "intervalPositive": "上报间隔必须为正数",
           "nameInvalid": "名称中不能包含引号或反斜杠",
           "nameRequired": "请输入服务器名称"
+        },
+        "uninstall": {
+          "title": "卸载 Agent",
+          "desc": "在已安装 Agent 的服务器上执行以下命令以完全卸载",
+          "linuxHint": "需要与安装时相同的权限（通常为 root）",
+          "winHint": "请以管理员身份运行 PowerShell 执行卸载命令"
         },
         "win": {
           "enableTerminal": "启用 Web 终端（ConPTY 直连）",
