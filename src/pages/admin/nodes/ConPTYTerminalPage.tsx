@@ -14,6 +14,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { TerminalStatusIndicator } from "./components/TerminalStatusIndicator";
 import { FileAPIPanel } from "./components/FileAPIPanel";
 import type { FileAPIPanelHandle } from "./components/FileAPIPanel";
+import { SshScriptsPanel } from "./components/SshScriptsPanel";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -281,6 +282,8 @@ export default function ConPTYTerminalPage() {
           }`}
         >
           {terminalPanel}
+          {/* 快捷脚本浮动面板 */}
+          <SshScriptsPanel onSend={(content) => sendInput(content)} />
         </div>
       </div>
     </div>
