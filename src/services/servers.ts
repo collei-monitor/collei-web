@@ -187,7 +187,7 @@ const groupApi = {
 /** 公开分组 API（含 server_uuids） */
 const publicGroupApi = {
   async list(): Promise<GroupWithServers[]> {
-    const { status, data } = await api.get("/clients/public/groups");
+    const { status, data } = await api.get("/clients/groups");
     if (status !== 200) throw new Error(data?.detail || "Failed to fetch groups");
     return data as GroupWithServers[];
   },
