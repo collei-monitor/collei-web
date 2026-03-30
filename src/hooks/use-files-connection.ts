@@ -15,6 +15,7 @@ import type {
 
 // ── 内部类型 ──────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface PendingRequest<T = any> {
   resolve: (value: T) => void;
   reject: (error: Error) => void;
@@ -79,7 +80,8 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
 
   // ── 请求发送辅助 ────────────────────────────────────────────────────────────
 
-  const sendRequest = useCallback(<T = any>(action: string, params: Record<string, any> = {}): Promise<T> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sendRequest = useCallback(<T = any>(action: string, params: Record<string, unknown> = {}): Promise<T> => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
       return Promise.reject(new Error("WebSocket not connected"));
@@ -109,14 +111,14 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
 
     // 二进制 read_resp 可能不含 request_id（仅含 session_id），需特殊处理
     if (msg.type === "read_resp" && !("content" in msg)) {
-      const rid = ("request_id" in msg ? (msg as any).request_id : null) || pendingBinaryReadIdRef.current;
+      const rid = ("request_id" in msg ? (msg as { request_id?: string }).request_id : null) || pendingBinaryReadIdRef.current;
       if (!rid) return;
       const pending = pendingRef.current.get(rid);
       if (!pending) return;
-      const expectedSize = (msg as any).size ?? 0;
+      const expectedSize = ("size" in msg ? (msg as { size?: number }).size : 0) ?? 0;
       // 空文件：直接 resolve，无需等待 binary 帧
       if (expectedSize === 0) {
-        pending.resolve({ chunks: [], path: (msg as any).path ?? "" });
+        pending.resolve({ chunks: [], path: ("path" in msg ? (msg as { path?: string }).path : "") ?? "" });
         pendingRef.current.delete(rid);
         pendingBinaryReadIdRef.current = null;
         return;
@@ -252,16 +254,16 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
   // ── 文件操作 ────────────────────────────────────────────────────────────────
 
   const readdir = useCallback(async (path: string): Promise<FileEntry[]> => {
-    const res = await sendRequest<{ entries: any[] }>("readdir", { path });
-    return (res.entries || []).map((raw: any): FileEntry => ({
-      name: raw.name ?? "",
-      type: raw.type ?? (raw.is_dir ? "dir" : "file"),
-      size: raw.size ?? 0,
-      permissions: raw.permissions ?? "",
-      owner: raw.owner ?? "",
-      group: raw.group ?? "",
-      mtime: raw.mtime ?? 0,
-      link_target: raw.link_target,
+    const res = await sendRequest<{ entries: Record<string, unknown>[] }>("readdir", { path });
+    return (res.entries || []).map((raw): FileEntry => ({
+      name: (raw.name as string) ?? "",
+      type: (raw.type as FileEntry["type"]) ?? (raw.is_dir ? "dir" : "file"),
+      size: (raw.size as number) ?? 0,
+      permissions: (raw.permissions as string) ?? "",
+      owner: (raw.owner as string) ?? "",
+      group: (raw.group as string) ?? "",
+      mtime: (raw.mtime as number) ?? 0,
+      link_target: raw.link_target as string | undefined,
     }));
   }, [sendRequest]);
 
@@ -280,8 +282,9 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
     pendingBinaryReadIdRef.current = requestId;
     return new Promise<{ path: string; content: string }>((resolve, reject) => {
       pendingRef.current.set(requestId, {
-        resolve: (res: any) => {
-          const chunks: ArrayBuffer[] = res.chunks ?? [];
+        resolve: (res: unknown) => {
+          const result = res as { chunks?: ArrayBuffer[]; path?: string };
+          const chunks: ArrayBuffer[] = result.chunks ?? [];
           if (chunks.length === 0) {
             resolve({ path, content: "" });
             return;
@@ -316,20 +319,21 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
     pendingBinaryReadIdRef.current = requestId;
     return new Promise<Blob>((resolve, reject) => {
       pendingRef.current.set(requestId, {
-        resolve: (res: any) => {
-          if (Array.isArray(res.chunks)) {
-            resolve(new Blob(res.chunks));
-          } else if (typeof res.content === "string") {
+        resolve: (res: unknown) => {
+          const result = res as { chunks?: ArrayBuffer[]; content?: string };
+          if (Array.isArray(result.chunks)) {
+            resolve(new Blob(result.chunks));
+          } else if (typeof result.content === "string") {
             // 兜底：若服务端以 base64 字符串返回
             try {
-              const binary = atob(res.content);
+              const binary = atob(result.content);
               const bytes = new Uint8Array(binary.length);
               for (let i = 0; i < binary.length; i++) {
                 bytes[i] = binary.charCodeAt(i);
               }
               resolve(new Blob([bytes]));
             } catch {
-              resolve(new Blob([res.content]));
+              resolve(new Blob([result.content]));
             }
           } else {
             reject(new Error("Unexpected read response format"));

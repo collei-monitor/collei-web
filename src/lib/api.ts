@@ -6,9 +6,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 const API_TIMEOUT_MS = 15_000;
 
 export const api = {
-  async request(
+  async request<P extends object = Record<string, string | number | boolean>>(
     endpoint: string,
-    options: RequestInit & { params?: Record<string, any> } = {}
+    options: RequestInit & { params?: P } = {} as RequestInit & { params?: P }
   ) {
     const { params, ...fetchOptions } = options;
 
@@ -48,11 +48,11 @@ export const api = {
     return { status: response.status, data };
   },
 
-  get(endpoint: string, params?: Record<string, any>) {
+  get<P extends object = Record<string, string | number | boolean>>(endpoint: string, params?: P) {
     return this.request(endpoint, { method: "GET", params });
   },
 
-  post(endpoint: string, body?: any, params?: Record<string, any>) {
+  post<P extends object = Record<string, string | number | boolean>>(endpoint: string, body?: unknown, params?: P) {
     return this.request(endpoint, {
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
@@ -60,7 +60,7 @@ export const api = {
     });
   },
 
-  put(endpoint: string, body?: any, params?: Record<string, any>) {
+  put<P extends object = Record<string, string | number | boolean>>(endpoint: string, body?: unknown, params?: P) {
     return this.request(endpoint, {
       method: "PUT",
       body: body ? JSON.stringify(body) : undefined,
@@ -68,7 +68,7 @@ export const api = {
     });
   },
 
-  delete(endpoint: string, params?: Record<string, any>) {
+  delete<P extends object = Record<string, string | number | boolean>>(endpoint: string, params?: P) {
     return this.request(endpoint, { method: "DELETE", params });
   },
 };

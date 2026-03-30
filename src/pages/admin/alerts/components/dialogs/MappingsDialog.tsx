@@ -74,7 +74,7 @@ interface GroupedTargets {
 
 export function MappingsDialog({ rule, open, onOpenChange }: Props) {
   const { t } = useTranslation();
-  const targets = rule?.targets ?? [];
+  const targets = useMemo(() => rule?.targets ?? [], [rule?.targets]);
   const { data: servers = [] } = useServers();
   const { data: groups = [] } = useGroups();
   const createTargets = useCreateRuleTargets();

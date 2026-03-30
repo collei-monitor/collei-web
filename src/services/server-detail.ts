@@ -64,7 +64,7 @@ const serverDetailApi = {
     uuid: string,
     params: LoadTimeRangeParams,
   ): Promise<ServerNodeRecord[]> {
-    const queryParams: Record<string, any> = {};
+    const queryParams: Record<string, string | number | boolean> = {};
 
     if (params.range === "custom" && params.startTime && params.endTime) {
       queryParams.start_time = params.startTime;
@@ -168,12 +168,7 @@ export function useServerDetail(uuid: string): UseServerDetailResult {
     const map = new Map<number, ServerNodeRecord>();
     for (const r of httpRecords) map.set(r.time, r);
     for (const r of wsRecords) map.set(r.time, r);
-    const cutoff = Math.floor(Date.now() / 1000) - HISTORY_WINDOW;
-    const result: ServerNodeRecord[] = [];
-    for (const r of map.values()) {
-      if (r.time >= cutoff) result.push(r);
-    }
-    return result.sort((a, b) => a.time - b.time);
+    return Array.from(map.values()).sort((a, b) => a.time - b.time);
   }, [initialLoad, wsRecords]);
 
   // 当 WS 推送新数据时，累积到 wsRecords

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpsertOIDC } from "@/services/oidc";
@@ -57,8 +57,9 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
   const [addition, setAddition] = useState("");
 
   // 当 open/editing 变化时同步表单状态（父组件通过 open prop 控制时 onOpenChange 不会触发）
-  useEffect(() => {
-    if (!open) return;
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevEditing, setPrevEditing] = useState(editing);
+  if (open && (!prevOpen || editing !== prevEditing)) {
     if (editing) {
       setName(editing.name);
       setProviderType(editing.provider_type);
@@ -78,7 +79,9 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
       setScope("");
       setAddition("");
     }
-  }, [open, editing]);
+  }
+  if (prevOpen !== open) setPrevOpen(open);
+  if (prevEditing !== editing) setPrevEditing(editing);
 
   const handleOpenChange = (v: boolean) => {
     if (!v) {

@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDnsRecord } from "@/services/dns";
@@ -32,22 +32,20 @@ export function EditRecordDialog({ record, domainId, open, onOpenChange }: Props
   const [priority, setPriority] = useState("");
   const [proxied, setProxied] = useState(false);
 
-  const prevOpen = useRef(open);
-  const prevRecord = useRef(record);
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevRecord, setPrevRecord] = useState(record);
 
-  useEffect(() => {
-    if (
-      record &&
-      (record !== prevRecord.current || (open && !prevOpen.current))
-    ) {
-      setContent(record.content);
-      setTtl(String(record.ttl));
-      setPriority(record.priority != null ? String(record.priority) : "");
-      setProxied(record.proxied === 1);
-    }
-    prevOpen.current = open;
-    prevRecord.current = record;
-  }, [record, open]);
+  if (
+    record &&
+    (record !== prevRecord || (open && !prevOpen))
+  ) {
+    setContent(record.content);
+    setTtl(String(record.ttl));
+    setPriority(record.priority != null ? String(record.priority) : "");
+    setProxied(record.proxied === 1);
+  }
+  if (prevOpen !== open) setPrevOpen(open);
+  if (prevRecord !== record) setPrevRecord(record);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

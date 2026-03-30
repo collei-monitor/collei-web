@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * 文件预览对话框
  * 支持预览图片、视频、音频等文件类型

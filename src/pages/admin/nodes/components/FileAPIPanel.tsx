@@ -58,7 +58,7 @@ import {
 import { toast } from "sonner";
 import { FileAPIListContent } from "./fileapi/FileAPIListContent";
 import { FileAPIEditorDialog } from "./fileapi/FileAPIEditorDialog";
-import { FilePreviewDialog, isPreviewableFile, getFileMimeType } from "./FilePreviewDialog";
+import { FilePreviewDialog, getFileMimeType } from "./FilePreviewDialog";
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────────
 
@@ -409,18 +409,6 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
       }
     },
     [currentPath, readBlob, previewBlobUrl, t],
-  );
-
-  const handleFileOpen = useCallback(
-    (entry: FileEntry) => {
-      if (entry.type !== "file") return;
-      if (isPreviewableFile(entry.name)) {
-        openPreviewDialog(entry);
-      } else {
-        openEditFileDialog(entry);
-      }
-    },
-    [openPreviewDialog, openEditFileDialog],
   );
 
   const handlePreviewClose = useCallback(

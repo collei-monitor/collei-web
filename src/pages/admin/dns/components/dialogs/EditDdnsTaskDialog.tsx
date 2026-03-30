@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDdnsTask } from "@/services/dns";
@@ -53,18 +53,16 @@ export function EditDdnsTaskDialog({ task, open, onOpenChange }: Props) {
   const [isActive, setIsActive] = useState(true);
   const [serverPopoverOpen, setServerPopoverOpen] = useState(false);
 
-  const prevOpen = useRef(open);
-  const prevTask = useRef(task);
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevTask, setPrevTask] = useState(task);
 
-  useEffect(() => {
-    if (task && (task !== prevTask.current || (open && !prevOpen.current))) {
-      setServerUuid(task.server_uuid);
-      setIpVersion(task.ip_version);
-      setIsActive(task.is_active === 1);
-    }
-    prevOpen.current = open;
-    prevTask.current = task;
-  }, [task, open]);
+  if (task && (task !== prevTask || (open && !prevOpen))) {
+    setServerUuid(task.server_uuid);
+    setIpVersion(task.ip_version);
+    setIsActive(task.is_active === 1);
+  }
+  if (prevOpen !== open) setPrevOpen(open);
+  if (prevTask !== task) setPrevTask(task);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

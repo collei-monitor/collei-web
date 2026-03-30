@@ -4,7 +4,7 @@
  * 支持面板内直接增删改脚本
  */
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
@@ -158,13 +158,15 @@ function ScriptForm({
   const [language, setLanguage] = useState<string>("bash");
   const [top, setTop] = useState(0);
 
-  useEffect(() => {
+  const [prevScript, setPrevScript] = useState(script);
+  if (script !== prevScript) {
     setName(script?.name ?? "");
     setDescription(script?.description ?? "");
     setContent(script?.content ?? "");
     setLanguage(script?.language ?? "bash");
     setTop(script?.top ?? 0);
-  }, [script]);
+    setPrevScript(script);
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

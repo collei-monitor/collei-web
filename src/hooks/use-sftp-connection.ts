@@ -15,6 +15,7 @@ import type {
 
 // ── 内部类型 ──────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface PendingRequest<T = any> {
   resolve: (value: T) => void;
   reject: (error: Error) => void;
@@ -78,7 +79,8 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
 
   // ── 请求发送辅助 ────────────────────────────────────────────────────────────
 
-  const sendRequest = useCallback(<T = any>(action: string, params: Record<string, any> = {}): Promise<T> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sendRequest = useCallback(<T = any>(action: string, params: Record<string, unknown> = {}): Promise<T> => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
       return Promise.reject(new Error("WebSocket not connected"));
@@ -267,10 +269,10 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
       encoding,
     });
     if (res.type === "binary") {
-      const err = new Error("BINARY_FILE");
-      (err as any).isBinary = true;
-      (err as any).filePath = res.path;
-      (err as any).fileSize = res.size;
+      const err: Error & { isBinary: boolean; filePath: string; fileSize: number } = Object.assign(
+        new Error("BINARY_FILE"),
+        { isBinary: true, filePath: res.path, fileSize: res.size },
+      );
       throw err;
     }
     return res;

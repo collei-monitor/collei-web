@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+﻿import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUpdateDnsDomain, useDnsCredentials } from "@/services/dns";
@@ -36,20 +36,18 @@ export function EditDomainDialog({ domain, open, onOpenChange }: Props) {
   const [credentialId, setCredentialId] = useState("");
   const [zoneId, setZoneId] = useState("");
 
-  const prevOpen = useRef(open);
-  const prevDomain = useRef(domain);
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [prevDomain, setPrevDomain] = useState(domain);
 
-  useEffect(() => {
-    if (
-      domain &&
-      (domain !== prevDomain.current || (open && !prevOpen.current))
-    ) {
-      setCredentialId(String(domain.credential_id));
-      setZoneId(domain.zone_id ?? "");
-    }
-    prevOpen.current = open;
-    prevDomain.current = domain;
-  }, [domain, open]);
+  if (
+    domain &&
+    (domain !== prevDomain || (open && !prevOpen))
+  ) {
+    setCredentialId(String(domain.credential_id));
+    setZoneId(domain.zone_id ?? "");
+  }
+  if (prevOpen !== open) setPrevOpen(open);
+  if (prevDomain !== domain) setPrevDomain(domain);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

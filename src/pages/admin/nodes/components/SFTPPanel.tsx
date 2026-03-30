@@ -58,7 +58,7 @@ import {
 import { toast } from "sonner";
 import { SFTPFileListContent } from "./sftp/SFTPFileListContent";
 import { SFTPEditorDialog } from "./sftp/SFTPEditorDialog";
-import { FilePreviewDialog, isPreviewableFile, getFileMimeType } from "./FilePreviewDialog";
+import { FilePreviewDialog, getFileMimeType } from "./FilePreviewDialog";
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────────
 
@@ -386,8 +386,8 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
       try {
         const result = await cat(filePath, "utf-8");
         setEditorContent(result.content);
-      } catch (err: any) {
-        if (err?.isBinary) {
+      } catch (err: unknown) {
+        if (err instanceof Error && "isBinary" in err && (err as Error & { isBinary: boolean }).isBinary) {
           setEditorOpen(false);
           toast.warning(
             t("sftp.toast.binaryFile", { name: entry.name }),
@@ -433,18 +433,6 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
       }
     },
     [currentPath, downloadBlob, previewBlobUrl, t],
-  );
-
-  const handleFileOpen = useCallback(
-    (entry: SFTPFileEntry) => {
-      if (entry.type !== "file") return;
-      if (isPreviewableFile(entry.name)) {
-        openPreviewDialog(entry);
-      } else {
-        openEditFileDialog(entry);
-      }
-    },
-    [openPreviewDialog, openEditFileDialog],
   );
 
   const handlePreviewClose = useCallback(
@@ -496,8 +484,8 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
         try {
           const result = await cat(editorFilePath, newEncoding);
           setEditorContent(result.content);
-        } catch (err: any) {
-          if (err?.isBinary) {
+        } catch (err: unknown) {
+          if (err instanceof Error && "isBinary" in err && (err as Error & { isBinary: boolean }).isBinary) {
             toast.warning(t("sftp.toast.binaryFile", { name: editorFileName }));
           } else {
             toast.error(
