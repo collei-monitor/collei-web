@@ -41,6 +41,7 @@ interface AuthState {
   user: AuthUser | null;
   status: AuthStatus;
   ssoProviders: SSOProvider[];
+  allowPasswordLogin: boolean;
   /** 应用启动时调用，通过 Cookie 验证身份并拉取用户信息 */
   fetchMe: () => Promise<void>;
   /** 登录成功后：立即拉取用户信息（Cookie 由浏览器自动管理） */
@@ -55,16 +56,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   user: null,
   status: "idle",
   ssoProviders: [],
+  allowPasswordLogin: true,
 
   fetchMe: async () => {
     set({ status: "loading" });
     try {
       const { status, data } = await api.get("/auth/me");
+      const providers = Array.isArray(data?.providers) ? data.providers as SSOProvider[] : [];
+      const allowPwd = data?.allow_password_login !== false;
       if (status === 200) {
-        set({ user: data as AuthUser, status: "authenticated" });
+        set({ user: data as AuthUser, status: "authenticated", ssoProviders: providers, allowPasswordLogin: allowPwd });
       } else {
-        const providers = Array.isArray(data?.providers) ? data.providers as SSOProvider[] : [];
-        set({ user: null, status: "unauthenticated", ssoProviders: providers });
+        set({ user: null, status: "unauthenticated", ssoProviders: providers, allowPasswordLogin: allowPwd });
       }
     } catch {
       set({ user: null, status: "unauthenticated" });
@@ -87,7 +90,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       const { data } = await api.get("/auth/me");
       const providers = Array.isArray(data?.providers) ? data.providers as SSOProvider[] : [];
-      set({ ssoProviders: providers });
+      const allowPwd = data?.allow_password_login !== false;
+      set({ ssoProviders: providers, allowPasswordLogin: allowPwd });
     } catch {
       // ignore
     }

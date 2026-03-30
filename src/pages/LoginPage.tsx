@@ -53,6 +53,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const onLoginSuccess = useAuthStore((s) => s.onLoginSuccess);
   const ssoProviders = useAuthStore((s) => s.ssoProviders);
+  const allowPasswordLogin = useAuthStore((s) => s.allowPasswordLogin);
   const [phase, setPhase] = useState<"login" | "2fa">("login");
   const [loginChallenge, setLoginChallenge] = useState("");
   const [error, setError] = useState("");
@@ -180,6 +181,8 @@ export default function LoginPage() {
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
+
+                {allowPasswordLogin && (
                 <Form {...loginForm}>
                   <form
                     onSubmit={loginForm.handleSubmit(onLoginSubmit)}
@@ -231,9 +234,11 @@ export default function LoginPage() {
                     </Button>
                   </form>
                 </Form>
+                )}
 
                 {ssoProviders.length > 0 && (
-                  <div className="mt-4">
+                  <div className={allowPasswordLogin ? "mt-4" : undefined}>
+                    {allowPasswordLogin && (
                     <div className="relative my-4">
                       <div className="absolute inset-0 flex items-center">
                         <Separator />
@@ -244,6 +249,7 @@ export default function LoginPage() {
                         </span>
                       </div>
                     </div>
+                    )}
                     <div className="flex flex-col gap-2">
                       {ssoProviders.map((p) => (
                         <Button

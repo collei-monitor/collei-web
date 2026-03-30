@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/store/auth";
 import { ChangePasswordCard } from "./components/ChangePasswordCard";
+import { AllowPasswordLoginCard } from "./components/AllowPasswordLoginCard";
 import { EnableTwoFactorDialog } from "./components/EnableTwoFactorDialog";
 import { DisableTwoFactorDialog } from "./components/DisableTwoFactorDialog";
 
@@ -89,6 +90,8 @@ export default function UsersPage() {
       </Card>
 
       {isLocalUser && <ChangePasswordCard />}
+
+      <AllowPasswordLoginCard />
 
       <EnableTwoFactorDialog
         open={enableOpen}

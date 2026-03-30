@@ -226,6 +226,18 @@
     "twoFactorDisabled": "未启用",
     "enableTwoFactor": "启用两步验证",
     "disableTwoFactor": "关闭两步验证",
+    "passwordLogin": {
+      "title": "密码登录",
+      "label": "允许密码登录",
+      "description": "关闭后登录页将不显示密码登录表单，仅允许通过 SSO 登录。请确保已配置至少一个 SSO 提供商。",
+      "noProviders": "无法关闭密码登录：尚未配置任何 SSO 提供商",
+      "success": "密码登录设置已更新",
+      "errors": {
+        "validation": "操作不允许，请检查配置",
+        "failed": "修改失败，请重试",
+        "networkError": "网络错误，请重试"
+      }
+    },
     "changePassword": {
       "title": "修改密码",
       "currentPassword": "当前密码",

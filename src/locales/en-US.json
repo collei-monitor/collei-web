@@ -223,6 +223,18 @@
     "twoFactorDisabled": "Not Enabled",
     "enableTwoFactor": "Enable 2FA",
     "disableTwoFactor": "Disable 2FA",
+    "passwordLogin": {
+      "title": "Password Login",
+      "label": "Allow Password Login",
+      "description": "When disabled, the login page will not show the password form. Only SSO login will be available. Ensure at least one SSO provider is configured.",
+      "noProviders": "Cannot disable password login: no SSO providers configured",
+      "success": "Password login setting updated",
+      "errors": {
+        "validation": "Operation not allowed. Please check the configuration",
+        "failed": "Failed to update. Please try again",
+        "networkError": "Network error. Please try again"
+      }
+    },
     "changePassword": {
       "title": "Change Password",
       "currentPassword": "Current Password",
