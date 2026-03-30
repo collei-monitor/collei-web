@@ -42,6 +42,7 @@ export function SortableRow({
   onTrafficRule,
   onInstall,
   visibleColumns,
+  ipMasked,
 }: {
   server: Server;
   onSortCommit: (uuid: string, top: number) => void;
@@ -53,6 +54,7 @@ export function SortableRow({
   onTrafficRule: (s: Server) => void;
   onInstall: (s: Server) => void;
   visibleColumns: { ip: boolean; groups: boolean; status: boolean; version: boolean };
+  ipMasked: boolean;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -84,10 +86,11 @@ export function SortableRow({
     <TableRow
       ref={setNodeRef}
       style={style}
+      className="group"
       //   className={server.hidden === ServerVisibility.HIDDEN ? "opacity-50" : ""}
     >
       {/* 拖动手柄 */}
-      <TableCell>
+      <TableCell className="w-10 min-w-10 md:sticky md:left-0 md:z-10 md:bg-background md:group-hover:bg-muted/50">
         <button
           type="button"
           className="cursor-grab touch-none active:cursor-grabbing"
@@ -99,7 +102,7 @@ export function SortableRow({
       </TableCell>
 
       {/* 排序值 */}
-      <TableCell>
+      <TableCell className="w-20 min-w-20 md:sticky md:left-10 md:z-10 md:bg-background md:group-hover:bg-muted/50">
         <SortInput
           value={server.top}
           onCommit={(v) => onSortCommit(server.uuid, v)}
@@ -108,7 +111,7 @@ export function SortableRow({
       </TableCell>
 
       {/* 服务器名称 */}
-      <TableCell className="font-medium">
+      <TableCell className="md:sticky md:left-30 md:z-10 md:bg-background md:group-hover:bg-muted/50 font-medium">
         <div className="flex items-center gap-1">
           {server.region && (
             <span className="text-xs text-muted-foreground">
@@ -152,7 +155,7 @@ export function SortableRow({
           <div className="space-y-0.5">
             {server.ipv4 && (
               <div className="flex items-center gap-1 group">
-                <span className="text-xs font-mono">{server.ipv4}</span>
+                <span className="text-xs font-mono">{ipMasked ? "*.*.*.*" : server.ipv4}</span>
                 <button
                   type="button"
                   onClick={() => handleCopyIp(server.ipv4!)}
@@ -174,7 +177,7 @@ export function SortableRow({
             {server.ipv6 && (
               <div className="flex items-center gap-1 group">
                 <span className="text-xs font-mono text-muted-foreground">
-                  {server.ipv6}
+                  {ipMasked ? "*:*:*:*:*:*:*:*" : server.ipv6}
                 </span>
                 <button
                   type="button"
@@ -235,7 +238,7 @@ export function SortableRow({
       )}
 
       {/* 操作 */}
-      <TableCell>
+      <TableCell className="md:sticky md:right-0 md:z-10 md:bg-background md:group-hover:bg-muted/50">
         <div className="flex items-center">
           <Tooltip>
             <TooltipTrigger asChild>

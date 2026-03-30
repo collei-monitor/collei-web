@@ -18,7 +18,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { RefreshCw, ListRestart, Plus, SlidersHorizontal } from "lucide-react";
+import { RefreshCw, ListRestart, Plus, SlidersHorizontal, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -54,6 +54,7 @@ export default function NodesPage() {
   const [showAddInstall, setShowAddInstall] = useState(false);
   const [installDialogKey, setInstallDialogKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [ipMasked, setIpMasked] = useState(false);
   type VisibleColumns = { ip: boolean; groups: boolean; status: boolean; version: boolean };
   const defaultColumns: VisibleColumns = { ip: true, groups: true, status: true, version: false };
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumns>(() => {
@@ -193,17 +194,28 @@ export default function NodesPage() {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <div className="rounded-md border overflow-x-auto">
+        <div className="rounded-md border">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-10" />
-                <TableHead className="w-20">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-10 md:sticky md:left-0 md:z-20 md:bg-background" />
+                <TableHead className="w-20 md:sticky md:left-10 md:z-20 md:bg-background">
                   {t("admin.nodes.table.sort")}
                 </TableHead>
-                <TableHead>{t("common.name")}</TableHead>
+                <TableHead className="md:sticky md:left-30 md:z-20 md:bg-background">{t("common.name")}</TableHead>
                 {visibleColumns.ip && (
-                  <TableHead>{t("admin.nodes.table.ip")}</TableHead>
+                  <TableHead>
+                    <div className="flex items-center gap-1">
+                      {t("admin.nodes.table.ip")}
+                      <button
+                        type="button"
+                        onClick={() => setIpMasked((v) => !v)}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {ipMasked ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
+                  </TableHead>
                 )}
                 {visibleColumns.groups && (
                   <TableHead>{t("admin.nodes.table.groups")}</TableHead>
@@ -214,7 +226,7 @@ export default function NodesPage() {
                 {visibleColumns.version && (
                   <TableHead>{t("admin.nodes.table.version")}</TableHead>
                 )}
-                <TableHead className="w-24" />
+                <TableHead className="w-24 md:sticky md:right-0 md:z-20 md:bg-background" />
               </TableRow>
             </TableHeader>
 
@@ -255,6 +267,7 @@ export default function NodesPage() {
                         onTrafficRule={setTrafficRuleTarget}
                         onInstall={(s) => { setInstallTarget(s); setInstallDialogKey(k => k + 1); }}
                         visibleColumns={visibleColumns}
+                        ipMasked={ipMasked}
                       />
                     ))}
                   </SortableContext>
