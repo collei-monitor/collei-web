@@ -20,6 +20,13 @@ interface PendingRequest<T = any> {
   reject: (error: Error) => void;
 }
 
+interface BinaryReadState {
+  requestId: string;
+  expectedSize: number;
+  chunks: ArrayBuffer[];
+  received: number;
+}
+
 // ── Hook 接口 ─────────────────────────────────────────────────────────────────
 
 export interface UseFileAPIConnectionOptions {
@@ -43,6 +50,8 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
   const sessionIdRef = useRef("");
   const pingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pendingRef = useRef<Map<string, PendingRequest>>(new Map());
+  const binaryReadRef = useRef<BinaryReadState | null>(null);
+  const pendingBinaryReadIdRef = useRef<string | null>(null);
 
   // ── 清理 ────────────────────────────────────────────────────────────────────
 
@@ -64,6 +73,8 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
       p.reject(new Error("Connection closed"));
     }
     pendingRef.current.clear();
+    binaryReadRef.current = null;
+    pendingBinaryReadIdRef.current = null;
   }, []);
 
   // ── 请求发送辅助 ────────────────────────────────────────────────────────────
@@ -96,6 +107,30 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
     }
     if (msg.type === "pong") return;
 
+    // 二进制 read_resp 可能不含 request_id（仅含 session_id），需特殊处理
+    if (msg.type === "read_resp" && !("content" in msg)) {
+      const rid = ("request_id" in msg ? (msg as any).request_id : null) || pendingBinaryReadIdRef.current;
+      if (!rid) return;
+      const pending = pendingRef.current.get(rid);
+      if (!pending) return;
+      const expectedSize = (msg as any).size ?? 0;
+      // 空文件：直接 resolve，无需等待 binary 帧
+      if (expectedSize === 0) {
+        pending.resolve({ chunks: [], path: (msg as any).path ?? "" });
+        pendingRef.current.delete(rid);
+        pendingBinaryReadIdRef.current = null;
+        return;
+      }
+      binaryReadRef.current = {
+        requestId: rid,
+        expectedSize,
+        chunks: [],
+        received: 0,
+      };
+      pendingBinaryReadIdRef.current = null;
+      return;
+    }
+
     // 通用 request_id 响应
     const rid = "request_id" in msg ? msg.request_id : undefined;
     if (!rid) {
@@ -112,21 +147,47 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
 
     if (msg.type === "error") {
       pending.reject(new Error(msg.message));
+      // 清理可能的 binary read 状态
+      if (binaryReadRef.current?.requestId === rid) {
+        binaryReadRef.current = null;
+      }
+      if (pendingBinaryReadIdRef.current === rid) {
+        pendingBinaryReadIdRef.current = null;
+      }
       // 标记上传失败
       setUploadTasks(prev =>
         prev.map(t => t.requestId === rid ? { ...t, status: "error" as const } : t)
       );
+      pendingRef.current.delete(rid);
     } else if (msg.type === "write_resp") {
       pending.resolve(msg);
       // 如果是上传任务，标记完成
       setUploadTasks(prev =>
         prev.map(t => t.requestId === rid ? { ...t, status: "done" as const, received: t.total } : t)
       );
+      pendingRef.current.delete(rid);
     } else {
       pending.resolve(msg);
+      pendingRef.current.delete(rid);
     }
-    pendingRef.current.delete(rid);
   }, [cleanup]);
+
+  const handleBinaryFrame = useCallback((data: ArrayBuffer) => {
+    const state = binaryReadRef.current;
+    if (!state) return;
+
+    state.chunks.push(data);
+    state.received += data.byteLength;
+
+    if (state.received >= state.expectedSize) {
+      const pending = pendingRef.current.get(state.requestId);
+      if (pending) {
+        pending.resolve({ chunks: state.chunks });
+        pendingRef.current.delete(state.requestId);
+      }
+      binaryReadRef.current = null;
+    }
+  }, []);
 
   // ── 连接 ────────────────────────────────────────────────────────────────────
 
@@ -158,7 +219,7 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
 
       ws.onmessage = (event) => {
         if (event.data instanceof ArrayBuffer) {
-          // Binary 帧 — read_resp 的文件内容数据（当前忽略，read 使用 JSON content）
+          handleBinaryFrame(event.data);
           return;
         }
         try {
@@ -186,7 +247,7 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
       setErrorMessage(message);
       optionsRef.current.onError?.(message);
     }
-  }, [cleanup, handleJsonFrame]);
+  }, [cleanup, handleJsonFrame, handleBinaryFrame]);
 
   // ── 文件操作 ────────────────────────────────────────────────────────────────
 
@@ -209,13 +270,79 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
     return res.entry;
   }, [sendRequest]);
 
-  const read = useCallback(async (path: string) => {
-    const res = await sendRequest<{ path: string; content: string }>("read", { path });
-    return res;
-  }, [sendRequest]);
+  const read = useCallback(async (path: string, encoding = "utf-8") => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      throw new Error("WebSocket not connected");
+    }
+    const requestId = crypto.randomUUID();
+    // 必须在发送前设置，确保 read_resp 到达时能通过回退逻辑找到此请求
+    pendingBinaryReadIdRef.current = requestId;
+    return new Promise<{ path: string; content: string }>((resolve, reject) => {
+      pendingRef.current.set(requestId, {
+        resolve: (res: any) => {
+          const chunks: ArrayBuffer[] = res.chunks ?? [];
+          if (chunks.length === 0) {
+            resolve({ path, content: "" });
+            return;
+          }
+          const totalSize = chunks.reduce((sum, c) => sum + c.byteLength, 0);
+          const buffer = new Uint8Array(totalSize);
+          let offset = 0;
+          for (const chunk of chunks) {
+            buffer.set(new Uint8Array(chunk), offset);
+            offset += chunk.byteLength;
+          }
+          try {
+            const decoder = new TextDecoder(encoding, { fatal: false });
+            resolve({ path, content: decoder.decode(buffer) });
+          } catch {
+            reject(new Error(`无法使用编码 ${encoding} 解码文件`));
+          }
+        },
+        reject,
+      });
+      ws.send(JSON.stringify({ action: "read", request_id: requestId, path, encoding }));
+    });
+  }, []);
 
-  const write = useCallback(async (path: string, content: string) => {
-    const res = await sendRequest<{ path: string; size: number }>("write", { path, content });
+  const readBlob = useCallback(async (path: string): Promise<Blob> => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      throw new Error("WebSocket not connected");
+    }
+    const requestId = crypto.randomUUID();
+    // 保存 requestId 以便在 read_resp 不含 request_id 时回退匹配
+    pendingBinaryReadIdRef.current = requestId;
+    return new Promise<Blob>((resolve, reject) => {
+      pendingRef.current.set(requestId, {
+        resolve: (res: any) => {
+          if (Array.isArray(res.chunks)) {
+            resolve(new Blob(res.chunks));
+          } else if (typeof res.content === "string") {
+            // 兜底：若服务端以 base64 字符串返回
+            try {
+              const binary = atob(res.content);
+              const bytes = new Uint8Array(binary.length);
+              for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+              }
+              resolve(new Blob([bytes]));
+            } catch {
+              resolve(new Blob([res.content]));
+            }
+          } else {
+            reject(new Error("Unexpected read response format"));
+          }
+        },
+        reject,
+      });
+      ws.send(JSON.stringify({ action: "read", request_id: requestId, path }));
+    });
+  }, []);
+
+  const write = useCallback(async (path: string, content: string, encoding = "utf-8") => {
+    const res = await sendRequest<{ path: string; size: number }>("write", { path, content, encoding });
     return res;
   }, [sendRequest]);
 
@@ -298,6 +425,7 @@ export function useFileAPIConnection(options: UseFileAPIConnectionOptions) {
     readdir,
     stat,
     read,
+    readBlob,
     write,
     upload,
     remove,

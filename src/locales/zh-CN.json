@@ -1543,7 +1543,7 @@
     },
     "script": {
       "title": "展示页自定义代码",
-      "desc": "为公开展示页面注入自定义样式和脚本，应用于首页和服务器详情页",
+      "desc": "为公开展示页面注入自定义样式和脚本，使用第三方主题时可能无法生效",
       "customHeaders": "自定义 Head",
       "customHeadersDesc": "注入到页面 <head> 中的自定义 HTML 代码，如 <style>、<link>、<meta> 等标签",
       "customHeadersPlaceholder": "<style>\n  body { background: #000; }\n</style>",
@@ -1681,7 +1681,8 @@
       "newFile": "新建文件",
       "upload": "上传文件",
       "download": "下载",
-      "rename": "重命名"
+      "rename": "重命名",
+      "view": "查看"
     },
     "editor": {
       "createTitle": "新建文件",
@@ -1689,7 +1690,8 @@
       "createDescription": "创建并编辑新文件内容",
       "editDescription": "在线编辑文件并保存到服务器",
       "fileName": "文件名",
-      "fileNamePlaceholder": "请输入文件名，例如 notes.txt"
+      "fileNamePlaceholder": "请输入文件名，例如 notes.txt",
+      "encoding": "编码"
     },
     "mkdir": {
       "title": "新建文件夹",
@@ -1729,6 +1731,9 @@
       "createFileSuccess": "文件 \"{{name}}\" 已创建",
       "fileNameRequired": "请输入文件名",
       "binaryFile": "\"{{name}}\" 是二进制文件，无法在线编辑，请使用下载功能"
+    },
+    "preview": {
+      "loadFailed": "文件预览加载失败"
     }
   },
   "terminal": {
@@ -1779,11 +1784,14 @@
       "newFile": "新建文件",
       "upload": "上传文件",
       "rename": "重命名",
-      "open": "打开"
+      "open": "打开",
+      "view": "查看",
+      "download": "下载"
     },
     "editor": {
       "fileName": "文件名",
-      "fileNamePlaceholder": "请输入文件名，例如 notes.txt"
+      "fileNamePlaceholder": "请输入文件名，例如 notes.txt",
+      "encoding": "编码"
     },
     "mkdir": {
       "title": "新建文件夹",
@@ -1818,6 +1826,9 @@
       "saveFailed": "保存失败",
       "createFileSuccess": "文件 \"{{name}}\" 已创建",
       "fileNameRequired": "请输入文件名"
+    },
+    "preview": {
+      "loadFailed": "文件预览加载失败"
     }
   }
 }

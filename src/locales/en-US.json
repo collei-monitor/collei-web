@@ -1540,7 +1540,7 @@
     },
     "script": {
       "title": "Display Page Custom Code",
-      "desc": "Inject custom styles and scripts into the public display pages (home & server detail)",
+      "desc": "Injects custom styles and scripts into public-facing pages; this may not take effect when using third-party themes.",
       "customHeaders": "Custom Head",
       "customHeadersDesc": "Custom HTML injected into the page <head>, such as <style>, <link>, or <meta> tags",
       "customHeadersPlaceholder": "<style>\n  body { background: #000; }\n</style>",
@@ -1678,7 +1678,8 @@
       "newFile": "New File",
       "upload": "Upload Files",
       "download": "Download",
-      "rename": "Rename"
+      "rename": "Rename",
+      "view": "View"
     },
     "editor": {
       "createTitle": "Create File",
@@ -1686,7 +1687,8 @@
       "createDescription": "Create and edit a new file",
       "editDescription": "Edit file content online and save to server",
       "fileName": "File Name",
-      "fileNamePlaceholder": "Enter file name, e.g. notes.txt"
+      "fileNamePlaceholder": "Enter file name, e.g. notes.txt",
+      "encoding": "Encoding"
     },
     "mkdir": {
       "title": "New Folder",
@@ -1726,6 +1728,9 @@
       "createFileSuccess": "File \"{{name}}\" created",
       "fileNameRequired": "Please enter a file name",
       "binaryFile": "\"{{name}}\" is a binary file and cannot be edited online. Please use download instead."
+    },
+    "preview": {
+      "loadFailed": "Failed to load file preview"
     }
   },
   "terminal": {
@@ -1776,11 +1781,14 @@
       "newFile": "New File",
       "upload": "Upload Files",
       "rename": "Rename",
-      "open": "Open"
+      "open": "Open",
+      "view": "View",
+      "download": "Download"
     },
     "editor": {
       "fileName": "File Name",
-      "fileNamePlaceholder": "Enter file name, e.g. notes.txt"
+      "fileNamePlaceholder": "Enter file name, e.g. notes.txt",
+      "encoding": "Encoding"
     },
     "mkdir": {
       "title": "New Folder",
@@ -1814,7 +1822,13 @@
       "saveSuccess": "File \"{{name}}\" saved",
       "saveFailed": "Save failed",
       "createFileSuccess": "File \"{{name}}\" created",
-      "fileNameRequired": "Please enter a file name"
+      "fileNameRequired": "Please enter a file name",
+      "downloading": "Downloading {{name}}…",
+      "downloadSuccess": "{{name}} downloaded",
+      "downloadFailed": "Download failed"
+    },
+    "preview": {
+      "loadFailed": "Failed to load file preview"
     }
   }
 }

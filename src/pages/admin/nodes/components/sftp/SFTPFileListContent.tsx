@@ -1,4 +1,5 @@
 import type { SFTPFileEntry } from "@/types/sftp";
+import { isPreviewableFile } from "../FilePreviewDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -25,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Download,
+  Eye,
   File,
   FileSymlink,
   Folder,
@@ -39,6 +41,7 @@ interface SFTPFileListContentProps {
   isMobile: boolean;
   onEntryClick: (entry: SFTPFileEntry) => void;
   onEdit: (entry: SFTPFileEntry) => void;
+  onView?: (entry: SFTPFileEntry) => void;
   onDownload: (entry: SFTPFileEntry) => void;
   onRename: (entry: SFTPFileEntry) => void;
   onDelete: (entry: SFTPFileEntry) => void;
@@ -70,6 +73,7 @@ export function SFTPFileListContent({
   isMobile,
   onEntryClick,
   onEdit,
+  onView,
   onDownload,
   onRename,
   onDelete,
@@ -120,7 +124,11 @@ export function SFTPFileListContent({
               className={entry.type === "dir" ? "cursor-pointer" : ""}
               onDoubleClick={() => {
                 if (entry.type === "file") {
-                  onEdit(entry);
+                  if (onView && isPreviewableFile(entry.name)) {
+                    onView(entry);
+                  } else {
+                    onEdit(entry);
+                  }
                   return;
                 }
                 onEntryClick(entry);
@@ -167,6 +175,12 @@ export function SFTPFileListContent({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      {entry.type === "file" && onView && isPreviewableFile(entry.name) && (
+                        <DropdownMenuItem onClick={() => onView(entry)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          {t("sftp.actions.view")}
+                        </DropdownMenuItem>
+                      )}
                       {entry.type === "file" && (
                         <DropdownMenuItem onClick={() => onEdit(entry)}>
                           <Pencil className="mr-2 h-4 w-4" />
@@ -203,6 +217,12 @@ export function SFTPFileListContent({
               <ContextMenu key={entry.name}>
                 <ContextMenuTrigger asChild>{row}</ContextMenuTrigger>
                 <ContextMenuContent>
+                  {entry.type === "file" && onView && isPreviewableFile(entry.name) && (
+                    <ContextMenuItem onClick={() => onView(entry)}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      {t("sftp.actions.view")}
+                    </ContextMenuItem>
+                  )}
                   {entry.type === "file" && (
                     <ContextMenuItem onClick={() => onEdit(entry)}>
                       <Pencil className="mr-2 h-4 w-4" />

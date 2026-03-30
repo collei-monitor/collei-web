@@ -39,7 +39,8 @@ export type FileAPIDownMessage =
   | { type: "ready" }
   | { type: "readdir_resp"; request_id: string; path: string; entries: FileEntry[] }
   | { type: "stat_resp"; request_id: string; entry: FileEntry }
-  | { type: "read_resp"; request_id: string; path: string; content: string }
+  | { type: "read_resp"; request_id: string; path: string; content: string; size?: number }
+  | { type: "read_resp"; request_id: string; path: string; size: number }
   | { type: "write_resp"; request_id: string; path: string; size: number }
   | { type: "remove_resp"; request_id: string }
   | { type: "rename_resp"; request_id: string }
@@ -53,8 +54,8 @@ export type FileAPIDownMessage =
 export type FileAPIUpMessage =
   | { action: "readdir"; request_id: string; path: string }
   | { action: "stat"; request_id: string; path: string }
-  | { action: "read"; request_id: string; path: string }
-  | { action: "write"; request_id: string; path: string }
+  | { action: "read"; request_id: string; path: string; encoding?: string }
+  | { action: "write"; request_id: string; path: string; encoding?: string }
   | { action: "remove"; request_id: string; path: string }
   | { action: "rename"; request_id: string; old: string; new: string }
   | { action: "mkdir"; request_id: string; path: string }

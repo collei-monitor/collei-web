@@ -58,6 +58,7 @@ import {
 import { toast } from "sonner";
 import { FileAPIListContent } from "./fileapi/FileAPIListContent";
 import { FileAPIEditorDialog } from "./fileapi/FileAPIEditorDialog";
+import { FilePreviewDialog, isPreviewableFile, getFileMimeType } from "./FilePreviewDialog";
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────────
 
@@ -130,8 +131,17 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
   const [editorFileName, setEditorFileName] = useState("");
   const [editorFilePath, setEditorFilePath] = useState("");
   const [editorContent, setEditorContent] = useState("");
+  const [editorEncoding, setEditorEncoding] = useState("utf-8");
   const [editorLoading, setEditorLoading] = useState(false);
   const [editorSaving, setEditorSaving] = useState(false);
+
+  // 预览对话框状态
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewFileName, setPreviewFileName] = useState("");
+  const [previewFilePath, setPreviewFilePath] = useState("");
+  const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewMimeType, setPreviewMimeType] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const connectedRef = useRef(false);
@@ -145,6 +155,7 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
     disconnect,
     readdir,
     read,
+    readBlob,
     write,
     upload,
     remove,
@@ -335,6 +346,7 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
     setEditorFileName("");
     setEditorFilePath(currentPath || "/");
     setEditorContent("");
+    setEditorEncoding("utf-8");
     setEditorLoading(false);
     setEditorOpen(true);
   }, [currentPath]);
@@ -350,11 +362,12 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
       setEditorFileName(entry.name);
       setEditorFilePath(filePath);
       setEditorContent("");
+      setEditorEncoding("utf-8");
       setEditorLoading(true);
       setEditorOpen(true);
 
       try {
-        const result = await read(filePath);
+        const result = await read(filePath, "utf-8");
         setEditorContent(result.content);
       } catch (err) {
         toast.error(
@@ -367,6 +380,83 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
     [read, currentPath, t],
   );
 
+  const openPreviewDialog = useCallback(
+    async (entry: FileEntry) => {
+      if (entry.type !== "file") return;
+      const filePath = joinPath(currentPath, entry.name);
+      const mime = getFileMimeType(entry.name);
+
+      // 清理上次的 blob URL
+      if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+
+      setPreviewFileName(entry.name);
+      setPreviewFilePath(filePath);
+      setPreviewMimeType(mime);
+      setPreviewBlobUrl(null);
+      setPreviewLoading(true);
+      setPreviewOpen(true);
+
+      try {
+        const blob = await readBlob(filePath);
+        const url = URL.createObjectURL(blob);
+        setPreviewBlobUrl(url);
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : t("fileapi.preview.loadFailed"),
+        );
+      } finally {
+        setPreviewLoading(false);
+      }
+    },
+    [currentPath, readBlob, previewBlobUrl, t],
+  );
+
+  const handleFileOpen = useCallback(
+    (entry: FileEntry) => {
+      if (entry.type !== "file") return;
+      if (isPreviewableFile(entry.name)) {
+        openPreviewDialog(entry);
+      } else {
+        openEditFileDialog(entry);
+      }
+    },
+    [openPreviewDialog, openEditFileDialog],
+  );
+
+  const handlePreviewClose = useCallback(
+    (open: boolean) => {
+      setPreviewOpen(open);
+      if (!open && previewBlobUrl) {
+        URL.revokeObjectURL(previewBlobUrl);
+        setPreviewBlobUrl(null);
+      }
+    },
+    [previewBlobUrl],
+  );
+
+  const handleDownload = useCallback(
+    async (entry: FileEntry) => {
+      if (entry.type !== "file") return;
+      const filePath = joinPath(currentPath, entry.name);
+      try {
+        toast.info(t("fileapi.toast.downloading", { name: entry.name }));
+        const blob = await readBlob(filePath);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = entry.name;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success(t("fileapi.toast.downloadSuccess", { name: entry.name }));
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : t("fileapi.toast.downloadFailed"),
+        );
+      }
+    },
+    [currentPath, readBlob, t],
+  );
+
   const handleSaveEditor = useCallback(async () => {
     const name = editorFileName.trim();
     if (!name) {
@@ -377,7 +467,7 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
     const filePath = joinPath(currentPath, name);
     setEditorSaving(true);
     try {
-      await write(filePath, editorContent);
+      await write(filePath, editorContent, editorEncoding);
       toast.success(
         t(
           editorMode === "create"
@@ -395,7 +485,27 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
     } finally {
       setEditorSaving(false);
     }
-  }, [currentPath, editorContent, editorFileName, editorMode, refresh, t, write]);
+  }, [currentPath, editorContent, editorEncoding, editorFileName, editorMode, refresh, t, write]);
+
+  const handleEditorEncodingChange = useCallback(
+    async (newEncoding: string) => {
+      setEditorEncoding(newEncoding);
+      if (editorMode === "edit" && editorFilePath) {
+        setEditorLoading(true);
+        try {
+          const result = await read(editorFilePath, newEncoding);
+          setEditorContent(result.content);
+        } catch (err) {
+          toast.error(
+            err instanceof Error ? err.message : t("fileapi.toast.readFailed"),
+          );
+        } finally {
+          setEditorLoading(false);
+        }
+      }
+    },
+    [read, editorFilePath, editorMode, t],
+  );
 
   // ── 渲染 ────────────────────────────────────────────────────────────────────
 
@@ -597,6 +707,8 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
             isMobile={true}
             onEntryClick={handleEntryClick}
             onEdit={openEditFileDialog}
+            onView={openPreviewDialog}
+            onDownload={handleDownload}
             onRename={openRenameDialog}
             onDelete={openDeleteDialog}
             t={t}
@@ -612,6 +724,8 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
                 isMobile={false}
                 onEntryClick={handleEntryClick}
                 onEdit={openEditFileDialog}
+                onView={openPreviewDialog}
+                onDownload={handleDownload}
                 onRename={openRenameDialog}
                 onDelete={openDeleteDialog}
                 t={t}
@@ -750,10 +864,30 @@ export const FileAPIPanel = forwardRef<FileAPIPanelHandle, FileAPIPanelProps>(fu
         onFileNameChange={setEditorFileName}
         filePath={editorFilePath}
         content={editorContent}
+        encoding={editorEncoding}
         onContentChange={setEditorContent}
+        onEncodingChange={handleEditorEncodingChange}
         loading={editorLoading}
         saving={editorSaving}
         onSave={handleSaveEditor}
+      />
+
+      <FilePreviewDialog
+        open={previewOpen}
+        fileName={previewFileName}
+        filePath={previewFilePath}
+        blobUrl={previewBlobUrl}
+        loading={previewLoading}
+        mimeType={previewMimeType}
+        onOpenChange={handlePreviewClose}
+        onDownload={() => {
+          if (previewBlobUrl) {
+            const a = document.createElement("a");
+            a.href = previewBlobUrl;
+            a.download = previewFileName;
+            a.click();
+          }
+        }}
       />
     </div>
   );

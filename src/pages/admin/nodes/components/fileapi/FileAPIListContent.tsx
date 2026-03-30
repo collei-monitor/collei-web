@@ -1,4 +1,5 @@
 import type { FileEntry } from "@/types/fileapi";
+import { isPreviewableFile } from "../FilePreviewDialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -24,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Download,
+  Eye,
   File,
   FileSymlink,
   Folder,
@@ -39,6 +42,8 @@ interface FileAPIListContentProps {
   isMobile: boolean;
   onEntryClick: (entry: FileEntry) => void;
   onEdit: (entry: FileEntry) => void;
+  onView?: (entry: FileEntry) => void;
+  onDownload?: (entry: FileEntry) => void;
   onRename: (entry: FileEntry) => void;
   onDelete: (entry: FileEntry) => void;
   t: (key: string) => string;
@@ -70,6 +75,8 @@ export function FileAPIListContent({
   isMobile,
   onEntryClick,
   onEdit,
+  onView,
+  onDownload,
   onRename,
   onDelete,
   t,
@@ -121,7 +128,11 @@ export function FileAPIListContent({
               className={isNavigable ? "cursor-pointer" : ""}
               onDoubleClick={() => {
                 if (entry.type === "file") {
-                  onEdit(entry);
+                  if (onView && isPreviewableFile(entry.name)) {
+                    onView(entry);
+                  } else {
+                    onEdit(entry);
+                  }
                   return;
                 }
                 onEntryClick(entry);
@@ -179,10 +190,22 @@ export function FileAPIListContent({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        {entry.type === "file" && onView && isPreviewableFile(entry.name) && (
+                          <DropdownMenuItem onClick={() => onView(entry)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            {t("fileapi.actions.view")}
+                          </DropdownMenuItem>
+                        )}
                         {entry.type === "file" && (
                           <DropdownMenuItem onClick={() => onEdit(entry)}>
                             <Pencil className="mr-2 h-4 w-4" />
                             {t("common.edit")}
+                          </DropdownMenuItem>
+                        )}
+                        {entry.type === "file" && onDownload && (
+                          <DropdownMenuItem onClick={() => onDownload(entry)}>
+                            <Download className="mr-2 h-4 w-4" />
+                            {t("fileapi.actions.download")}
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem onClick={() => onRename(entry)}>
@@ -217,10 +240,22 @@ export function FileAPIListContent({
                     </ContextMenuItem>
                   ) : (
                     <>
+                      {entry.type === "file" && onView && isPreviewableFile(entry.name) && (
+                        <ContextMenuItem onClick={() => onView(entry)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          {t("fileapi.actions.view")}
+                        </ContextMenuItem>
+                      )}
                       {entry.type === "file" && (
                         <ContextMenuItem onClick={() => onEdit(entry)}>
                           <Pencil className="mr-2 h-4 w-4" />
                           {t("common.edit")}
+                        </ContextMenuItem>
+                      )}
+                      {entry.type === "file" && onDownload && (
+                        <ContextMenuItem onClick={() => onDownload(entry)}>
+                          <Download className="mr-2 h-4 w-4" />
+                          {t("fileapi.actions.download")}
                         </ContextMenuItem>
                       )}
                       <ContextMenuItem onClick={() => onRename(entry)}>

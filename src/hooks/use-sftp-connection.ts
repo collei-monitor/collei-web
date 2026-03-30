@@ -285,16 +285,20 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
     return res;
   }, [sendRequest]);
 
-  const download = useCallback(async (path: string) => {
+  const downloadBlob = useCallback(async (path: string): Promise<Blob> => {
     const result = await sendRequest<{ name: string; size: number; chunks: ArrayBuffer[] }>("download", { path });
-    const blob = new Blob(result.chunks);
+    return new Blob(result.chunks);
+  }, [sendRequest]);
+
+  const download = useCallback(async (path: string) => {
+    const blob = await downloadBlob(path);
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = result.name;
+    a.download = path.split("/").pop() || "download";
     a.click();
     URL.revokeObjectURL(url);
-  }, [sendRequest]);
+  }, [downloadBlob]);
 
   const upload = useCallback(async (dirPath: string, file: File) => {
     const ws = wsRef.current;
@@ -383,6 +387,7 @@ export function useSFTPConnection(options: UseSFTPConnectionOptions) {
     cat,
     write,
     download,
+    downloadBlob,
     upload,
     mkdir,
     rm,

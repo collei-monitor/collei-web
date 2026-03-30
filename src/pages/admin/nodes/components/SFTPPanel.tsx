@@ -58,6 +58,7 @@ import {
 import { toast } from "sonner";
 import { SFTPFileListContent } from "./sftp/SFTPFileListContent";
 import { SFTPEditorDialog } from "./sftp/SFTPEditorDialog";
+import { FilePreviewDialog, isPreviewableFile, getFileMimeType } from "./FilePreviewDialog";
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────────
 
@@ -119,8 +120,17 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
   const [editorFileName, setEditorFileName] = useState("");
   const [editorFilePath, setEditorFilePath] = useState("");
   const [editorContent, setEditorContent] = useState("");
+  const [editorEncoding, setEditorEncoding] = useState("utf-8");
   const [editorLoading, setEditorLoading] = useState(false);
   const [editorSaving, setEditorSaving] = useState(false);
+
+  // 预览对话框状态
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewFileName, setPreviewFileName] = useState("");
+  const [previewFilePath, setPreviewFilePath] = useState("");
+  const [previewBlobUrl, setPreviewBlobUrl] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewMimeType, setPreviewMimeType] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const connectedRef = useRef(false);
@@ -137,6 +147,7 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
     cat,
     write,
     download,
+    downloadBlob,
     upload,
     mkdir,
     rm,
@@ -352,6 +363,7 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
     setEditorFileName("");
     setEditorFilePath(currentPath || "/");
     setEditorContent("");
+    setEditorEncoding("utf-8");
     setEditorLoading(false);
     setEditorOpen(true);
   }, [currentPath]);
@@ -367,11 +379,12 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
       setEditorFileName(entry.name);
       setEditorFilePath(filePath);
       setEditorContent("");
+      setEditorEncoding("utf-8");
       setEditorLoading(true);
       setEditorOpen(true);
 
       try {
-        const result = await cat(filePath);
+        const result = await cat(filePath, "utf-8");
         setEditorContent(result.content);
       } catch (err: any) {
         if (err?.isBinary) {
@@ -391,6 +404,60 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
     [cat, currentPath, t],
   );
 
+  const openPreviewDialog = useCallback(
+    async (entry: SFTPFileEntry) => {
+      if (entry.type !== "file") return;
+      const filePath = joinPath(currentPath, entry.name);
+      const mime = getFileMimeType(entry.name);
+
+      // 清理上次的 blob URL
+      if (previewBlobUrl) URL.revokeObjectURL(previewBlobUrl);
+
+      setPreviewFileName(entry.name);
+      setPreviewFilePath(filePath);
+      setPreviewMimeType(mime);
+      setPreviewBlobUrl(null);
+      setPreviewLoading(true);
+      setPreviewOpen(true);
+
+      try {
+        const blob = await downloadBlob(filePath);
+        const url = URL.createObjectURL(blob);
+        setPreviewBlobUrl(url);
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : t("sftp.preview.loadFailed"),
+        );
+      } finally {
+        setPreviewLoading(false);
+      }
+    },
+    [currentPath, downloadBlob, previewBlobUrl, t],
+  );
+
+  const handleFileOpen = useCallback(
+    (entry: SFTPFileEntry) => {
+      if (entry.type !== "file") return;
+      if (isPreviewableFile(entry.name)) {
+        openPreviewDialog(entry);
+      } else {
+        openEditFileDialog(entry);
+      }
+    },
+    [openPreviewDialog, openEditFileDialog],
+  );
+
+  const handlePreviewClose = useCallback(
+    (open: boolean) => {
+      setPreviewOpen(open);
+      if (!open && previewBlobUrl) {
+        URL.revokeObjectURL(previewBlobUrl);
+        setPreviewBlobUrl(null);
+      }
+    },
+    [previewBlobUrl],
+  );
+
   const handleSaveEditor = useCallback(async () => {
     const name = editorFileName.trim();
     if (!name) {
@@ -401,7 +468,7 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
     const filePath = joinPath(currentPath, name);
     setEditorSaving(true);
     try {
-      await write(filePath, editorContent, "utf-8");
+      await write(filePath, editorContent, editorEncoding);
       toast.success(
         t(
           editorMode === "create"
@@ -419,7 +486,31 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
     } finally {
       setEditorSaving(false);
     }
-  }, [currentPath, editorContent, editorFileName, editorMode, refresh, t, write]);
+  }, [currentPath, editorContent, editorEncoding, editorFileName, editorMode, refresh, t, write]);
+
+  const handleEditorEncodingChange = useCallback(
+    async (newEncoding: string) => {
+      setEditorEncoding(newEncoding);
+      if (editorMode === "edit" && editorFilePath) {
+        setEditorLoading(true);
+        try {
+          const result = await cat(editorFilePath, newEncoding);
+          setEditorContent(result.content);
+        } catch (err: any) {
+          if (err?.isBinary) {
+            toast.warning(t("sftp.toast.binaryFile", { name: editorFileName }));
+          } else {
+            toast.error(
+              err instanceof Error ? err.message : t("sftp.toast.readFailed"),
+            );
+          }
+        } finally {
+          setEditorLoading(false);
+        }
+      }
+    },
+    [cat, editorFileName, editorFilePath, editorMode, t],
+  );
 
   // ── 渲染 ────────────────────────────────────────────────────────────────────
 
@@ -629,6 +720,7 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
             isMobile={true}
             onEntryClick={handleEntryClick}
             onEdit={openEditFileDialog}
+            onView={openPreviewDialog}
             onDownload={handleDownload}
             onRename={openRenameDialog}
             onDelete={openDeleteDialog}
@@ -645,6 +737,7 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
                 isMobile={false}
                 onEntryClick={handleEntryClick}
                 onEdit={openEditFileDialog}
+                onView={openPreviewDialog}
                 onDownload={handleDownload}
                 onRename={openRenameDialog}
                 onDelete={openDeleteDialog}
@@ -799,6 +892,7 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
         fileName={editorFileName}
         filePath={editorFilePath}
         content={editorContent}
+        encoding={editorEncoding}
         loading={editorLoading}
         saving={editorSaving}
         onOpenChange={(open) => {
@@ -810,7 +904,22 @@ export const SFTPPanel = forwardRef<SFTPPanelHandle, SFTPPanelProps>(function SF
         }}
         onFileNameChange={setEditorFileName}
         onContentChange={setEditorContent}
+        onEncodingChange={handleEditorEncodingChange}
         onSave={handleSaveEditor}
+      />
+
+      <FilePreviewDialog
+        open={previewOpen}
+        fileName={previewFileName}
+        filePath={previewFilePath}
+        blobUrl={previewBlobUrl}
+        loading={previewLoading}
+        mimeType={previewMimeType}
+        onOpenChange={handlePreviewClose}
+        onDownload={() => {
+          const filePath = joinPath(currentPath, previewFileName);
+          download(filePath);
+        }}
       />
 
     </div>

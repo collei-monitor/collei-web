@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Save } from "lucide-react";
 
@@ -15,11 +16,13 @@ interface SFTPEditorDialogProps {
   fileName: string;
   filePath?: string;
   content: string;
+  encoding: string;
   loading: boolean;
   saving: boolean;
   onOpenChange: (open: boolean) => void;
   onFileNameChange: (name: string) => void;
   onContentChange: (content: string) => void;
+  onEncodingChange: (encoding: string) => void;
   onSave: () => void;
 }
 
@@ -53,17 +56,25 @@ function detectEditorLanguage(fileName: string): string {
   return map[ext] || "plaintext";
 }
 
+const ENCODINGS = [
+  "utf-8", "gbk", "gb2312", "gb18030", "big5",
+  "shift_jis", "euc-jp", "euc-kr",
+  "iso-8859-1", "windows-1252",
+] as const;
+
 export function SFTPEditorDialog({
   open,
   mode,
   fileName,
   filePath,
   content,
+  encoding,
   loading,
   saving,
   onOpenChange,
   onFileNameChange,
   onContentChange,
+  onEncodingChange,
   onSave,
 }: SFTPEditorDialogProps) {
   const { t } = useTranslation();
@@ -97,7 +108,23 @@ export function SFTPEditorDialog({
               <Skeleton className="h-[55vh] w-full" />
             </div>
           ) : (
-            <div className="overflow-hidden rounded-md border">
+            <>
+              <div className="flex items-center gap-2">
+                <Label className="shrink-0 text-xs text-muted-foreground">{t("sftp.editor.encoding")}</Label>
+                <Select value={encoding} onValueChange={onEncodingChange}>
+                  <SelectTrigger className="h-7 w-32 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ENCODINGS.map((enc) => (
+                      <SelectItem key={enc} value={enc} className="text-xs">
+                        {enc.toUpperCase()}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="overflow-hidden rounded-md border">
               <Suspense
                 fallback={
                   <div className="flex h-[55vh] items-center justify-center text-sm text-muted-foreground">
@@ -151,6 +178,7 @@ export function SFTPEditorDialog({
                 />
               </Suspense>
             </div>
+            </>
           )}
 
           <div className="flex justify-end gap-2">
