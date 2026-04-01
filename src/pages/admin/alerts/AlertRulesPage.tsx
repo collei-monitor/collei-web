@@ -177,19 +177,21 @@ export default function AlertRulesPage() {
                         </TooltipTrigger>
                         <TooltipContent>{t("common.edit")}</TooltipContent>
                       </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => setMappingsRule(rule)}
-                          >
-                            <Link className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>{t("admin.alerts.rules.table.mappings")}</TooltipContent>
-                      </Tooltip>
+                      {rule.metric !== "login" && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => setMappingsRule(rule)}
+                            >
+                              <Link className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("admin.alerts.rules.table.mappings")}</TooltipContent>
+                        </Tooltip>
+                      )}
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
