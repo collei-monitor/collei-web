@@ -12,6 +12,8 @@ import EventCenterPage from "@/pages/admin/alerts/EventCenterPage";
 import AlertEnginePage from "@/pages/admin/alerts/AlertEnginePage";
 import UsersPage from "@/pages/admin/users/UsersPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
+import ThemeSettingsPage from "@/pages/admin/settings/ThemeSettingsPage";
+import BackupRestorePage from "@/pages/admin/settings/BackupRestorePage";
 import OIDCProvidersPage from "@/pages/admin/users/OIDCProvidersPage";
 import LogsPage from "@/pages/admin/LogsPage";
 import NetworkPage from "@/pages/admin/services/network/NetworkPage";
@@ -66,6 +68,8 @@ const router = createBrowserRouter([
           { path: "users", element: <UsersPage /> },
           { path: "logs", element: <LogsPage /> },
           { path: "settings", element: <SettingsPage /> },
+          { path: "settings/themes", element: <ThemeSettingsPage /> },
+          { path: "settings/backup", element: <BackupRestorePage /> },
           { path: "settings/oidc", element: <OIDCProvidersPage /> },
           { path: "services/network", element: <NetworkPage /> },
           { path: "services/remote", element: <RemotePage /> },

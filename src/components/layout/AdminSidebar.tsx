@@ -282,7 +282,22 @@ export function AdminSidebar() {
           title: t("admin.sidebar.settings"),
           url: "/admin/settings",
           icon: Settings,
-          end: true,
+          end: false,
+          children: [
+            {
+              title: t("admin.sidebar.settingsBasic"),
+              url: "/admin/settings",
+              exact: true,
+            },
+            {
+              title: t("admin.sidebar.settingsThemes"),
+              url: "/admin/settings/themes",
+            },
+            {
+              title: t("admin.sidebar.settingsBackup"),
+              url: "/admin/settings/backup",
+            },
+          ],
         },
       ],
     },

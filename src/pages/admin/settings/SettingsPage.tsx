@@ -6,7 +6,6 @@ import {
   Clock,
   Activity,
   Code,
-  Palette,
 } from "lucide-react";
 import {
   Card,
@@ -29,7 +28,6 @@ import { TextareaConfigField } from "./components/TextareaConfigField";
 import { MonitoringSection } from "./components/MonitoringSection";
 import { IpDbSection } from "./components/IpDbSection";
 import { FaviconUploadSection } from "./components/FaviconUploadSection";
-import { ThemeManageSection } from "./components/ThemeManageSection";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
@@ -89,8 +87,8 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
-        <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
+        <h1 className="text-2xl font-bold">{t("settings.general.pageTitle")}</h1>
+        <p className="text-muted-foreground mt-1">{t("settings.general.pageSubtitle")}</p>
       </div>
 
       {/* ── 基本设置 ── */}
@@ -224,20 +222,6 @@ export default function SettingsPage() {
               />
             </>
           )}
-        </CardContent>
-      </Card>
-
-      {/* ── 展示主题管理 ── */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Palette className="h-4 w-4" />
-            {t("settings.themes.title")}
-          </CardTitle>
-          <CardDescription>{t("settings.themes.desc")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ThemeManageSection />
         </CardContent>
       </Card>
 
