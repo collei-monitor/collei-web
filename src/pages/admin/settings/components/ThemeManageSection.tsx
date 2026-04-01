@@ -78,7 +78,7 @@ function ThemeCard({
             )}
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-            {theme.version && <span>v{theme.version}</span>}
+            {theme.version && <span>{theme.version.startsWith("v") ? theme.version : `v${theme.version}`}</span>}
             {theme.author && <span>· {theme.author}</span>}
             {!theme.is_builtin && theme.total_size > 0 && (
               <span>
