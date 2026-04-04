@@ -114,9 +114,24 @@ export function EditServerDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!server) return;
+
+    // Only submit fields that have been modified
+    const diff: UpdateServerPayload = {};
+    if (form.name !== server.name) diff.name = form.name;
+    if (form.region !== (server.region ?? "")) diff.region = form.region;
+    if (form.top !== server.top) diff.top = form.top;
+    if (form.hidden !== server.hidden) diff.hidden = form.hidden;
+    if (form.is_region_locked !== server.is_region_locked) diff.is_region_locked = form.is_region_locked;
+    if (JSON.stringify(form.tags ?? []) !== JSON.stringify(server.tags ?? [])) diff.tags = form.tags;
+
+    if (Object.keys(diff).length === 0) {
+      onOpenChange(false);
+      return;
+    }
+
     const toastId = toast.loading(t("common.saving"));
     updateServer.mutate(
-      { uuid: server.uuid, payload: form },
+      { uuid: server.uuid, payload: diff },
       {
         onSuccess: () => {
           toast.success(t("admin.nodes.toast.editSuccess"), { id: toastId });

@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { SortInput } from "../SortInput";
 import { StatusBadge } from "../StatusBadge";
 import { ServerActions } from "./ServerActions";
+import { OsIcon } from "@/components/OsIcon";
 
 export function SortableRow({
   server,
@@ -53,7 +54,13 @@ export function SortableRow({
   onBilling: (s: Server) => void;
   onTrafficRule: (s: Server) => void;
   onInstall: (s: Server) => void;
-  visibleColumns: { ip: boolean; groups: boolean; status: boolean; version: boolean };
+  visibleColumns: {
+    ip: boolean;
+    groups: boolean;
+    status: boolean;
+    version: boolean;
+    os: boolean;
+  };
   ipMasked: boolean;
 }) {
   const { t } = useTranslation();
@@ -149,13 +156,24 @@ export function SortableRow({
         </div>
       </TableCell>
 
+      {/* 系统 */}
+      {visibleColumns.os && (
+        <TableCell>
+          <div className="flex items-center gap-1.5">
+            <OsIcon os={server.os} />
+          </div>
+        </TableCell>
+      )}
+
       {/* IP 地址 */}
       {visibleColumns.ip && (
         <TableCell>
           <div className="space-y-0.5">
             {server.ipv4 && (
               <div className="flex items-center gap-1 group">
-                <span className="text-xs font-mono">{ipMasked ? "*.*.*.*" : server.ipv4}</span>
+                <span className="text-xs font-mono">
+                  {ipMasked ? "*.*.*.*" : server.ipv4}
+                </span>
                 <button
                   type="button"
                   onClick={() => handleCopyIp(server.ipv4!)}
@@ -273,8 +291,12 @@ export function SortableRow({
                 size="icon"
                 className="h-8 w-8"
                 onClick={() => {
-                  const isWindows = server.os?.toLowerCase().includes("windows");
-                  const route = isWindows ? "/admin/conpty-terminal" : "/admin/terminal";
+                  const isWindows = server.os
+                    ?.toLowerCase()
+                    .includes("windows");
+                  const route = isWindows
+                    ? "/admin/conpty-terminal"
+                    : "/admin/terminal";
                   navigate(
                     `${route}?uuid=${server.uuid}&name=${encodeURIComponent(server.name)}`,
                   );

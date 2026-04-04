@@ -55,8 +55,8 @@ export default function NodesPage() {
   const [installDialogKey, setInstallDialogKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [ipMasked, setIpMasked] = useState(false);
-  type VisibleColumns = { ip: boolean; groups: boolean; status: boolean; version: boolean };
-  const defaultColumns: VisibleColumns = { ip: true, groups: true, status: true, version: false };
+  type VisibleColumns = { ip: boolean; groups: boolean; status: boolean; version: boolean; os: boolean };
+  const defaultColumns: VisibleColumns = { ip: true, groups: true, status: true, version: false, os: false };
   const [visibleColumns, setVisibleColumns] = useState<VisibleColumns>(() => {
     try {
       const stored = localStorage.getItem("nodes-visible-columns");
@@ -172,6 +172,12 @@ export default function NodesPage() {
               >
                 {t("admin.nodes.table.version")}
               </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                checked={visibleColumns.os}
+                onCheckedChange={(v) => updateVisibleColumns("os", v)}
+              >
+                {t("admin.nodes.table.os")}
+              </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Button size="sm" className="gap-1.5" onClick={() => { setShowAddInstall(true); setInstallDialogKey(k => k + 1); }}>
@@ -203,6 +209,9 @@ export default function NodesPage() {
                   {t("admin.nodes.table.sort")}
                 </TableHead>
                 <TableHead className="md:sticky md:left-30 md:z-20 md:bg-background">{t("common.name")}</TableHead>
+                {visibleColumns.os && (
+                  <TableHead>{t("admin.nodes.table.os")}</TableHead>
+                )}
                 {visibleColumns.ip && (
                   <TableHead>
                     <div className="flex items-center gap-1">
@@ -242,7 +251,8 @@ export default function NodesPage() {
                         (visibleColumns.ip ? 1 : 0) +
                         (visibleColumns.groups ? 1 : 0) +
                         (visibleColumns.status ? 1 : 0) +
-                        (visibleColumns.version ? 1 : 0)
+                        (visibleColumns.version ? 1 : 0) +
+                        (visibleColumns.os ? 1 : 0)
                       }
                       className="h-32 text-center text-muted-foreground"
                     >

@@ -294,7 +294,8 @@
         "sort": "排序",
         "ip": "IP 地址",
         "groups": "分组",
-        "version": "版本"
+        "version": "版本",
+        "os": "系统"
       },
       "status": {
         "online": "在线",

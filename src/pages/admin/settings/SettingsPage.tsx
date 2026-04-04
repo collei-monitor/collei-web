@@ -5,7 +5,6 @@ import {
   Database,
   Clock,
   Activity,
-  Code,
 } from "lucide-react";
 import {
   Card,
@@ -24,7 +23,6 @@ import {
 } from "@/services/config";
 import { ConfigSkeleton } from "./components/ConfigSkeleton";
 import { TextConfigField } from "./components/TextConfigField";
-import { TextareaConfigField } from "./components/TextareaConfigField";
 import { MonitoringSection } from "./components/MonitoringSection";
 import { IpDbSection } from "./components/IpDbSection";
 import { FaviconUploadSection } from "./components/FaviconUploadSection";
@@ -173,53 +171,6 @@ export default function SettingsPage() {
               />
               <Separator />
               <FaviconUploadSection />
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* ── 展示页自定义代码 ── */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Code className="h-4 w-4" />
-            {t("settings.script.title")}
-          </CardTitle>
-          <CardDescription>{t("settings.script.desc")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {isLoading ? (
-            <>
-              <ConfigSkeleton />
-              <ConfigSkeleton />
-            </>
-          ) : (
-            <>
-              <TextareaConfigField
-                configKey="custom_headers"
-                label={t("settings.script.customHeaders")}
-                description={t("settings.script.customHeadersDesc")}
-                placeholder={t("settings.script.customHeadersPlaceholder")}
-                currentValue={configs?.["custom_headers"]}
-                onSave={handleSave}
-                saving={
-                  setConfig.isPending &&
-                  setConfig.variables?.key === "custom_headers"
-                }
-              />
-              <Separator />
-              <TextareaConfigField
-                configKey="custom_body"
-                label={t("settings.script.customBody")}
-                description={t("settings.script.customBodyDesc")}
-                placeholder={t("settings.script.customBodyPlaceholder")}
-                currentValue={configs?.["custom_body"]}
-                onSave={handleSave}
-                saving={
-                  setConfig.isPending &&
-                  setConfig.variables?.key === "custom_body"
-                }
-              />
             </>
           )}
         </CardContent>

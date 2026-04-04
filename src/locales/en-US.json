@@ -291,7 +291,8 @@
         "sort": "Sort",
         "ip": "IP Address",
         "groups": "Groups",
-        "version": "Version"
+        "version": "Version",
+        "os": "OS"
       },
       "status": {
         "online": "Online",
