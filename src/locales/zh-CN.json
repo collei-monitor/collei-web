@@ -6,7 +6,7 @@
     "system": "系统"
   },
   "common": {
-    "appTitle": "Collei Monitor",
+    "appTitle": "Collei",
     "appSubtitle": "自托管服务器监控平台",
     "login": "登录",
     "logout": "退出登录",
@@ -107,7 +107,16 @@
       "os": "系统",
       "network": "网络",
       "networkUpload": "上传",
-      "networkDownload": "下载"
+      "networkDownload": "下载",
+      "expand": "展开详情",
+      "collapse": "收起详情",
+      "serverInfo": "服务器信息",
+      "networkLatency": "网络延迟",
+      "noProbeData": "暂无探测数据",
+      "uptime": "运行时间",
+      "totalUpload": "总上传",
+      "totalDownload": "总下载",
+      "lastOnline": "最后上报"
     },
     "buildTime": "构建于 {{time}}",
     "billing": {

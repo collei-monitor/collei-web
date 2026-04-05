@@ -6,7 +6,7 @@
     "system": "System"
   },
   "common": {
-    "appTitle": "Collei Monitor",
+    "appTitle": "Collei",
     "appSubtitle": "Self-Hosted Server Monitoring Platform",
     "login": "Login",
     "logout": "Logout",
@@ -104,7 +104,16 @@
       "os": "OS",
       "network": "Network",
       "networkUpload": "Upload",
-      "networkDownload": "Download"
+      "networkDownload": "Download",
+      "expand": "Expand details",
+      "collapse": "Collapse details",
+      "serverInfo": "Server Info",
+      "networkLatency": "Network Latency",
+      "noProbeData": "No probe data",
+      "uptime": "Uptime",
+      "totalUpload": "Total Upload",
+      "totalDownload": "Total Download",
+      "lastOnline": "Last Online"
     },
     "buildTime": "Built at {{time}}",
     "billing": {

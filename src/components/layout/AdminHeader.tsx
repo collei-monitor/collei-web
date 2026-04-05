@@ -38,12 +38,10 @@ export function AdminHeader() {
       <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b bg-background px-4 gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="h-6" />
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm ml-2.5">
-            {t("common.appTitle")}
-          </span>
+        <div className="flex items-center gap-2 ml-2">
+          <span className="font-semibold text-xl">{t("common.appTitle")}</span>
           {!isMobile && version?.current_version && (
-            <span className="text-xs text-muted-foreground font-mono">
+            <span className="text-xs text-muted-foreground font-mono self-end">
               {t("common.version.badge", {
                 version: version.current_version,
                 commit: version.current_commit ?? "dev",
@@ -67,7 +65,9 @@ export function AdminHeader() {
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>{t("common.version.updateAvailable")}</TooltipContent>
+              <TooltipContent>
+                {t("common.version.updateAvailable")}
+              </TooltipContent>
             </Tooltip>
           )}
 
@@ -88,11 +88,7 @@ export function AdminHeader() {
           <LanguageSwitch />
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleLogout}
-              >
+              <Button variant="outline" size="icon" onClick={handleLogout}>
                 <LogOut className="text-red-600 hover:text-red-700" />
               </Button>
             </TooltipTrigger>
@@ -129,11 +125,7 @@ export function AdminHeader() {
             </div>
           </div>
           <div className="flex justify-end mt-2">
-            <Button
-              asChild
-              variant="default"
-              className="gap-1.5"
-            >
+            <Button asChild variant="default" className="gap-1.5">
               <a
                 href="https://github.com/collei-monitor/collei/releases"
                 target="_blank"
