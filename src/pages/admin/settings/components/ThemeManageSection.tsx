@@ -7,6 +7,7 @@ import {
   Check,
   Package,
   Layers,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -91,6 +92,17 @@ function ThemeCard({
             <p className="text-xs text-muted-foreground mt-1 truncate">
               {theme.description}
             </p>
+          )}
+          {theme.link && (
+            <a
+              href={theme.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-primary mt-1 hover:underline truncate"
+            >
+              <ExternalLink className="h-3 w-3 shrink-0" />
+              {theme.link}
+            </a>
           )}
         </div>
       </div>

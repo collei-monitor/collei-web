@@ -216,6 +216,7 @@ export interface ThemeInfo {
   description: string;
   version: string;
   author: string;
+  link: string;
   created_at: string;
   file_count: number;
   total_size: number;
