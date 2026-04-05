@@ -319,7 +319,11 @@
         "tags": "Tags",
         "tagPlaceholder": "Enter tag name",
         "sort": "Sort Order",
-        "visibility": "Visibility"
+        "visibility": "Visibility",
+        "remark": "Private Remark",
+        "remarkPlaceholder": "Visible to admins only",
+        "publicRemark": "Public Remark",
+        "publicRemarkPlaceholder": "Visible to all users"
       },
       "delete": {
         "description": "Are you sure you want to delete server \"{{name}}\"? This action cannot be undone and all associated data will be removed."

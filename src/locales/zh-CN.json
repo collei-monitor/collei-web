@@ -322,7 +322,11 @@
         "tags": "标签",
         "tagPlaceholder": "输入标签名称",
         "sort": "排序",
-        "visibility": "可见性"
+        "visibility": "可见性",
+        "remark": "私人备注",
+        "remarkPlaceholder": "仅管理员可见的备注",
+        "publicRemark": "公开备注",
+        "publicRemarkPlaceholder": "所有用户可见的备注"
       },
       "delete": {
         "description": "确定要删除服务器 \"{{name}}\" 吗？此操作不可恢复，所有关联数据将被清除。"

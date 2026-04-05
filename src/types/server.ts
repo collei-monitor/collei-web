@@ -101,6 +101,7 @@ export interface Server {
   disk_total: number | null;
   version: string | null;
   remark: string | null;
+  public_remark: string | null;
   top: number;
   hidden: number;
   is_approved: number;
@@ -138,6 +139,7 @@ export interface NetIOEntry {
 export interface UpdateServerPayload {
   name?: string;
   remark?: string;
+  public_remark?: string;
   top?: number;
   hidden?: number;
   region?: string;

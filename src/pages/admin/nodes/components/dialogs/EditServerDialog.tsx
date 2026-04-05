@@ -8,6 +8,7 @@ import { useUpdateServer } from "@/services/servers";
 import type { Server, UpdateServerPayload } from "@/types/server";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";import {
@@ -72,6 +73,8 @@ export function EditServerDialog({
           hidden: server.hidden,
           is_region_locked: server.is_region_locked,
           tags: server.tags ?? [],
+          remark: server.remark ?? "",
+          public_remark: server.public_remark ?? "",
         }
       : {},
   );
@@ -123,6 +126,8 @@ export function EditServerDialog({
     if (form.hidden !== server.hidden) diff.hidden = form.hidden;
     if (form.is_region_locked !== server.is_region_locked) diff.is_region_locked = form.is_region_locked;
     if (JSON.stringify(form.tags ?? []) !== JSON.stringify(server.tags ?? [])) diff.tags = form.tags;
+    if (form.remark !== (server.remark ?? "")) diff.remark = form.remark;
+    if (form.public_remark !== (server.public_remark ?? "")) diff.public_remark = form.public_remark;
 
     if (Object.keys(diff).length === 0) {
       onOpenChange(false);
@@ -304,6 +309,30 @@ export function EditServerDialog({
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
+          </div>
+
+          {/* 私人备注 */}
+          <div className="space-y-2">
+            <Label htmlFor="edit-remark">{t("admin.nodes.edit.remark")}</Label>
+            <Textarea
+              id="edit-remark"
+              rows={2}
+              value={form.remark ?? ""}
+              onChange={(e) => setForm((p) => ({ ...p, remark: e.target.value }))}
+              placeholder={t("admin.nodes.edit.remarkPlaceholder")}
+            />
+          </div>
+
+          {/* 公开备注 */}
+          <div className="space-y-2">
+            <Label htmlFor="edit-public-remark">{t("admin.nodes.edit.publicRemark")}</Label>
+            <Textarea
+              id="edit-public-remark"
+              rows={2}
+              value={form.public_remark ?? ""}
+              onChange={(e) => setForm((p) => ({ ...p, public_remark: e.target.value }))}
+              placeholder={t("admin.nodes.edit.publicRemarkPlaceholder")}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
