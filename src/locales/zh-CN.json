@@ -1461,6 +1461,7 @@
       "detail": {
         "title": "日志详情",
         "serverInfo": "关联服务器",
+        "offlineServers": "离线服务器",
         "serverName": "名称",
         "serverOs": "系统",
         "serverRegion": "地区",

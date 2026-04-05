@@ -58,6 +58,7 @@ import {
   ChevronRight,
   FileText,
 } from "lucide-react";
+import { FlagIcon } from "@/components/FlagIcon";
 
 const ALL_VALUE = "__all__";
 const PAGE_SIZE = 50;
@@ -437,7 +438,7 @@ export default function LogsPage() {
 
       {/* Detail dialog */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[70vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[70vh] overflow-y-auto" aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>{t("admin.logs.detail.title")}</DialogTitle>
           </DialogHeader>
@@ -476,7 +477,7 @@ export default function LogsPage() {
                       {server.region && (
                         <>
                           <dt className="text-muted-foreground">{t("admin.logs.detail.serverRegion")}</dt>
-                          <dd className="text-xs">{server.region}</dd>
+                          <dd className="text-xs"><FlagIcon region={server.region} /></dd>
                         </>
                       )}
                       {server.version && (
@@ -495,7 +496,71 @@ export default function LogsPage() {
                 </div>
               );
             })()}
-            {selectedLog?.detail && (
+            {/* offline_check：解析 detail 中逗号分隔的 UUID 关联服务器 */}
+            {selectedLog?.source === "offline_check" && selectedLog?.detail && (() => {
+              const uuids = selectedLog.detail.split(",").map((u) => u.trim()).filter(Boolean);
+              if (uuids.length === 0) return null;
+              return (
+                <div className="rounded-md border p-3 space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    {t("admin.logs.detail.offlineServers")}
+                  </p>
+                  <div className="space-y-2">
+                    {uuids.map((uuid) => {
+                      const server = servers?.find((s) => s.uuid === uuid);
+                      return (
+                        <div key={uuid} className="rounded border p-2">
+                          {server ? (
+                            <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                              <dt className="text-muted-foreground">{t("admin.logs.detail.serverName")}</dt>
+                              <dd className="font-medium break-all">{server.name}</dd>
+                              <dt className="text-muted-foreground">UUID</dt>
+                              <dd className="font-mono text-xs break-all">{server.uuid}</dd>
+                              {server.ipv4 && (
+                                <>
+                                  <dt className="text-muted-foreground">IPv4</dt>
+                                  <dd className="font-mono text-xs">{server.ipv4}</dd>
+                                </>
+                              )}
+                              {server.ipv6 && (
+                                <>
+                                  <dt className="text-muted-foreground">IPv6</dt>
+                                  <dd className="font-mono text-xs break-all">{server.ipv6}</dd>
+                                </>
+                              )}
+                              {server.os && (
+                                <>
+                                  <dt className="text-muted-foreground">{t("admin.logs.detail.serverOs")}</dt>
+                                  <dd className="text-xs">{server.os}</dd>
+                                </>
+                              )}
+                              {server.region && (
+                                <>
+                                  <dt className="text-muted-foreground">{t("admin.logs.detail.serverRegion")}</dt>
+                                  <dd className="text-xs"><FlagIcon region={server.region} /></dd>
+                                </>
+                              )}
+                              {server.version && (
+                                <>
+                                  <dt className="text-muted-foreground">{t("admin.logs.detail.serverVersion")}</dt>
+                                  <dd className="font-mono text-xs">{server.version}</dd>
+                                </>
+                              )}
+                            </dl>
+                          ) : (
+                            <p className="text-xs text-muted-foreground font-mono">
+                              {t("admin.logs.detail.serverNotFound")}
+                              <span className="ml-1 break-all">{uuid}</span>
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+            {selectedLog?.detail && selectedLog?.source !== "offline_check" && (
               <pre className="overflow-auto whitespace-pre-wrap break-all rounded-md bg-muted p-4 text-sm font-mono max-h-72">
                 {selectedLog.detail}
               </pre>

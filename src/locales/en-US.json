@@ -1458,6 +1458,7 @@
       "detail": {
         "title": "Log Detail",
         "serverInfo": "Associated Server",
+        "offlineServers": "Offline Servers",
         "serverName": "Name",
         "serverOs": "OS",
         "serverRegion": "Region",
