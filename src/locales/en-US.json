@@ -49,7 +49,6 @@
       "updateDialogTitle": "New Version {{version}} Available",
       "updateDialogDesc": "Current: {{current}} → Latest: {{latest}}",
       "changelog": "Changelog",
-      "viewReleases": "View Releases",
       "noChangelog": "No changelog available"
     }
   },

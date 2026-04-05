@@ -56,14 +56,11 @@ export function AdminHeader() {
               <TooltipTrigger asChild>
                 <Button
                   variant="outline"
-                  size={isMobile ? "icon" : "sm"}
-                  className="text-amber-600 border-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950 gap-1.5"
+                  size="icon"
+                  className="text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950 gap-1.5"
                   onClick={() => setChangelogOpen(true)}
                 >
                   <ArrowUpCircle className="h-4 w-4" />
-                  {!isMobile && (
-                    <span>{t("common.version.updateAvailable")}</span>
-                  )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -133,7 +130,7 @@ export function AdminHeader() {
                 rel="noopener noreferrer"
               >
                 <ExternalLink className="h-4 w-4" />
-                {t("common.version.viewReleases")}
+                Github
               </a>
             </Button>
           </div>

@@ -12,9 +12,6 @@ import type { DisplayServer, ServerNodeRecord, ServerLoad } from "@/types/server
 
 // ── 常量 ──────────────────────────────────────────────────────────────────────
 
-/** 保留的历史数据时间窗口（秒） */
-const HISTORY_WINDOW = 80;
-
 // ── 时间范围类型 ──────────────────────────────────────────────────────────────
 
 export type LoadTimeRange = "realtime" | "1h" | "4h" | "1d" | "3d" | "custom";
@@ -51,12 +48,11 @@ const RANGE_HOURS: Record<string, number> = {
 
 const serverDetailApi = {
   /** 获取服务器历史负载数据（实时模式） */
-  async getLoad(uuid: string): Promise<ServerNodeRecord[]> {
+  async getLoad(uuid: string): Promise<LoadDataResponse> {
     const { status, data } = await api.get(`/clients/public/servers/${uuid}/load`);
     if (status !== 200)
       throw new Error(data?.detail || "Failed to fetch server load");
-    const resp = data as LoadDataResponse;
-    return resp.data;
+    return data as LoadDataResponse;
   },
 
   /** 获取服务器历史负载数据（指定时间范围） */
@@ -131,9 +127,9 @@ function snapshotToRecord(
 }
 
 /** 裁剪超出时间窗口的记录 */
-function trimRecords(records: ServerNodeRecord[]): ServerNodeRecord[] {
+function trimRecords(records: ServerNodeRecord[], window: number): ServerNodeRecord[] {
   if (records.length === 0) return records;
-  const cutoff = Math.floor(Date.now() / 1000) - HISTORY_WINDOW;
+  const cutoff = Math.floor(Date.now() / 1000) - window;
   return records.filter((r) => r.time >= cutoff);
 }
 
@@ -143,6 +139,8 @@ interface UseServerDetailResult {
   server: DisplayServer | undefined;
   history: ServerNodeRecord[];
   isLoading: boolean;
+  /** API 返回的数据保留窗口（秒），null 时表示不限制 */
+  loadRetainSeconds: number | null;
 }
 
 /**
@@ -151,7 +149,9 @@ interface UseServerDetailResult {
  */
 export function useServerDetail(uuid: string): UseServerDetailResult {
   const { servers, isLoading: serversLoading } = useDisplayServers();
-  const { data: initialLoad, isLoading: loadLoading } = useServerLoad(uuid);
+  const { data: loadResp, isLoading: loadLoading } = useServerLoad(uuid);
+  const initialLoad = loadResp?.data;
+  const retainSeconds = loadResp?.load_retain_seconds ?? null;
   const [wsRecords, setWsRecords] = useState<ServerNodeRecord[]>([]);
 
   const server = useMemo(
@@ -186,13 +186,14 @@ export function useServerDetail(uuid: string): UseServerDetailResult {
     });
   }, [server?.load, uuid]);
 
-  // 定期清理 wsRecords 中超出窗口的旧数据
+  // 定期清理 wsRecords 中超出窗口的旧数据（仅当 retainSeconds 有值时裁剪）
   useEffect(() => {
+    if (retainSeconds == null) return;
     const timer = setInterval(() => {
-      setWsRecords((prev) => trimRecords(prev));
+      setWsRecords((prev) => trimRecords(prev, retainSeconds));
     }, 10000);
     return () => clearInterval(timer);
-  }, []);
+  }, [retainSeconds]);
 
   // uuid 变化时重置 WS 累积数据
   const prevUuidRef = useRef(uuid);
@@ -207,6 +208,7 @@ export function useServerDetail(uuid: string): UseServerDetailResult {
     server,
     history,
     isLoading: serversLoading || loadLoading,
+    loadRetainSeconds: retainSeconds,
   };
 }
 
@@ -219,6 +221,8 @@ interface UseServerDetailWithRangeResult {
   isServerLoading: boolean;
   /** 图表数据正在加载（切换时间范围时为 true） */
   isChartLoading: boolean;
+  /** API 返回的实时数据保留窗口（秒），null 时表示不限制 */
+  loadRetainSeconds: number | null;
 }
 
 /**
@@ -244,5 +248,6 @@ export function useServerDetailWithRange(
     // 仅当服务器信息尚未获取时才为 true，不受图表数据加载影响
     isServerLoading: !realtimeResult.server && realtimeResult.isLoading,
     isChartLoading: isRealtime ? false : rangeLoading,
+    loadRetainSeconds: realtimeResult.loadRetainSeconds,
   };
 }
