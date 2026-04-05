@@ -256,6 +256,12 @@ export function AdminSidebar() {
       labelKey: "admin.sidebar.system",
       items: [
         {
+          title: t("admin.sidebar.logs"),
+          url: "/admin/logs",
+          icon: ScrollText,
+          end: false,
+        },
+        {
           title: t("admin.sidebar.account"),
           url: "/admin/users",
           icon: Users,
@@ -271,12 +277,6 @@ export function AdminSidebar() {
               url: "/admin/settings/oidc",
             },
           ],
-        },
-        {
-          title: t("admin.sidebar.logs"),
-          url: "/admin/logs",
-          icon: ScrollText,
-          end: false,
         },
         {
           title: t("admin.sidebar.settings"),

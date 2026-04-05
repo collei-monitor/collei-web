@@ -21,6 +21,7 @@ import { ModeToggle } from "@/components/common/ModeToggle";
 import { LanguageSwitch } from "@/components/common/LanguageSwitch";
 import { useAuthStore } from "@/store/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { truncateHash } from "@/lib/utils";
 
 export function AdminHeader() {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export function AdminHeader() {
             <span className="text-xs text-muted-foreground font-mono self-end">
               {t("common.version.badge", {
                 version: version.current_version,
-                commit: version.current_commit ?? "dev",
+                commit: truncateHash(version.current_commit) ?? "dev",
               })}
             </span>
           )}
