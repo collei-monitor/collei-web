@@ -42,7 +42,16 @@
     "refresh": "Refresh",
     "refreshSuccess": "Refresh successful",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "version": {
+      "badge": "v{{version}} ({{commit}})",
+      "updateAvailable": "New Version Available",
+      "updateDialogTitle": "New Version {{version}} Available",
+      "updateDialogDesc": "Current: {{current}} → Latest: {{latest}}",
+      "changelog": "Changelog",
+      "viewReleases": "View Releases",
+      "noChangelog": "No changelog available"
+    }
   },
   "time": {
     "day": "d",

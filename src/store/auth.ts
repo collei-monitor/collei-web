@@ -3,6 +3,16 @@ import api from "@/lib/api";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
+export interface VersionInfo {
+  current_version: string | null;
+  current_commit: string | null;
+  latest_version: string | null;
+  latest_commit: string | null;
+  has_update: boolean;
+  changelog: string | null;
+  checked_at: number | null;
+}
+
 export interface AuthUser {
   uuid: string;
   username: string;
@@ -13,6 +23,7 @@ export interface AuthUser {
   ws_token?: string;
   global_registration_token?: string | null;
   agent_url?: string | null;
+  version?: VersionInfo | null;
 }
 
 export interface SSOProvider {
