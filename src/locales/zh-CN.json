@@ -1480,7 +1480,9 @@
         "scopePlaceholder": "逗号分隔，留空使用默认值",
         "addition": "附加配置",
         "additionPlaceholder": "JSON 格式的附加配置参数（选填）",
-        "secretStatus": "当前密钥状态"
+        "secretStatus": "当前密钥状态",
+        "callbackUrl": "回调链接",
+        "callbackUrlDesc": "请将此链接填写到第三方 OAuth 应用的 Redirect URI / Callback URL 中"
       },
       "dialog": {
         "createTitle": "添加 SSO 提供商",

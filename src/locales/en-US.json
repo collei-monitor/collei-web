@@ -1477,7 +1477,9 @@
         "scopePlaceholder": "Comma-separated, leave empty for defaults",
         "addition": "Additional Config",
         "additionPlaceholder": "Additional parameters in JSON format (optional)",
-        "secretStatus": "Current Secret"
+        "secretStatus": "Current Secret",
+        "callbackUrl": "Callback URL",
+        "callbackUrlDesc": "Set this as the Redirect URI / Callback URL in your OAuth application"
       },
       "dialog": {
         "createTitle": "Add SSO Provider",

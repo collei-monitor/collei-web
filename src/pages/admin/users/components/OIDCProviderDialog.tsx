@@ -1,6 +1,7 @@
-﻿import { useState } from "react";
+﻿import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Copy, Check } from "lucide-react";
 import { useUpsertOIDC } from "@/services/oidc";
 import type { OIDCProviderCreate, OIDCProviderRead } from "@/services/oidc";
 import { Button } from "@/components/ui/button";
@@ -121,7 +122,9 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
     upsert.mutate(payload, {
       onSuccess: () => {
         toast.success(
-          editing ? t("admin.oidc.toast.updateSuccess") : t("admin.oidc.toast.createSuccess"),
+          editing
+            ? t("admin.oidc.toast.updateSuccess")
+            : t("admin.oidc.toast.createSuccess"),
           { id: toastId },
         );
         setName("");
@@ -147,15 +150,34 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
     clientId.trim() !== "" &&
     (isEdit || clientSecret.trim() !== "");
 
+  const callbackUrl = useMemo(() => {
+    const n = (isEdit ? editing!.name : name.trim()) || "";
+    if (!n) return "";
+    return `${window.location.origin}/api/v1/auth/sso/${encodeURIComponent(n)}/callback`;
+  }, [isEdit, editing, name]);
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    if (!callbackUrl) return;
+    navigator.clipboard.writeText(callbackUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? t("admin.oidc.dialog.editTitle") : t("admin.oidc.dialog.createTitle")}
+            {isEdit
+              ? t("admin.oidc.dialog.editTitle")
+              : t("admin.oidc.dialog.createTitle")}
           </DialogTitle>
           <DialogDescription>
-            {isEdit ? t("admin.oidc.dialog.editDesc") : t("admin.oidc.dialog.createDesc")}
+            {isEdit
+              ? t("admin.oidc.dialog.editDesc")
+              : t("admin.oidc.dialog.createDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -172,12 +194,39 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
             />
           </div>
 
+          {/* 回调链接 */}
+          {callbackUrl && (
+            <div className="space-y-2">
+              <Label>{t("admin.oidc.form.callbackUrl")}</Label>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 rounded-md border bg-muted px-3 py-2 text-xs break-all select-all">
+                  {callbackUrl}
+                </code>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 shrink-0"
+                  onClick={handleCopy}
+                >
+                  {copied ? (
+                    <Check className="h-3.5 w-3.5 text-green-500" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* 提供商类型 */}
           <div className="space-y-2">
             <Label>{t("admin.oidc.form.providerType")}</Label>
             <Select value={providerType} onValueChange={setProviderType}>
               <SelectTrigger>
-                <SelectValue placeholder={t("admin.oidc.form.providerTypePlaceholder")} />
+                <SelectValue
+                  placeholder={t("admin.oidc.form.providerTypePlaceholder")}
+                />
               </SelectTrigger>
               <SelectContent>
                 {SUPPORTED_TYPES.map((type) => (
@@ -191,7 +240,9 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
 
           {/* Client ID */}
           <div className="space-y-2">
-            <Label htmlFor="oidc-client-id">{t("admin.oidc.form.clientId")}</Label>
+            <Label htmlFor="oidc-client-id">
+              {t("admin.oidc.form.clientId")}
+            </Label>
             <Input
               id="oidc-client-id"
               value={clientId}
@@ -202,12 +253,21 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
 
           {/* Client Secret */}
           <div className="space-y-2">
-            <Label htmlFor="oidc-client-secret">{t("admin.oidc.form.clientSecret")}</Label>
+            <Label htmlFor="oidc-client-secret">
+              {t("admin.oidc.form.clientSecret")}
+            </Label>
             {isEdit && (
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs text-muted-foreground">{t("admin.oidc.form.secretStatus")}</span>
-                <Badge variant={editing!.has_secret ? "default" : "destructive"} className="text-xs">
-                  {editing!.has_secret ? t("admin.oidc.table.secretSet") : t("admin.oidc.table.secretMissing")}
+                <span className="text-xs text-muted-foreground">
+                  {t("admin.oidc.form.secretStatus")}
+                </span>
+                <Badge
+                  variant={editing!.has_secret ? "default" : "destructive"}
+                  className="text-xs"
+                >
+                  {editing!.has_secret
+                    ? t("admin.oidc.table.secretSet")
+                    : t("admin.oidc.table.secretMissing")}
                 </Badge>
               </div>
             )}
@@ -226,7 +286,9 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
 
           {/* 排序 */}
           <div className="space-y-2">
-            <Label htmlFor="oidc-order">{t("admin.oidc.form.displayOrder")}</Label>
+            <Label htmlFor="oidc-order">
+              {t("admin.oidc.form.displayOrder")}
+            </Label>
             <Input
               id="oidc-order"
               type="number"
@@ -248,7 +310,9 @@ export function OIDCProviderDialog({ open, onOpenChange, editing }: Props) {
 
           {/* 附加配置 */}
           <div className="space-y-2">
-            <Label htmlFor="oidc-addition">{t("admin.oidc.form.addition")}</Label>
+            <Label htmlFor="oidc-addition">
+              {t("admin.oidc.form.addition")}
+            </Label>
             <Textarea
               id="oidc-addition"
               value={addition}
