@@ -57,6 +57,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          CURRENT_TAG=${GITHUB_REF_NAME}
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -v "^${CURRENT_TAG}$" | head -n 1)
+          echo "Previous tag: ${PREVIOUS_TAG}"
+          
+          if [ -z "${PREVIOUS_TAG}" ]; then
+            LOG=$(git log --pretty=format:"* %s (%h)" HEAD)
+          else
+            LOG=$(git log --pretty=format:"* %s (%h)" ${PREVIOUS_TAG}..${CURRENT_TAG})
+          fi
+          
+          {
+            echo "## What's Changed"
+            echo ""
+            echo "${LOG}"
+            echo ""
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${CURRENT_TAG}"
+          } > CHANGELOG.md
+          
+          cat CHANGELOG.md
 
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -77,4 +102,4 @@ jobs:
           files: |
             collei-web-${{ github.ref_name }}.tar.gz
             collei-web-${{ github.ref_name }}.zip
-          generate_release_notes: true
+          body_path: CHANGELOG.md
