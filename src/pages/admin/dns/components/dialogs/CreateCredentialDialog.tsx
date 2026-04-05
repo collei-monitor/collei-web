@@ -151,7 +151,7 @@ export function CreateCredentialDialog({ open, onOpenChange }: Props) {
               <SelectContent>
                 {KNOWN_PROVIDERS.map((pk) => (
                   <SelectItem key={pk} value={pk}>
-                    {t("admin.services.dns.credentials.providers.${pk}")}
+                    {t(`admin.services.dns.credentials.providers.${pk}`)}
                   </SelectItem>
                 ))}
               </SelectContent>
