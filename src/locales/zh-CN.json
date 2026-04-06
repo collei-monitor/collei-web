@@ -304,6 +304,15 @@
       "visible": "显示",
       "hidden": "隐藏",
       "regionLocked": "区域已锁定",
+      "conflict": {
+        "badge": "冲突",
+        "title": "Token 冲突检测",
+        "description": "检测到另一个 Agent 实例正在使用此 Token，可能存在 Token 被复用的情况。",
+        "conflictRunId": "冲突方 Run ID",
+        "conflictIp": "冲突方 IP",
+        "lastSeen": "最后检测时间",
+        "currentRunId": "当前 Run ID"
+      },
       "searchPlaceholder": "搜索名称…",
       "columns": "自定义列",
       "add": "添加",

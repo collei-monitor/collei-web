@@ -31,6 +31,7 @@ import { SortInput } from "../SortInput";
 import { StatusBadge } from "../StatusBadge";
 import { ServerActions } from "./ServerActions";
 import { OsIcon } from "@/components/OsIcon";
+import { ConflictBadge } from "../ConflictBadge";
 
 export function SortableRow({
   server,
@@ -152,6 +153,12 @@ export function SortableRow({
             <Badge variant="outline" className="text-[10px] px-1.5 py-0">
               {t("admin.nodes.status.pending")}
             </Badge>
+          )}
+          {server.conflict && (
+            <ConflictBadge
+              conflict={server.conflict}
+              currentRunId={server.current_run_id}
+            />
           )}
         </div>
       </TableCell>

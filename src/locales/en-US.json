@@ -301,6 +301,15 @@
       "visible": "Visible",
       "hidden": "Hidden",
       "regionLocked": "Region Locked",
+      "conflict": {
+        "badge": "Conflict",
+        "title": "Token Conflict Detected",
+        "description": "Another agent instance is reporting with the same token. This may indicate token reuse.",
+        "conflictRunId": "Conflict Run ID",
+        "conflictIp": "Conflict IP",
+        "lastSeen": "Last Detected",
+        "currentRunId": "Current Run ID"
+      },
       "searchPlaceholder": "Search name…",
       "columns": "Customize Columns",
       "add": "Add",

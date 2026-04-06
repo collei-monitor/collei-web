@@ -83,6 +83,12 @@ export interface UpsertTrafficRulePayload {
 
 // ── 服务器 ────────────────────────────────────────────────────────────────────
 
+export interface ServerConflict {
+  run_id: string;
+  ip: string;
+  last_seen: number;
+}
+
 export interface Server {
   uuid: string;
   name: string;
@@ -111,6 +117,7 @@ export interface Server {
   last_online: number | null;
   boot_time: number | null;
   current_run_id: string | null;
+  conflict: ServerConflict | null;
   total_flow_out: number | null;
   total_flow_in: number | null;
   current_disk_io: DiskIOEntry[];
