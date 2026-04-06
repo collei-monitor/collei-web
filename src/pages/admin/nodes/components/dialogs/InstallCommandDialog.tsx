@@ -74,6 +74,8 @@ export function InstallCommandDialog({
     installDir: "",
     configDir: "",
     version: "",
+    nicWhitelist: "",
+    nicBlacklist: "",
   });
 
   // 被动注册结果
@@ -101,6 +103,8 @@ export function InstallCommandDialog({
       installDir: "",
       configDir: "",
       version: "",
+      nicWhitelist: "",
+      nicBlacklist: "",
     });
 
   const isWinProxyMode = windowsFormValues.downloadMode === "proxy";
@@ -160,6 +164,8 @@ export function InstallCommandDialog({
       installDir: formValues.installDir || undefined,
       configDir: formValues.configDir || undefined,
       version: formValues.version || undefined,
+      nicWhitelist: formValues.nicWhitelist || undefined,
+      nicBlacklist: formValues.nicBlacklist || undefined,
       proxyDownload: isProxyMode || undefined,
     }),
     [apiUrl, name, formValues, isProxyMode],
@@ -224,6 +230,8 @@ export function InstallCommandDialog({
       installDir: windowsFormValues.installDir || undefined,
       configDir: windowsFormValues.configDir || undefined,
       version: windowsFormValues.version || undefined,
+      nicWhitelist: windowsFormValues.nicWhitelist || undefined,
+      nicBlacklist: windowsFormValues.nicBlacklist || undefined,
       proxyDownload: isWinProxyMode || undefined,
     }),
     [apiUrl, name, windowsFormValues, isWinProxyMode],

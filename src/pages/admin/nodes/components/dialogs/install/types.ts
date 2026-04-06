@@ -16,6 +16,8 @@ export interface InstallOptions {
   configDir?: string;
   version?: string;
   proxyDownload?: boolean;
+  nicWhitelist?: string;
+  nicBlacklist?: string;
 }
 
 export type Downloader = "wget" | "curl";
@@ -52,6 +54,9 @@ export function buildInstallCommand(
   if (opts.force) args.push("--force");
   if (opts.noAutoUpdate) args.push("--no-auto-update");
   if (opts.proxyDownload) args.push("--proxy-download");
+
+  if (opts.nicWhitelist) args.push(`--nic-whitelist "${opts.nicWhitelist}"`);
+  if (opts.nicBlacklist) args.push(`--nic-blacklist "${opts.nicBlacklist}"`);
 
   if (opts.installDir) args.push(`--install-dir ${opts.installDir}`);
   if (opts.configDir) args.push(`--config-dir ${opts.configDir}`);
@@ -99,6 +104,10 @@ export interface WindowsInstallOptions {
   configDir?: string;
   /** 指定版本号（高级） */
   version?: string;
+  /** 网卡白名单（逗号分隔正则） */
+  nicWhitelist?: string;
+  /** 网卡黑名单（逗号分隔正则） */
+  nicBlacklist?: string;
 }
 
 export const WIN_SCRIPT_URL =
@@ -123,6 +132,15 @@ function buildWindowsParams(opts: WindowsInstallOptions): string[] {
   if (opts.force) args.push("-Force");
   if (opts.noAutoUpdate) args.push("-NoAutoUpdate");
   if (opts.proxyDownload) args.push("-ProxyDownload");
+
+  if (opts.nicWhitelist) {
+    const entries = opts.nicWhitelist.split(",").map((s) => `"${s.trim()}"`).join(",");
+    args.push(`-NicWhitelist ${entries}`);
+  }
+  if (opts.nicBlacklist) {
+    const entries = opts.nicBlacklist.split(",").map((s) => `"${s.trim()}"`).join(",");
+    args.push(`-NicBlacklist ${entries}`);
+  }
 
   if (opts.installDir) args.push(`-InstallDir '${opts.installDir}'`);
   if (opts.configDir) args.push(`-ConfigDir '${opts.configDir}'`);

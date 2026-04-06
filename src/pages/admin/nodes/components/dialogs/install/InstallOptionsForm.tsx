@@ -21,6 +21,8 @@ export interface InstallFormValues {
   installDir: string;
   configDir: string;
   version: string;
+  nicWhitelist: string;
+  nicBlacklist: string;
 }
 
 export function InstallOptionsForm({
@@ -165,6 +167,28 @@ export function InstallOptionsForm({
               value={values.version}
               onChange={(e) => onChange({ version: e.target.value })}
               placeholder="latest"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={id("nic-whitelist")}>
+              {t("admin.nodes.install.nicWhitelist")}
+            </Label>
+            <Input
+              id={id("nic-whitelist")}
+              value={values.nicWhitelist}
+              onChange={(e) => onChange({ nicWhitelist: e.target.value })}
+              placeholder={t("admin.nodes.install.nicWhitelistPlaceholder")}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor={id("nic-blacklist")}>
+              {t("admin.nodes.install.nicBlacklist")}
+            </Label>
+            <Input
+              id={id("nic-blacklist")}
+              value={values.nicBlacklist}
+              onChange={(e) => onChange({ nicBlacklist: e.target.value })}
+              placeholder={t("admin.nodes.install.nicBlacklistPlaceholder")}
             />
           </div>
         </CollapsibleContent>
