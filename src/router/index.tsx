@@ -26,6 +26,7 @@ import SSHTerminalPage from "@/pages/admin/nodes/SSHTerminalPage";
 import ConPTYTerminalPage from "@/pages/admin/nodes/ConPTYTerminalPage";
 import SshScriptsPage from "@/pages/admin/services/scripts/SshScriptsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import ErrorPage from "@/pages/ErrorPage";
 import { RequireAuth, RequireGuest } from "./guards";
 import { WebSocketProvider } from "@/providers/WebSocketProvider";
 import { CustomCodeInjector } from "@/components/CustomCodeInjector";
@@ -33,6 +34,7 @@ import { CustomCodeInjector } from "@/components/CustomCodeInjector";
 const router = createBrowserRouter([
   {
     // 公开展示路由共享同一个 WebSocket 连接，页面切换时不重连
+    errorElement: <ErrorPage />,
     element: <WebSocketProvider><CustomCodeInjector /><Outlet /></WebSocketProvider>,
     children: [
       {
@@ -47,11 +49,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
+    errorElement: <ErrorPage />,
     element: <RequireGuest />,
     children: [{ index: true, element: <LoginPage /> }],
   },
   {
     path: "/admin",
+    errorElement: <ErrorPage />,
     element: <RequireAuth />,
     children: [
       {

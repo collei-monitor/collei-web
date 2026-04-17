@@ -62,6 +62,12 @@
     "title": "Page Not Found",
     "description": "Sorry, the page you're looking for doesn't exist. Please check the URL or go back to the home page."
   },
+  "errorPage": {
+    "title": "Something Went Wrong",
+    "description": "Sorry, an unexpected error occurred while loading the page. Please try going back or refreshing.",
+    "details": "Error details",
+    "goBack": "Go Back"
+  },
   "display": {
     "title": "Collei Monitor",
     "subtitle": "Self-hosted server monitoring platform. Monitor your infrastructure in real-time.",
