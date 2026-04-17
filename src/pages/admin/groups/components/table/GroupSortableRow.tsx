@@ -71,7 +71,7 @@ export function GroupSortableRow({
 
       {/* 服务器数量 */}
       <TableCell className="tabular-nums text-muted-foreground">
-        {group.server_uuids.length}
+        {group.server_uuids?.length ?? 0}
       </TableCell>
 
       {/* 操作按钮 */}

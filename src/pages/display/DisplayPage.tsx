@@ -54,7 +54,7 @@ export default function DisplayPage() {
     if (activeGroupId) {
       const group = groups.find((g: PublicGroup) => g.id === activeGroupId);
       if (group) {
-        const uuidSet = new Set(group.server_uuids);
+        const uuidSet = new Set(group.server_uuids ?? []);
         list = servers.filter(
           (s: DisplayServer) =>
             uuidSet.has(s.uuid) || s.groups.some((g) => g.id === activeGroupId),
